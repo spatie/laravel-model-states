@@ -1,14 +1,14 @@
 <?php
 
-namespace Spatie\State\Tests\Stubs;
+namespace Spatie\State\Tests\Dummy;
 
 use Spatie\State\Stateful;
-use Spatie\State\Tests\Stubs\States\PaymentState;
-use Spatie\State\Tests\Stubs\States\Pending;
+use Spatie\State\Tests\Dummy\States\PaymentState;
+use Spatie\State\Tests\Dummy\States\Pending;
 
 class Payment implements Stateful
 {
-    /** @var \Spatie\State\Tests\Stubs\States\Pending */
+    /** @var \Spatie\State\Tests\Dummy\States\Pending */
     public $state;
 
     /** @var string */

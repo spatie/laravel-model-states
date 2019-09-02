@@ -1,13 +1,13 @@
 <?php
 
-namespace Spatie\State\Tests\Stubs\States;
+namespace Spatie\State\Tests\Dummy\States;
 
 use Spatie\State\State;
-use Spatie\State\Tests\Stubs\Payment;
+use Spatie\State\Tests\Dummy\Payment;
 
 abstract class PaymentState implements State
 {
-    /** @var \Spatie\State\Tests\Stubs\Payment */
+    /** @var \Spatie\State\Tests\Dummy\Payment */
     protected $payment;
 
     public function __construct(Payment $payment)

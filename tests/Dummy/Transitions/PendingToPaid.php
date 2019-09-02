@@ -1,10 +1,10 @@
 <?php
 
-namespace Spatie\State\Tests\Stubs\Transitions;
+namespace Spatie\State\Tests\Dummy\Transitions;
 
-use Spatie\State\Tests\Stubs\Payment;
-use Spatie\State\Tests\Stubs\States\Paid;
-use Spatie\State\Tests\Stubs\States\Pending;
+use Spatie\State\Tests\Dummy\Payment;
+use Spatie\State\Tests\Dummy\States\Paid;
+use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Transition;
 
 class PendingToPaid extends Transition

@@ -1,9 +1,9 @@
 <?php
 
-namespace Spatie\State\Tests\Stubs\Transitions;
+namespace Spatie\State\Tests\Dummy\Transitions;
 
-use Spatie\State\Tests\Stubs\Payment;
-use Spatie\State\Tests\Stubs\States\Created;
+use Spatie\State\Tests\Dummy\Payment;
+use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Transition;
 
 class CreatedToFailed extends Transition
