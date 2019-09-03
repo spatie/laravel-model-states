@@ -42,6 +42,7 @@ class Payment extends Model
 ```
 
 ```php
+// Concrete payment state classes can extend this base state
 abstract class PaymentState extends State
 {
     protected Payment $payment;
@@ -58,8 +59,10 @@ abstract class PaymentState extends State
 ```php
 $payment = Payment::create();
 
-echo $payment->state->color(); // Color depending on the current state
+// Color depending on the current state
+echo $payment->state->color(); 
 
+// Using a transition
 $createdToPending = new CreatedToPending();
 
 $payment = $createdtoPending($payment);
