@@ -2,39 +2,30 @@
 
 namespace Spatie\State\Tests\Dummy;
 
-use Spatie\State\Stateful;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\State\HasStates;
+use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\PaymentState;
-use Spatie\State\Tests\Dummy\States\Pending;
 
-class Payment implements Stateful
+/**
+ * @property PaymentState state
+ * @method static self first
+ * @method static self create
+ */
+class Payment extends Model
 {
-    /** @var \Spatie\State\Tests\Dummy\States\Pending */
-    public $state;
+    use HasStates;
 
-    /** @var string */
-    public $paid_at;
+    protected $states = [
+        'state' => PaymentState::class,
+    ];
 
-    /** @var string */
-    public $canceled_at;
-
-    /** @var string */
-    public $errored_at;
-
-    /** @var string */
-    public $error_message;
-
-    public function __construct()
+    protected static function boot()
     {
-        $this->state = new Pending($this);
-    }
+        parent::boot();
 
-    public function setState(PaymentState $state)
-    {
-        $this->state = $state;
-    }
-
-    public function getState(): PaymentState
-    {
-        return $this->state;
+        self::creating(function (Payment $payment) {
+            $payment->state = new Created($payment);
+        });
     }
 }

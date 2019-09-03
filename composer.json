@@ -16,10 +16,12 @@
         }
     ],
     "require": {
-        "php": "^7.4"
+        "php": "^7.3"
     },
     "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.6",
         "larapack/dd": "^1.0",
+        "orchestra/testbench": "^3.8",
         "phpunit/phpunit": "^8.2"
     },
     "autoload": {

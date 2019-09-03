@@ -5,10 +5,9 @@ namespace Spatie\State\Tests\Dummy\States;
 use Spatie\State\State;
 use Spatie\State\Tests\Dummy\Payment;
 
-abstract class PaymentState implements State
+abstract class PaymentState extends State
 {
-    /** @var \Spatie\State\Tests\Dummy\Payment */
-    protected $payment;
+    protected Payment $payment;
 
     public function __construct(Payment $payment)
     {

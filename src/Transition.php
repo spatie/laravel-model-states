@@ -2,16 +2,16 @@
 
 namespace Spatie\State;
 
-use Exception;
-
 abstract class Transition
 {
-    protected function ensureInitialState(Stateful $stateful, string $stateClass): void
+    protected function ensureInitialState(Stateful $stateful, string $newState): void
     {
-        if (is_a($stateful->getState(), $stateClass)) {
+        $initialState = $stateful->getState();
+
+        if (is_a($initialState, $newState)) {
             return;
         }
 
-        throw new Exception();
+        throw TransitionException::make($stateful, $initialState, $newState);
     }
 }
