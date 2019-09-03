@@ -28,7 +28,7 @@ abstract class TestCase extends Orchestra
     {
         $this->app->get('db')->connection()->getSchemaBuilder()->create('payments', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('state');
+            $table->string('state')->nullable();
             $table->datetime('paid_at')->nullable();
             $table->datetime('cancelled_at')->nullable();
             $table->datetime('errored_at')->nullable();

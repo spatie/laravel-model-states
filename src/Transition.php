@@ -4,9 +4,9 @@ namespace Spatie\State;
 
 abstract class Transition
 {
-    protected function ensureInitialState(Stateful $stateful, string $newState): void
+    protected function ensureInitialState($stateful, string $newState): void
     {
-        $initialState = $stateful->getState();
+        $initialState = $stateful->state;
 
         if (is_a($initialState, $newState)) {
             return;

@@ -17,13 +17,15 @@ class PendingToFailed extends Transition
         $this->message = $message;
     }
 
-    public function __invoke(Payment $payment): Stateful
+    public function __invoke(Payment $payment): Payment
     {
         $this->ensureInitialState($payment, Pending::class);
 
-        $payment->setState(new Failed($payment));
+        $payment->state = new Failed($payment);
         $payment->errored_at = time();
         $payment->error_message = $this->message;
+
+        $payment->save();
 
         return $payment;
     }

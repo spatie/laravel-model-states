@@ -2,43 +2,70 @@
 
 namespace Spatie\State;
 
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Model;
+use ReflectionClass;
+use ReflectionProperty;
 
 trait HasStates
 {
-    public function getAttribute($key)
+    private static $stateFields = null;
+
+    public static function bootHasStates(): void
     {
-        if (! isset($this->states[$key])) {
-            return parent::getAttribute($key);
+        $stateFields = self::resolveStateFields();
+
+        foreach ($stateFields as $field => $stateType) {
+            static::retrieved(function (Model $model) use ($field) {
+                $stateClass = $model->getAttribute($field);
+
+                $model->{$field} = new $stateClass($model);
+            });
+
+            static::creating(function (Model $model) use ($field) {
+                $model->setAttribute(
+                    $field,
+                    $model->{$field}
+                        ? get_class($model->{$field})
+                        : null
+                );
+            });
+
+            static::saving(function (Model $model) use ($field) {
+                $model->setAttribute(
+                    $field,
+                    $model->{$field}
+                        ? get_class($model->{$field})
+                        : null
+                );
+            });
         }
-
-        $stateClass = $this->attributes[$key] ?? null;
-
-        if (! $stateClass) {
-            return null;
-        }
-
-        return new $stateClass($this);
     }
 
-    public function setAttribute($key, $value)
+    private static function resolveStateFields(): array
     {
-        if (! isset($this->states[$key])) {
-            return parent::setAttribute($key, $value);
+        if (self::$stateFields !== null) {
+            return self::$stateFields;
         }
 
-        $expectedStateClassName = $this->states[$key];
+        $reflection = new ReflectionClass(static::class);
 
-        if (! is_a($value, $expectedStateClassName)) {
-            $modelClassName = get_class($this);
+        self::$stateFields = collect($reflection->getProperties())
+            ->mapWithKeys(function (ReflectionProperty $property) {
+                $docComment = $property->getDocComment();
 
-            $actualStateClassName = is_object($value)
-                ? get_class($value)
-                : (string) $value;
+                preg_match('/@var ([\w\\\\]+)/', $docComment, $matches);
 
-            throw new InvalidArgumentException("Expected {$modelClassName}::{$key} to be of type {$expectedStateClassName}, instead got {$actualStateClassName}");
-        }
+                $stateType = $matches[1] ?? null;
 
-        parent::setAttribute($key, get_class($value));
+                if (! is_subclass_of($stateType, State::class)) {
+                    return [];
+                }
+
+                return [$property->getName() => $stateType];
+            })
+            ->filter()
+            ->toArray();
+
+        return self::$stateFields;
     }
 }

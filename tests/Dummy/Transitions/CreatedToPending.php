@@ -13,7 +13,7 @@ class CreatedToPending extends Transition
     {
         $this->ensureInitialState($payment, Created::class);
 
-        $payment->setState(new Pending($payment));
+        $payment->state = new Pending($payment);
 
         return $payment;
     }

@@ -27,16 +27,6 @@ class StateTest extends TestCase
     }
 
     /** @test */
-    public function can_only_set_the_specified_state_type()
-    {
-        $payment = Payment::create();
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $payment->state = new WrongState();
-    }
-
-    /** @test */
     public function transitions_can_be_performed()
     {
         $payment = Payment::create();
@@ -44,5 +34,9 @@ class StateTest extends TestCase
         $createdToPending = new CreatedToPending();
 
         $payment = $createdToPending($payment);
+
+        $payment->refresh();
+
+        $this->assertInstanceOf(Pending::class, $payment->state);
     }
 }
