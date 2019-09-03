@@ -7,7 +7,7 @@ use Spatie\State\Tests\Dummy\Payment;
 
 abstract class PaymentState extends State
 {
-    protected Payment $payment;
+    protected $payment;
 
     public function __construct(Payment $payment)
     {

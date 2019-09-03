@@ -45,7 +45,7 @@ class Payment extends Model
 // Concrete payment state classes can extend this base state
 abstract class PaymentState extends State
 {
-    protected Payment $payment;
+    protected $payment;
 
     public function __construct(Payment $payment)
     {
