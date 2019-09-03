@@ -8,7 +8,7 @@ use Spatie\State\Transition;
 
 class CreatedToFailed extends Transition
 {
-    private string $message;
+    private $message;
 
     public function __construct(string $message)
     {

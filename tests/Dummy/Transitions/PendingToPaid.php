@@ -13,7 +13,7 @@ class PendingToPaid extends Transition
     {
         $this->ensureInitialState($payment, Pending::class);
 
-        $payment->setState(new Paid($payment));
+        $payment->state = new Paid($payment);
         $payment->paid_at = time();
 
         return $payment;

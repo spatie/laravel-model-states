@@ -18,12 +18,10 @@ class Payment extends Model
     /** @var \Spatie\State\Tests\Dummy\States\PaymentState */
     public $state;
 
-    protected static function boot()
+    public function __construct(array $attributes = [])
     {
-        self::creating(function (Payment $payment) {
-            $payment->state = new Created($payment);
-        });
+        parent::__construct($attributes);
 
-        parent::boot();
+        $this->state = new Created($this);
     }
 }

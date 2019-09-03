@@ -15,33 +15,41 @@ composer require spatie/laravel-state
 
 ## Usage
 
+**Note**: make sure you're familiar with the basics of the [state pattern](https://en.wikipedia.org/wiki/State_pattern) before using this package.
+
+This package adds state support to your Laravel models. First you'll have to use the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
+
+State fields are simple properties on your model class, with a `@var` docblock. A field will be registered as a state field when its type extends the `Spatie\State\State` class.
+
+When PHP 7.4 arrives, we'll add support for typed properties as well.
+
+Here's an example of a `Payment` class with one state field, simply called `state`.
+
 ```php
 use Spatie\State\HasStates;
 
-/**
- * @property PaymentState state
- */
 class Payment extends Model
 {
     use HasStates;
 
-    protected $states = [
-        'state' => PaymentState::class,
-    ];
+    /** @var \App\States\PaymentState */
+    public $state;
 
-    // Comin soon: configure initial states
-    protected static function boot()
+    public function __construct(array $attributes = [])
     {
-        parent::boot();
+        parent::__construct($attributes);
 
-        self::creating(function (Payment $payment) {
-            $payment->state = new Created($payment);
-        });
+        // Make sure to set the default state in the contructor
+        $this->state = new Pending($this);
     }
 }
 ```
 
+Say there are be three possible payment states: pending, paid and failed. You'd be best to make one abstract base class for all payment states, and let concrete implementations extend it. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
+
 ```php
+use Spatie\State\State;
+
 // Concrete payment state classes can extend this base state
 abstract class PaymentState extends State
 {
@@ -56,16 +64,51 @@ abstract class PaymentState extends State
 }
 ```
 
+Now you can use the `state` field on your model directly as a `PaymentState` object, it will be properly saved and loaded to and from the database behind the scenes.
+
 ```php
 $payment = Payment::create();
 
 // Color depending on the current state
-echo $payment->state->color(); 
+echo $payment->state->color();
+```
 
-// Using a transition
-$createdToPending = new CreatedToPending();
+Next up, you can make transition classes which will take care of state transitions for you. Here's an example of a transition class which will mark the payment as failed with an error message.
 
-$payment = $createdtoPending($payment);
+```php
+use Spatie\State\Transition;
+
+class PendingToFailed extends Transition
+{
+    private $message;
+
+    public function __construct(string $message)
+    {
+        $this->message = $message;
+    }
+
+    public function __invoke(Payment $payment): Payment
+    {
+        // Only payments which state currently is pending can be handled by this transition
+        $this->ensureInitialState($payment, Pending::class);
+
+        $payment->state = new Failed($payment);
+        $payment->failed_at = time();
+        $payment->error_message = $this->message;
+
+        $payment->save();
+
+        return $payment;
+    }
+}
+```
+
+This transition is used like so:
+
+```php
+$pendingToFailed = new PendingToFailed('Error message from payment provider');
+
+$payment = $pendingToFailed($payment);
 ```
 
 ### Testing
