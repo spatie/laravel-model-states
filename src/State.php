@@ -23,13 +23,17 @@ abstract class State
         return Relation::getMorphedModel($name) ?? $name;
     }
 
-    public static function resolveStateName(?State $state): ?string
+    public static function resolveStateName($state): ?string
     {
-        if (! $state) {
+        if ($state === null) {
             return null;
         }
 
-        $stateClass = get_class($state);
+        if ($state instanceof State) {
+            $stateClass = get_class($state);
+        } else {
+            $stateClass = $state;
+        }
 
         $alias = array_search($stateClass, Relation::$morphMap);
 
