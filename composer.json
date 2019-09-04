@@ -1,11 +1,11 @@
 {
-    "name": "spatie/state",
+    "name": "spatie/laravel-state",
     "description": "",
     "keywords": [
         "spatie",
         "state"
     ],
-    "homepage": "https://github.com/spatie/state",
+    "homepage": "https://github.com/spatie/laravel-state",
     "license": "MIT",
     "authors": [
         {
@@ -41,15 +41,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Spatie\\Skeleton\\SkeletonServiceProvider"
-            ],
-            "aliases": {
-                "Skeleton": "Spatie\\Skeleton\\SkeletonFacade"
-            }
-        }
     }
 }
