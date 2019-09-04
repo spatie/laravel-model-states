@@ -4,8 +4,15 @@ namespace Spatie\State;
 
 abstract class State
 {
+    /** @var array */
+    public static $map = [];
+
     public function __toString(): string
     {
-        return get_class($this);
+        $className = get_class($this);
+
+        $alias = array_search($className, self::$map);
+
+        return $alias ?? $className;
     }
 }
