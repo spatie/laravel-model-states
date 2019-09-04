@@ -2,12 +2,12 @@
 
 namespace Spatie\State\Tests;
 
-use InvalidArgumentException;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\States\Created;
+use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
-use Spatie\State\Tests\Dummy\WrongState;
 
 class StateTest extends TestCase
 {
@@ -38,5 +38,31 @@ class StateTest extends TestCase
         $payment->refresh();
 
         $this->assertInstanceOf(Pending::class, $payment->state);
+    }
+
+    /** @test */
+    public function save_with_morph_map()
+    {
+        Relation::morphMap([
+            'created' => Created::class,
+        ]);
+
+        $payment = Payment::create();
+
+        $this->assertEquals('created', $payment->attributesToArray()['state']);
+    }
+
+    /** @test */
+    public function load_with_morph_map()
+    {
+        $payment = Payment::create();
+
+        $payment->state = new Paid($payment);
+
+        $payment->save();
+
+        $payment = Payment::find($payment->id);
+
+        $this->assertInstanceOf(Paid::class, $payment->state);
     }
 }

@@ -2,32 +2,51 @@
 
 namespace Spatie\State;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Spatie\State\Exceptions\InvalidState;
 
 abstract class State
 {
-    /** @var static[] */
-    public static $map = [];
-
-    public static function make(string $value, ...$args): State
+    public static function make(string $name, ...$args): State
     {
-        $stateClass = isset(static::$map[$value])
-            ? static::$map[$value]
-            : $value;
+        $stateClass = self::resolveStateClass($name);
 
         if (! is_subclass_of($stateClass, static::class)) {
-            throw InvalidState::make($value, static::class);
+            throw InvalidState::make($name, static::class);
         }
 
         return new $stateClass(...$args);
     }
 
+    public static function resolveStateClass(string $name): string
+    {
+        return Relation::getMorphedModel($name) ?? $name;
+    }
+
+    public static function resolveStateName(?State $state): ?string
+    {
+        if (! $state) {
+            return null;
+        }
+
+        $stateClass = get_class($state);
+
+        $alias = array_search($stateClass, Relation::$morphMap);
+
+        if ($alias) {
+            return $alias;
+        }
+
+        return $stateClass;
+    }
+
+    public function getValue(): string
+    {
+        return static::resolveStateName($this);
+    }
+
     public function __toString(): string
     {
-        $className = get_class($this);
-
-        $alias = array_search($className, self::$map);
-
-        return $alias ?? $className;
+        return $this->getValue();
     }
 }

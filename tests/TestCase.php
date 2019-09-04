@@ -2,6 +2,7 @@
 
 namespace Spatie\State\Tests;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
 
@@ -26,6 +27,8 @@ abstract class TestCase extends Orchestra
 
     protected function setUpDatabase()
     {
+        Relation::$morphMap = [];
+
         $this->app->get('db')->connection()->getSchemaBuilder()->create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('state')->nullable();

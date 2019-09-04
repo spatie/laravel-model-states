@@ -16,7 +16,7 @@ trait HasStates
 
         foreach ($stateFields as $field => $stateType) {
             static::retrieved(function (Model $model) use ($field) {
-                $stateClass = $model->getAttribute($field);
+                $stateClass = State::resolveStateClass($model->getAttribute($field));
 
                 $model->{$field} = new $stateClass($model);
             });
@@ -24,18 +24,14 @@ trait HasStates
             static::creating(function (Model $model) use ($field) {
                 $model->setAttribute(
                     $field,
-                    $model->{$field}
-                        ? get_class($model->{$field})
-                        : null
+                    State::resolveStateName($model->{$field})
                 );
             });
 
             static::saving(function (Model $model) use ($field) {
                 $model->setAttribute(
                     $field,
-                    $model->{$field}
-                        ? get_class($model->{$field})
-                        : null
+                    State::resolveStateName($model->{$field})
                 );
             });
         }
