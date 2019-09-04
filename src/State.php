@@ -4,7 +4,7 @@ namespace Spatie\State;
 
 abstract class State
 {
-    /** @var array */
+    /** @var static[] */
     public static $map = [];
 
     public function __toString(): string
