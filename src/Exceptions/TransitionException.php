@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\State\Exceptions;
 
 use Exception;
 

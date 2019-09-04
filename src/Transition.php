@@ -2,6 +2,8 @@
 
 namespace Spatie\State;
 
+use Spatie\State\Exceptions\TransitionException;
+
 abstract class Transition
 {
     protected function ensureInitialState($stateful, string $newState): void
