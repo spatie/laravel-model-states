@@ -2,7 +2,6 @@
 
 namespace Spatie\State;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\State\Exceptions\InvalidState;
 
 abstract class State
@@ -10,10 +9,7 @@ abstract class State
     /** @var static[] */
     public static $map = [];
 
-    /** @var \Illuminate\Database\Eloquent\Model */
-    protected $model;
-
-    public static function make(string $value, Model $model): State
+    public static function make(string $value, ...$args): State
     {
         $stateClass = isset(static::$map[$value])
             ? static::$map[$value]
@@ -23,12 +19,7 @@ abstract class State
             throw InvalidState::make($value, static::class);
         }
 
-        return new $stateClass($model);
-    }
-
-    public function __construct(Model $model)
-    {
-        $this->model = $model;
+        return new $stateClass(...$args);
     }
 
     public function __toString(): string
