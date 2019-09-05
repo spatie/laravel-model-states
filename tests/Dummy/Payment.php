@@ -23,8 +23,11 @@ class Payment extends Model
 
     public function __construct(array $attributes = [])
     {
-        $this->state = new Created($this);
-
         parent::__construct($attributes);
+
+        $this->state = $this->makeState(
+            $attributes['state'] ?? Created::class,
+            $this
+        );
     }
 }

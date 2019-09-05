@@ -64,4 +64,13 @@ trait HasStates
 
         return self::$stateFields;
     }
+
+    protected function makeState($value, ...$args): ?State
+    {
+        if ($value instanceof State) {
+            return $value;
+        }
+
+        return State::make($value, ...$args);
+    }
 }

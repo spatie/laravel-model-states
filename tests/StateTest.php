@@ -41,6 +41,18 @@ class StateTest extends TestCase
     }
 
     /** @test */
+    public function create_with_state()
+    {
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $payment = $payment->fresh();
+
+        $this->assertInstanceOf(Paid::class, $payment->state);
+    }
+
+    /** @test */
     public function save_with_morph_map()
     {
         Relation::morphMap([
