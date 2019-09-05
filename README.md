@@ -42,7 +42,7 @@ class Payment extends Model
 
 > **Note**: by adding a `@property` docblock, you'll get IDE autocompletion and static analysis support on your state fields.
 
-In this case, this `PaymentState` class is an abstract class. All concrete payment states should extend this base state class. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
+In this case, the `PaymentState` class is an abstract class. All concrete payment states should extend this base state class. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
 
 This is what such a base class might look like:
 
