@@ -15,7 +15,7 @@ composer require spatie/laravel-state
 
 ## Usage
 
-**Note**: make sure you're familiar with the basics of the [state pattern](https://en.wikipedia.org/wiki/State_pattern) before using this package.
+> **Note**: make sure you're familiar with the basics of the [state pattern](https://en.wikipedia.org/wiki/State_pattern) before using this package.
 
 This package adds state support to your Laravel models. First you'll have to use the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
 
