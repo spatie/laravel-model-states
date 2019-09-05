@@ -19,38 +19,36 @@ composer require spatie/laravel-state
 
 This package adds state support to your Laravel models. First you'll have to use the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
 
-State fields are simple properties on your model class, with a `@var` docblock. A field will be registered as a state field when its type extends the `Spatie\State\State` class.
-
-When PHP 7.4 arrives, we'll add support for typed properties as well.
+State fields are defined in the `$states` array on your model class. It requires you to map a field name unto a state class.
 
 Here's an example of a `Payment` class with one state field, simply called `state`.
 
 ```php
+use App\States\PaymentState;
 use Spatie\State\HasStates;
 
+/**
+ * @property \App\States\PaymentState state
+ */
 class Payment extends Model
 {
     use HasStates;
 
-    /** @var \App\States\PaymentState */
-    public $state;
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-
-        // Make sure to set the default state in the contructor
-        $this->state = new Pending($this);
-    }
+    protected $states = [
+        'state' => PaymentState::class,
+    ];
 }
 ```
 
-Say there are be three possible payment states: pending, paid and failed. You'd be best to make one abstract base class for all payment states, and let concrete implementations extend it. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
+> *Note*: by adding a `@property` docblock, you'll get IDE autocompletion and static analysis support on your state fields.
+
+In this case, this `PaymentState` class is an abstract class. All concrete payment states should extend this base state class. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
+
+This is what such a base class might look like:
 
 ```php
 use Spatie\State\State;
 
-// Concrete payment state classes can extend this base state
 abstract class PaymentState extends State
 {
     protected $payment;
@@ -72,6 +70,30 @@ $payment = Payment::create();
 // Color depending on the current state
 echo $payment->state->color();
 ```
+
+### Defaults
+
+If you want a state to have a default value, you can simply hook into the existing Laravel model events.
+
+```php
+// …
+
+class Payment extends Model
+{
+    // …
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::creating(function (Payment $payment) {
+            $payment->state = $payment->state ?? new Created($payment);
+        });
+    }
+}
+```
+
+### State transitions
 
 Next up, you can make transition classes which will take care of state transitions for you. Here's an example of a transition class which will mark the payment as failed with an error message.
 
