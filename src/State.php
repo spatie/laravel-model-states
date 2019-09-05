@@ -44,6 +44,11 @@ abstract class State
         return $stateClass;
     }
 
+    public static function getMorphClass(): string
+    {
+        return static::resolveStateName(static::class);
+    }
+
     public function getValue(): string
     {
         return static::resolveStateName($this);
