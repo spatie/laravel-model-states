@@ -166,4 +166,18 @@ class StateTest extends TestCase
             'state' => 'paid',
         ]);
     }
+
+    /** @test */
+    public function is_one_of()
+    {
+        $payment = new Payment();
+
+        $this->assertTrue($payment->state->isOneOf(
+            Created::class
+        ));
+
+        $this->assertFalse($payment->state->isOneOf(
+            Paid::class
+        ));
+    }
 }

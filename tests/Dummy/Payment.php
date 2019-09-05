@@ -25,12 +25,10 @@ class Payment extends Model
 
     protected $guarded = [];
 
-    protected static function boot()
+    public function __construct(array $attributes = [])
     {
-        parent::boot();
+        parent::__construct($attributes);
 
-        self::creating(function (Payment $payment) {
-            $payment->state = $payment->state ?? new Created($payment);
-        });
+        $this->state = $this->state ?? new Created($this);
     }
 }

@@ -73,7 +73,7 @@ echo $payment->state->color();
 
 ### Defaults
 
-If you want a state to have a default value, you can simply hook into the existing Laravel model events.
+If you want a state to have a default value, you can do so in your model's constructor.
 
 ```php
 // …
@@ -82,13 +82,11 @@ class Payment extends Model
 {
     // …
 
-    protected static function boot()
+    public function __construct(array $attributes = [])
     {
-        parent::boot();
-
-        self::creating(function (Payment $payment) {
-            $payment->state = $payment->state ?? new Created($payment);
-        });
+        parent::__construct($attributes);
+        
+        $this->state = $this->state ?? new Created($this);
     }
 }
 ```

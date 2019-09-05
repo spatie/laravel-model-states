@@ -51,6 +51,11 @@ abstract class State
         return static::resolveStateName(static::class);
     }
 
+    public function isOneOf(string ...$stateClasses): bool
+    {
+        return in_array(static::class, $stateClasses);
+    }
+
     public function getValue(): string
     {
         return static::resolveStateName($this);
