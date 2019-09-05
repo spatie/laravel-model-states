@@ -16,6 +16,8 @@ class PendingToPaid extends Transition
         $payment->state = new Paid($payment);
         $payment->paid_at = time();
 
+        $payment->save();
+
         return $payment;
     }
 }

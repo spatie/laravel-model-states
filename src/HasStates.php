@@ -3,74 +3,61 @@
 namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Model;
-use ReflectionClass;
-use ReflectionProperty;
+use TypeError;
 
 trait HasStates
 {
-    private static $stateFields = null;
-
     public static function bootHasStates(): void
     {
-        $stateFields = self::resolveStateFields();
+        $serialiseState = function (string $field, string $expectedStateClass) {
+            return function (Model $model) use ($field, $expectedStateClass) {
+                $value = $model->getAttribute($field);
 
-        foreach ($stateFields as $field => $stateType) {
-            static::retrieved(function (Model $model) use ($field) {
+                if ($value === null) {
+                    return;
+                }
+
+                $stateClass = State::resolveStateClass($value);
+
+                if (! is_subclass_of($stateClass, State::class)) {
+                    throw new TypeError("State field `{$field}` values must extend from `" . State::class . "`, instead got `{$stateClass}`");
+                }
+
+                if (! is_subclass_of($stateClass, $expectedStateClass)) {
+                    throw new TypeError("State field `{$field}` expects state to be of type `{$expectedStateClass}`, instead got `{$stateClass}`");
+                }
+
+                $model->setAttribute(
+                    $field,
+                    State::resolveStateName($value)
+                );
+            };
+        };
+
+        $unserialiseState = function (string $field) {
+            return function (Model $model) use ($field) {
                 $stateClass = State::resolveStateClass($model->getAttribute($field));
 
-                $model->{$field} = new $stateClass($model);
-            });
-
-            static::creating(function (Model $model) use ($field) {
                 $model->setAttribute(
                     $field,
-                    State::resolveStateName($model->{$field})
+                    new $stateClass($model)
                 );
-            });
+            };
+        };
 
-            static::saving(function (Model $model) use ($field) {
-                $model->setAttribute(
-                    $field,
-                    State::resolveStateName($model->{$field})
-                );
-            });
+        foreach (self::resolveStateFields() as $field => $expectedStateClass) {
+            static::retrieved($unserialiseState($field));
+            static::created($unserialiseState($field));
+            static::saved($unserialiseState($field));
+
+            static::updating($serialiseState($field, $expectedStateClass));
+            static::creating($serialiseState($field, $expectedStateClass));
+            static::saving($serialiseState($field, $expectedStateClass));
         }
     }
 
     private static function resolveStateFields(): array
     {
-        if (self::$stateFields !== null) {
-            return self::$stateFields;
-        }
-
-        $reflection = new ReflectionClass(static::class);
-
-        self::$stateFields = collect($reflection->getProperties())
-            ->mapWithKeys(function (ReflectionProperty $property) {
-                $docComment = $property->getDocComment();
-
-                preg_match('/@var ([\w\\\\]+)/', $docComment, $matches);
-
-                $stateType = $matches[1] ?? null;
-
-                if (! is_subclass_of($stateType, State::class)) {
-                    return [];
-                }
-
-                return [$property->getName() => $stateType];
-            })
-            ->filter()
-            ->toArray();
-
-        return self::$stateFields;
-    }
-
-    protected function makeState($value, ...$args): ?State
-    {
-        if ($value instanceof State) {
-            return $value;
-        }
-
-        return State::make($value, ...$args);
+        return (new static)->states ?? [];
     }
 }

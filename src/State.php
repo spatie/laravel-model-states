@@ -41,7 +41,9 @@ abstract class State
             return $alias;
         }
 
-        return $stateClass;
+        return is_string($stateClass)
+            ? $stateClass
+            : get_class($stateClass);
     }
 
     public static function getMorphClass(): string

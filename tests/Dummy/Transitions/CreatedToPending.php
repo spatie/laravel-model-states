@@ -15,6 +15,8 @@ class CreatedToPending extends Transition
 
         $payment->state = new Pending($payment);
 
+        $payment->save();
+
         return $payment;
     }
 }

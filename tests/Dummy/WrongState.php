@@ -2,7 +2,9 @@
 
 namespace Spatie\State\Tests\Dummy;
 
-class WrongState
+use Spatie\State\State;
+
+class WrongState extends State
 {
 
 }

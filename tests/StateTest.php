@@ -8,6 +8,8 @@ use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
+use Spatie\State\Tests\Dummy\WrongState;
+use TypeError;
 
 class StateTest extends TestCase
 {
@@ -17,13 +19,35 @@ class StateTest extends TestCase
         $payment = Payment::create();
 
         $this->assertInstanceOf(Created::class, $payment->state);
-        $this->assertTrue(Created::class === $payment->attributesToArray()['state']);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => Created::class,
+        ]);
 
         $payment->state = new Pending($payment);
 
         $payment->save();
 
-        $this->assertInstanceOf(Pending::class, $payment->state);
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => Pending::class,
+        ]);
+    }
+
+    /** @test */
+    public function create_with_state()
+    {
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => Paid::class,
+        ]);
+
+        $this->assertInstanceOf(Paid::class, $payment->state);
     }
 
     /** @test */
@@ -41,31 +65,29 @@ class StateTest extends TestCase
     }
 
     /** @test */
-    public function create_with_state()
+    public function only_states_of_the_correct_type_are_allowed_via_create()
     {
-        $payment = Payment::create([
-            'state' => Paid::class,
+        $this->expectException(TypeError::class);
+
+        Payment::create([
+            'state' => new WrongState()
         ]);
-
-        $payment = $payment->fresh();
-
-        $this->assertInstanceOf(Paid::class, $payment->state);
     }
 
     /** @test */
-    public function save_with_morph_map()
+    public function only_states_of_the_correct_type_are_allowed_via_setter()
     {
-        Relation::morphMap([
-            'created' => Created::class,
-        ]);
-
         $payment = Payment::create();
 
-        $this->assertEquals('created', $payment->attributesToArray()['state']);
+        $this->expectException(TypeError::class);
+
+        $payment->state = new WrongState();
+
+        $payment->save();
     }
 
     /** @test */
-    public function load_with_morph_map()
+    public function state_from_concrete_class()
     {
         $payment = Payment::create();
 
@@ -73,8 +95,75 @@ class StateTest extends TestCase
 
         $payment->save();
 
-        $payment = Payment::find($payment->id);
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => Paid::class,
+        ]);
+    }
 
-        $this->assertInstanceOf(Paid::class, $payment->state);
+    /** @test */
+    public function state_from_class_name()
+    {
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => Paid::class,
+        ]);
+    }
+
+    /** @test */
+    public function state_with_morphed_class_name()
+    {
+        Relation::morphMap([
+            'paid' => Paid::class,
+        ]);
+
+        $payment = Payment::create([
+            'state' => 'paid',
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => 'paid',
+        ]);
+    }
+
+    /** @test */
+    public function state_with_morphed_class_name_from_class_name()
+    {
+        Relation::morphMap([
+            'paid' => Paid::class,
+        ]);
+
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => 'paid',
+        ]);
+    }
+
+    /** @test */
+    public function state_with_morphed_class_name_from_concrete_class()
+    {
+        Relation::morphMap([
+            'paid' => Paid::class,
+        ]);
+
+        $payment = new Payment();
+
+        $payment->state = new Paid($payment);
+
+        $payment->save();
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => 'paid',
+        ]);
     }
 }
