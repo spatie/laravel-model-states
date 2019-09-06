@@ -129,6 +129,8 @@ abstract class PaymentState extends State
 }
 ```
 
+Note that you only need to provide a manual mapping, if the concrete state classes don't live within the same directory as their abstract state class.
+
 ### State transitions
 
 Next up, you can make transition classes which will take care of state transitions for you. Here's an example of a transition class which will mark the payment as failed with an error message.
