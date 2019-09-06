@@ -9,23 +9,31 @@ use Spatie\State\Transition;
 
 class PendingToFailed extends Transition
 {
+    /** @var \Spatie\State\Tests\Dummy\Payment */
+    private $payment;
+
+    /** @var string */
     private $message;
 
-    public function __construct(string $message)
+    public function __construct(Payment $payment, string $message)
     {
+        $this->payment = $payment;
         $this->message = $message;
     }
 
-    public function __invoke(Payment $payment): Payment
+    public function canTransition(): bool
     {
-        $this->ensureInitialState($payment, Pending::class);
+        return $this->payment->state->isOneOf(Pending::class);
+    }
 
-        $payment->state = new Failed($payment);
-        $payment->failed_at = time();
-        $payment->error_message = $this->message;
+    public function handle(): Payment
+    {
+        $this->payment->state = new Failed($this->payment);
+        $this->payment->failed_at = now();
+        $this->payment->error_message = $this->message;
 
-        $payment->save();
+        $this->payment->save();
 
-        return $payment;
+        return $this->payment;
     }
 }

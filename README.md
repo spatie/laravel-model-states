@@ -144,43 +144,93 @@ Note that you only need to provide a manual mapping, if the concrete state class
 
 ### State transitions
 
-Next up, you can make transition classes which will take care of state transitions for you. Here's an example of a transition class which will mark the payment as failed with an error message.
+Transitions offer a structured way of transitioning the state of a model from one to another.
+
+Imagine transitioning a payment's state from pending to failed, which will also save an error message to the database.
+Here's what such a basic transition class might look like.
 
 ```php
 use Spatie\State\Transition;
 
 class PendingToFailed extends Transition
 {
+    private $payment;
     private $message;
 
-    public function __construct(string $message)
+    public function __construct(Payment $payment, string $message)
     {
+        $this->payment = $payment;
         $this->message = $message;
     }
 
-    public function __invoke(Payment $payment): Payment
+    public function handle(): Payment
     {
-        // Only payments which state currently is pending can be handled by this transition
-        $this->ensureInitialState($payment, Pending::class);
+        $this->payment->state = new Failed($this->payment);
+        $this->payment->failed_at = now();
+        $this->payment->error_message = $this->message;
 
-        $payment->state = new Failed();
-        $payment->failed_at = time();
-        $payment->error_message = $this->message;
+        $this->payment->save();
 
-        $payment->save();
-
-        return $payment;
+        return $this->payment;
     }
 }
 ```
 
-This transition is used like so:
+And this is how it would be used:
 
 ```php
-$pendingToFailed = new PendingToFailed('Error message from payment provider');
-
-$payment = $pendingToFailed($payment);
+$payment->state->transition(PendingToFailed::class, 'error message');
 ```
+
+> **Note**: the `State::transition` method will take as much additional arguments as you'd like, 
+> these arguments will be passed to the transition's constructor. 
+> The first argument in the transition's constructor will always be the model that the transition is performed on. 
+
+If you want to be more explicit about configuring your transition, you can also use it like so:
+
+```php
+$payment->state->transition(new CreatedToFailed($payment, 'error message'));
+```
+
+### Ensuring valid transitions
+
+Our above example is still flawed, as it's possible to perform this transition whatever the current state of the payment.
+
+If you want transitions to only work with specific states, you may implement the `canTransition()` method.
+
+```php
+class CreatedToFailed extends Transition
+{
+    // …
+
+    public function canTransition(): bool
+    {
+        return $this->payment->state->is(Created::class);
+    
+        // return $this->payment->state->isOneOf(Created::class, Pending::class);
+    }
+}
+```
+
+If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\CannotPerformTransition` exception will be thrown.
+
+### Dependency injection in handle
+
+Just like Laravel jobs, you're able to inject dependencies automatically in the `handle()` method of every transition.
+
+```php
+class TransitionWithDependency extends Transition
+{
+    // …
+
+    public function handle(Dependency $dependency)
+    {
+        // $dependency is resolved from the container
+    }
+}
+```
+
+> **Note**: be careful not to have too many side effects within a transition. If you're injecting many dependencies, it's probably a sign that you should refactor your code and use an event-based system to handle complex side effects.
 
 ### Testing
 

@@ -8,20 +8,28 @@ use Spatie\State\Transition;
 
 class CreatedToFailed extends Transition
 {
+    /** @var \Spatie\State\Tests\Dummy\Payment */
+    private $payment;
+
+    /** @var string */
     private $message;
 
-    public function __construct(string $message)
+    public function __construct(Payment $payment, string $message)
     {
+        $this->payment = $payment;
         $this->message = $message;
     }
 
-    public function __invoke(Payment $payment)
+    public function canTransition(): bool
     {
-        $this->ensureInitialState($payment, Created::class);
+        return $this->payment->state->equals(Created::class);
+    }
 
-        $payment = (new CreatedToPending())($payment);
+    public function handle()
+    {
+        $payment = (new CreatedToPending($this->payment))->handle();
 
-        $payment = (new PendingToFailed($this->message))($payment);
+        $payment = (new PendingToFailed($payment, $this->message))->handle();
 
         return $payment;
     }

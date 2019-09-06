@@ -12,6 +12,10 @@ use Spatie\State\Tests\Dummy\States\PaymentState;
  * @method static self find(int $id)
  * @method static self create(array $data = [])
  * @property int id
+ * @property \Carbon\Carbon failed_at
+ * @property \Carbon\Carbon paid_at
+ * @property \Carbon\Carbon pending_at
+ * @property string error_message
  *
  * @property \Spatie\State\Tests\Dummy\States\PaymentState state
  */

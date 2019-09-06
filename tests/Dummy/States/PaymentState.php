@@ -7,7 +7,8 @@ use Spatie\State\Tests\Dummy\Payment;
 
 abstract class PaymentState extends State
 {
-    protected $payment;
+    /** @var \Spatie\State\Tests\Dummy\Payment */
+    protected $model;
 
     public static $states =[
         Canceled::class,
@@ -20,7 +21,7 @@ abstract class PaymentState extends State
 
     public function __construct(Payment $payment)
     {
-        $this->payment = $payment;
+        parent::__construct($payment);
     }
 
     abstract public function color(): string;

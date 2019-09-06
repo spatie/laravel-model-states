@@ -33,7 +33,7 @@ abstract class TestCase extends Orchestra
             $table->datetime('paid_at')->nullable();
             $table->datetime('cancelled_at')->nullable();
             $table->datetime('failed_at')->nullable();
-            $table->datetime('description')->nullable();
+            $table->string('error_message')->nullable();
             $table->timestamps();
         });
     }

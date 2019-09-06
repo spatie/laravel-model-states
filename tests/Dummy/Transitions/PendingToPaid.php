@@ -9,15 +9,26 @@ use Spatie\State\Transition;
 
 class PendingToPaid extends Transition
 {
-    public function __invoke(Payment $payment): Payment
+    /** @var \Spatie\State\Tests\Dummy\Payment */
+    private $payment;
+
+    public function __construct(Payment $payment)
     {
-        $this->ensureInitialState($payment, Pending::class);
+        $this->payment = $payment;
+    }
 
-        $payment->state = new Paid($payment);
-        $payment->paid_at = time();
+    public function canTransition(): bool
+    {
+        return $this->payment->state->equals(Pending::class);
+    }
 
-        $payment->save();
+    public function handle(): Payment
+    {
+        $this->payment->state = new Paid($this->payment);
+        $this->payment->paid_at = time();
 
-        return $payment;
+        $this->payment->save();
+
+        return $this->payment;
     }
 }

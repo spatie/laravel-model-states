@@ -2,7 +2,9 @@
 
 namespace Spatie\State;
 
+use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
+use Spatie\State\Exceptions\CannotPerformTransition;
 use Spatie\State\Exceptions\InvalidState;
 
 abstract class State
@@ -16,6 +18,14 @@ abstract class State
      */
     private static $generatedMapping = [];
 
+    /** @var \Illuminate\Database\Eloquent\Model */
+    protected $model;
+
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+    }
+
     /**
      * Create a state object based on a value (classname or name),
      * and optionally provide its constructor arguments.
@@ -25,7 +35,7 @@ abstract class State
      *
      * @return \Spatie\State\State
      */
-    public static function find(string $name, ...$args): State
+    public static function find(string $name, Model $model): State
     {
         $stateClass = static::resolveStateClass($name);
 
@@ -33,7 +43,7 @@ abstract class State
             throw InvalidState::make($name, static::class);
         }
 
-        return new $stateClass(...$args);
+        return new $stateClass($model);
     }
 
     /**
@@ -59,23 +69,27 @@ abstract class State
     /**
      * Resolve the state class based on a value, for example a stored value in the database.
      *
-     * @param string $name
+     * @param string|\Spatie\State\State $state
      *
      * @return string
      */
-    public static function resolveStateClass(string $name): string
+    public static function resolveStateClass($state): string
     {
+        if ($state instanceof State) {
+            return get_class($state);
+        }
+
         foreach (static::resolveStateMapping() as $stateClass) {
             if (! class_exists($stateClass)) {
                 continue;
             }
 
-            if (($stateClass::$name ?? null) === $name) {
+            if (($stateClass::$name ?? null) === $state) {
                 return $stateClass;
             }
         }
 
-        return $name;
+        return $state;
     }
 
     /**
@@ -133,20 +147,49 @@ abstract class State
      * Determine if the current state equals another.
      * This can be either a classname or a name.
      *
-     * @param \Spatie\State\State $stateName
+     * @param string|\Spatie\State\State $state
      *
      * @return bool
      */
-    public function equals(string $stateName): bool
+    public function equals($state): bool
     {
-        $className = self::resolveStateClass($stateName);
+        return self::resolveStateClass($state)
+            === self::resolveStateClass($this);
+    }
 
-        return $className === get_class($this);
+    /**
+     * Determine if the current state equals another.
+     * This can be either a classname or a name.
+     *
+     * @param string|\Spatie\State\State $state
+     *
+     * @return bool
+     */
+    public function is($state): bool
+    {
+        return $this->equals($state);
     }
 
     public function __toString(): string
     {
         return static::getMorphClass();
+    }
+
+    public function transition($transitionClass, ...$args): Model
+    {
+        if (is_string($transitionClass)) {
+            $transition = new $transitionClass($this->model, ...$args);
+        } else {
+            $transition = $transitionClass;
+        }
+
+        if (method_exists($transition, 'canTransition')) {
+            if (! $transition->canTransition()) {
+                throw CannotPerformTransition::make($this->model, $transition);
+            };
+        }
+
+        return app()->call([$transition, 'handle']);
     }
 
     /**
