@@ -19,7 +19,7 @@ composer require spatie/laravel-state
 
 This package adds state support to your Laravel models. 
 
-Start of by using the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
+Start off by using the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
 These are defined in the `$states` array on your model class. It requires you to map a field name unto a state class.
 Here's an example of a `Payment` class with one state field, simply called `state`.
 
