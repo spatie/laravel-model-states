@@ -237,6 +237,8 @@ class TransitionWithDependency extends Transition
 This package provides a validation rule to validate incoming request data. It can be used like so:
 
 ```php
+use Spatie\State\Validation\ValidStateRule;
+
 request()->validate([
     'state' => new ValidStateRule(PaymentState::class),
 ]);
