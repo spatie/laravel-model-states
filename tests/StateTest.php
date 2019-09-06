@@ -2,10 +2,13 @@
 
 namespace Spatie\State\Tests;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Spatie\State\Tests\Dummy\AutoDetectStates\AbstractState;
+use Spatie\State\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\State\Tests\Dummy\DummyModel;
 use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\Paid;
+use Spatie\State\Tests\Dummy\States\PaidWithoutName;
 use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
 use Spatie\State\Tests\Dummy\WrongState;
@@ -13,6 +16,20 @@ use TypeError;
 
 class StateTest extends TestCase
 {
+    public function state_with_name_is_saved_with_its_class_name()
+    {
+        $payment = Payment::create([
+            'state' => PaidWithoutName::class,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => PaidWithoutName::getMorphClass(),
+        ]);
+
+        $this->assertInstanceOf(PaidWithoutName::class, $payment->state);
+    }
+
     /** @test */
     public function state_is_properly_serialized()
     {
@@ -22,7 +39,7 @@ class StateTest extends TestCase
 
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
-            'state' => Created::class,
+            'state' => Created::getMorphClass(),
         ]);
 
         $payment->state = new Pending($payment);
@@ -31,7 +48,7 @@ class StateTest extends TestCase
 
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
-            'state' => Pending::class,
+            'state' => Pending::getMorphClass(),
         ]);
     }
 
@@ -44,7 +61,7 @@ class StateTest extends TestCase
 
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
-            'state' => Paid::class,
+            'state' => Paid::getMorphClass(),
         ]);
 
         $this->assertInstanceOf(Paid::class, $payment->state);
@@ -97,7 +114,7 @@ class StateTest extends TestCase
 
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
-            'state' => Paid::class,
+            'state' => Paid::getMorphClass(),
         ]);
     }
 
@@ -110,17 +127,13 @@ class StateTest extends TestCase
 
         $this->assertDatabaseHas('payments', [
             'id' => $payment->id,
-            'state' => Paid::class,
+            'state' => Paid::getMorphClass(),
         ]);
     }
 
     /** @test */
     public function state_with_morphed_class_name()
     {
-        Relation::morphMap([
-            'paid' => Paid::class,
-        ]);
-
         $payment = Payment::create([
             'state' => 'paid',
         ]);
@@ -134,10 +147,6 @@ class StateTest extends TestCase
     /** @test */
     public function state_with_morphed_class_name_from_class_name()
     {
-        Relation::morphMap([
-            'paid' => Paid::class,
-        ]);
-
         $payment = Payment::create([
             'state' => Paid::class,
         ]);
@@ -151,10 +160,6 @@ class StateTest extends TestCase
     /** @test */
     public function state_with_morphed_class_name_from_concrete_class()
     {
-        Relation::morphMap([
-            'paid' => Paid::class,
-        ]);
-
         $payment = new Payment();
 
         $payment->state = new Paid($payment);
@@ -176,8 +181,38 @@ class StateTest extends TestCase
             Created::class
         ));
 
+        $this->assertTrue($payment->state->isOneOf(
+            new Created($payment),
+        ));
+
+        $this->assertTrue($payment->state->isOneOf(
+            'created',
+        ));
+
         $this->assertFalse($payment->state->isOneOf(
             Paid::class
         ));
+    }
+
+    /** @test */
+    public function equals()
+    {
+        $createdA = new Created(new Payment());
+        $createdB = new Created(new Payment());
+        $paid = new Paid(new Payment());
+
+        $this->assertTrue($createdA->equals($createdB));
+        $this->assertTrue($createdA->equals(Created::class));
+        $this->assertTrue($createdA->equals('created'));
+
+        $this->assertFalse($createdA->equals($paid));
+    }
+
+    /** @test */
+    public function resolve_state_without_explicit_mapping()
+    {
+        $state = AbstractState::find('a');
+
+        $this->assertInstanceOf(StateA::class, $state);
     }
 }

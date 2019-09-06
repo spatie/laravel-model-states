@@ -27,8 +27,6 @@ abstract class TestCase extends Orchestra
 
     protected function setUpDatabase()
     {
-        Relation::$morphMap = [];
-
         $this->app->get('db')->connection()->getSchemaBuilder()->create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->string('state')->nullable();

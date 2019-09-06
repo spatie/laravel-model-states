@@ -91,6 +91,44 @@ class Payment extends Model
 }
 ```
 
+### State names
+
+By default, the state's classname will be saved into the database. If you want the state to be saved using another value, you can provide a static `$name` property on your concrete state classes.
+
+```php
+class Paid extends PaymentState
+{
+    public static $name = 'paid';
+
+    // …
+}
+```
+
+#### Resolving states from the database
+
+If you're using custom names, you'll need to make sure they can be resolved back from the database. There's two ways to do this:
+
+- Manually provide the available states on an abstract state class
+- Keep the abstract state class and its concrete implementations together in the same directory, which allows them to be resolved automatically.
+
+Here's what the manual mapping looks like:
+
+```php
+abstract class PaymentState extends State
+{
+    public static $states =[
+        Canceled::class,
+        Created::class,
+        Failed::class,
+        Paid::class,
+        Pending::class,
+        PaidWithoutName::class,
+    ];
+    
+    // …
+}
+```
+
 ### State transitions
 
 Next up, you can make transition classes which will take care of state transitions for you. Here's an example of a transition class which will mark the payment as failed with an error message.

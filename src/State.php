@@ -2,14 +2,32 @@
 
 namespace Spatie\State;
 
-use Illuminate\Database\Eloquent\Relations\Relation;
+use ReflectionClass;
 use Spatie\State\Exceptions\InvalidState;
 
 abstract class State
 {
-    public static function make(string $name, ...$args): State
+    /**
+     * Static cache for generated state maps.
+     *
+     * @var array
+     *
+     * @see State::resolveStateMapping
+     */
+    private static $generatedMapping = [];
+
+    /**
+     * Create a state object based on a value (classname or name),
+     * and optionally provide its constructor arguments.
+     *
+     * @param string $name
+     * @param mixed ...$args
+     *
+     * @return \Spatie\State\State
+     */
+    public static function find(string $name, ...$args): State
     {
-        $stateClass = self::resolveStateClass($name);
+        $stateClass = static::resolveStateClass($name);
 
         if (! is_subclass_of($stateClass, static::class)) {
             throw InvalidState::make($name, static::class);
@@ -18,11 +36,51 @@ abstract class State
         return new $stateClass(...$args);
     }
 
-    public static function resolveStateClass(string $name): string
+    /**
+     * The value that will be saved in the database.
+     *
+     * @return string
+     */
+    public static function getMorphClass(): string
     {
-        return Relation::getMorphedModel($name) ?? $name;
+        return static::resolveStateName(static::class);
     }
 
+    /**
+     * Resolve the state class based on a value, for example a stored value in the database.
+     *
+     * @param string $name
+     *
+     * @return string
+     */
+    public static function resolveStateClass(string $name): string
+    {
+        foreach (static::resolveStateMapping() as $stateClass) {
+            if (! class_exists($stateClass)) {
+                continue;
+            }
+
+            if (($stateClass::$name ?? null) === $name) {
+                return $stateClass;
+            }
+        }
+
+        return $name;
+    }
+
+    /**
+     * Resolve the name of the state, which is the value that will be saved in the database.
+     *
+     * Possible names are:
+     *
+     *    - The classname, is no explicit name is provided
+     *    - A name provided in the state class as a public static property:
+     *      `public static $name = 'dummy'`
+     *
+     * @param $state
+     *
+     * @return string|null
+     */
     public static function resolveStateName($state): ?string
     {
         if ($state === null) {
@@ -32,37 +90,102 @@ abstract class State
         if ($state instanceof State) {
             $stateClass = get_class($state);
         } else {
-            $stateClass = $state;
+            $stateClass = static::resolveStateClass($state);
         }
 
-        $alias = array_search($stateClass, Relation::$morphMap);
-
-        if ($alias) {
-            return $alias;
+        if (class_exists($stateClass) && isset($stateClass::$name)) {
+            return $stateClass::$name;
         }
 
-        return is_string($stateClass)
-            ? $stateClass
-            : get_class($stateClass);
+        return $stateClass;
     }
 
-    public static function getMorphClass(): string
+    /**
+     * Determine if the current state is one of an arbitrary number of other states.
+     * This can be either a classname or a name.
+     *
+     * @param string ...$stateClasses
+     *
+     * @return bool
+     */
+    public function isOneOf(string ...$statesNames): bool
     {
-        return static::resolveStateName(static::class);
+        foreach ($statesNames as $statesName) {
+            if ($this->equals($statesName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public function isOneOf(string ...$stateClasses): bool
+    /**
+     * Determine if the current state equals another.
+     * This can be either a classname or a name.
+     *
+     * @param \Spatie\State\State $stateName
+     *
+     * @return bool
+     */
+    public function equals(string $stateName): bool
     {
-        return in_array(static::class, $stateClasses);
-    }
+        $className = self::resolveStateClass($stateName);
 
-    public function getValue(): string
-    {
-        return static::resolveStateName($this);
+        return $className === get_class($this);
     }
 
     public function __toString(): string
     {
-        return $this->getValue();
+        return static::getMorphClass();
+    }
+
+    /**
+     * This method is used to find all available implementations of a given abstract state class.
+     * Finding all implementations can be done in two ways:
+     *
+     *    - The developer can define his own mapping directly in abstract state classes
+     *      via the `protected $states = []` property
+     *    - If no specific mapping was provided, the same directory where the abstract state class lives
+     *      is scanned, and all concrete state classes extending the abstract state class will be provided.
+     *
+     * @return array
+     */
+    private static function resolveStateMapping(): array
+    {
+        if (isset(static::$states)) {
+            return static::$states;
+        }
+
+        if (isset(self::$generatedMapping[static::class])) {
+            return self::$generatedMapping[static::class];
+        }
+
+        $reflection = new ReflectionClass(static::class);
+
+        ['dirname' => $directory] = pathinfo($reflection->getFileName());
+
+        $files = scandir($directory);
+
+        unset($files[0], $files[1]);
+
+        $namespace = $reflection->getNamespaceName();
+
+        $resolvedStates = [];
+
+        foreach ($files as $file) {
+            ['filename' => $className] = pathinfo($file);
+
+            $stateClass = $namespace . '\\' . $className;
+
+            if (! is_subclass_of($stateClass, static::class)) {
+                continue;
+            }
+
+            $resolvedStates[] = $stateClass;
+        }
+
+        self::$generatedMapping[static::class] = $resolvedStates;
+
+        return self::$generatedMapping[static::class];
     }
 }

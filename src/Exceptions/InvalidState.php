@@ -10,6 +10,6 @@ class InvalidState extends InvalidArgumentException
         string $value,
         string $abstractStateClass
     ): InvalidState {
-        return new self("No valid state class found for value {$value} extending {$abstractStateClass}, did you register {$abstractStateClass}::\$map?");
+        return new self("No valid state class found for value {$value} extending {$abstractStateClass}, did you forget to provide a mapping in {$abstractStateClass}::\$states?");
     }
 }

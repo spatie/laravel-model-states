@@ -9,6 +9,7 @@ trait HasStates
 {
     public static function bootHasStates(): void
     {
+        /** @var \Spatie\State\State $expectedStateClass */
         $serialiseState = function (string $field, string $expectedStateClass) {
             return function (Model $model) use ($field, $expectedStateClass) {
                 $value = $model->getAttribute($field);
@@ -17,10 +18,10 @@ trait HasStates
                     return;
                 }
 
-                $stateClass = State::resolveStateClass($value);
+                $stateClass = $expectedStateClass::resolveStateClass($value);
 
                 if (! is_subclass_of($stateClass, State::class)) {
-                    throw new TypeError("State field `{$field}` values must extend from `" . State::class . "`, instead got `{$stateClass}`");
+                    throw new TypeError("State field `{$field}` value must extend from `" . State::class . "`, instead got `{$stateClass}`");
                 }
 
                 if (! is_subclass_of($stateClass, $expectedStateClass)) {
@@ -34,9 +35,10 @@ trait HasStates
             };
         };
 
-        $unserialiseState = function (string $field) {
-            return function (Model $model) use ($field) {
-                $stateClass = State::resolveStateClass($model->getAttribute($field));
+        /** @var \Spatie\State\State $expectedStateClass */
+        $unserialiseState = function (string $field, string $expectedStateClass) {
+            return function (Model $model) use ($field, $expectedStateClass) {
+                $stateClass = $expectedStateClass::resolveStateClass($model->getAttribute($field));
 
                 $model->setAttribute(
                     $field,
@@ -46,9 +48,9 @@ trait HasStates
         };
 
         foreach (self::resolveStateFields() as $field => $expectedStateClass) {
-            static::retrieved($unserialiseState($field));
-            static::created($unserialiseState($field));
-            static::saved($unserialiseState($field));
+            static::retrieved($unserialiseState($field, $expectedStateClass));
+            static::created($unserialiseState($field, $expectedStateClass));
+            static::saved($unserialiseState($field, $expectedStateClass));
 
             static::updating($serialiseState($field, $expectedStateClass));
             static::creating($serialiseState($field, $expectedStateClass));
