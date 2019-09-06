@@ -192,7 +192,7 @@ If you want to be more explicit about configuring your transition, you can also 
 $payment->state->transition(new CreatedToFailed($payment, 'error message'));
 ```
 
-### Ensuring valid transitions
+#### Ensuring valid transitions
 
 Our above example is still flawed, as it's possible to perform this transition whatever the current state of the payment.
 
@@ -214,7 +214,7 @@ class CreatedToFailed extends Transition
 
 If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\CannotPerformTransition` exception will be thrown.
 
-### Dependency injection in handle
+#### Injecting dependencies in transitions
 
 Just like Laravel jobs, you're able to inject dependencies automatically in the `handle()` method of every transition.
 
@@ -231,6 +231,18 @@ class TransitionWithDependency extends Transition
 ```
 
 > **Note**: be careful not to have too many side effects within a transition. If you're injecting many dependencies, it's probably a sign that you should refactor your code and use an event-based system to handle complex side effects.
+
+### State validation
+
+This package provides a validation rule to validate incoming request data. It can be used like so:
+
+```php
+request()->validate([
+    'state' => new ValidStateRule(PaymentState::class),
+]);
+```
+
+Only valid state values of `PaymentState` implementations will be allowed.
 
 ### Testing
 
