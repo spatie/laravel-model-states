@@ -51,14 +51,21 @@ use Spatie\State\State;
 
 abstract class PaymentState extends State
 {
-    protected $payment;
-
-    public function __construct(Payment $payment)
-    {
-        $this->payment = $payment;
-    }
-
     abstract public function color(): string;
+}
+```
+
+And this is a possible concrete implementation:
+
+```php
+class Paid extends PaymentState
+{
+    public static $name = 'paid';
+
+    public function color(): string
+    {
+        return 'green';
+    }
 }
 ```
 
@@ -66,6 +73,10 @@ Now you can use the `state` field on your model directly as a `PaymentState` obj
 
 ```php
 $payment = Payment::create();
+
+$payment->state = new Paid();
+
+$payment->save();
 
 // Color depending on the current state
 echo $payment->state->color();
@@ -86,7 +97,7 @@ class Payment extends Model
     {
         parent::__construct($attributes);
         
-        $this->state = $this->state ?? new Created($this);
+        $this->state = $this->state ?? new Created();
     }
 }
 ```
