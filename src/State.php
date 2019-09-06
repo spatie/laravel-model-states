@@ -47,6 +47,16 @@ abstract class State
     }
 
     /**
+     * The value that will be saved in the database.
+     *
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return static::getMorphClass();
+    }
+
+    /**
      * Resolve the state class based on a value, for example a stored value in the database.
      *
      * @param string $name
