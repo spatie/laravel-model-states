@@ -163,7 +163,7 @@ class PendingToFailed extends Transition
         // Only payments which state currently is pending can be handled by this transition
         $this->ensureInitialState($payment, Pending::class);
 
-        $payment->state = new Failed($payment);
+        $payment->state = new Failed();
         $payment->failed_at = time();
         $payment->error_message = $this->message;
 
