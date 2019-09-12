@@ -234,7 +234,7 @@ class TransitionWithDependency extends Transition
 
 ### Querybuilder support
 
-Every model using the `HasStates` trait will have a `whereState($field, $states)` and a `whereNotState($field, $states)` scope available. It's used like so:
+Every model using the `HasStates` trait will have a `whereState($field, $states)` and a `whereNotState($field, $states)` scope available. They are used like so:
 
 ```php
 $payments = Payment::whereState('state', Paid::class);
