@@ -232,6 +232,16 @@ class TransitionWithDependency extends Transition
 
 > **Note**: be careful not to have too many side effects within a transition. If you're injecting many dependencies, it's probably a sign that you should refactor your code and use an event-based system to handle complex side effects.
 
+### Querybuilder support
+
+Every model using the `HasStates` trait will have a `whereState($field, $states)` scope available. It's used like so:
+
+```php
+$payments = Payment::whereState('state', Paid::class);
+
+$payments = Payment::whereState('state', [Pending::class, Paid::class]);
+```
+
 ### State validation
 
 This package provides a validation rule to validate incoming request data. It can be used like so:

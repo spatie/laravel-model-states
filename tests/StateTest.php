@@ -270,6 +270,7 @@ class StateTest extends TestCase
 
         $this->assertEquals(1, Payment::whereState('state', Paid::class)->count());
         $this->assertEquals(1, Payment::whereState('state', Created::class)->count());
+        $this->assertEquals(2, Payment::whereState('state', [Created::class, Paid::class])->count());
 
         $this->assertTrue($paidPayment->is(Payment::whereState('state', Paid::class)->first()));
         $this->assertTrue($createdPayment->is(Payment::whereState('state', Created::class)->first()));

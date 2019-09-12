@@ -69,7 +69,7 @@ trait HasStates
         return (new static)->states ?? [];
     }
 
-    public function scopeWhereState(Builder $builder, string $field, $state): Builder
+    public function scopeWhereState(Builder $builder, string $field, $states): Builder
     {
         /** @var \Spatie\State\State|null $abstractStateClass */
         $abstractStateClass = self::resolveStateFields()[$field] ?? null;
@@ -78,8 +78,10 @@ trait HasStates
             throw UnknownState::make($field, static::class);
         }
 
-        $stateName = $abstractStateClass::resolveStateName($state);
+        $stateNames = collect((array) $states)->map(function ($state) use ($abstractStateClass) {
+            return $abstractStateClass::resolveStateName($state);
+        });
 
-        return $builder->where($field, $stateName);
+        return $builder->whereIn($field, $stateNames);
     }
 }
