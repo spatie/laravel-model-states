@@ -40,6 +40,10 @@ trait HasStates
             return function (Model $model) use ($field, $expectedStateClass) {
                 $stateClass = $expectedStateClass::resolveStateClass($model->getAttribute($field));
 
+                if ($stateClass === null) {
+                    return;
+                }
+
                 $model->setAttribute(
                     $field,
                     new $stateClass($model)
