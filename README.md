@@ -238,7 +238,6 @@ Every model using the `HasStates` trait will have a `whereState($field, $states)
 
 ```php
 $payments = Payment::whereState('state', Paid::class);
-
 $payments = Payment::whereState('state', [Pending::class, Paid::class]);
 
 $payments = Payment::whereNotState('state', Pending::class);
