@@ -36,4 +36,29 @@ class ValidStateRuleTest extends TestCase
             ['state' => $rule]
         )->fails());
     }
+
+    /** @test */
+    public function nullable_validation()
+    {
+        $rule = (new ValidStateRule(PaymentState::class))->nullable();
+
+        $this->assertTrue(! Validator::make(
+            ['state' => null],
+            ['state' => $rule]
+        )->fails());
+
+        $rule = (new ValidStateRule(PaymentState::class))->required();
+
+        $this->assertFalse(! Validator::make(
+            ['state' => null],
+            ['state' => $rule]
+        )->fails());
+
+        $rule = (new ValidStateRule(PaymentState::class));
+
+        $this->assertFalse(! Validator::make(
+            ['state' => null],
+            ['state' => $rule]
+        )->fails());
+    }
 }

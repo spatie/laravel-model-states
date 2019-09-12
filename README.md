@@ -255,6 +255,11 @@ use Spatie\State\Validation\ValidStateRule;
 request()->validate([
     'state' => new ValidStateRule(PaymentState::class),
 ]);
+
+// Allowing null
+request()->validate([
+    'state' => ValidStateRule::make(PaymentState::class)->nullable(),
+]);
 ```
 
 Only valid state values of `PaymentState` implementations will be allowed.
