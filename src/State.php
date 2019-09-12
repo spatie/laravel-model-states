@@ -73,8 +73,12 @@ abstract class State
      *
      * @return string
      */
-    public static function resolveStateClass($state): string
+    public static function resolveStateClass($state): ?string
     {
+        if ($state === null) {
+            return null;
+        }
+
         if ($state instanceof State) {
             return get_class($state);
         }
