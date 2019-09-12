@@ -84,4 +84,20 @@ trait HasStates
 
         return $builder->whereIn($field, $stateNames);
     }
+
+    public function scopeWhereNotState(Builder $builder, string $field, $states): Builder
+    {
+        /** @var \Spatie\State\State|null $abstractStateClass */
+        $abstractStateClass = self::resolveStateFields()[$field] ?? null;
+
+        if (! $abstractStateClass) {
+            throw UnknownState::make($field, static::class);
+        }
+
+        $stateNames = collect((array) $states)->map(function ($state) use ($abstractStateClass) {
+            return $abstractStateClass::resolveStateName($state);
+        });
+
+        return $builder->whereNotIn($field, $stateNames);
+    }
 }
