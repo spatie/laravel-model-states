@@ -3,6 +3,7 @@
 namespace Spatie\State\Tests;
 
 use Spatie\State\Exceptions\CannotPerformTransition;
+use Spatie\State\Exceptions\UnknownState;
 use Spatie\State\Tests\Dummy\AutoDetectStates\AbstractState;
 use Spatie\State\Tests\Dummy\AutoDetectStates\StateA;
 use Spatie\State\Tests\Dummy\Dependency;
@@ -258,5 +259,27 @@ class StateTest extends TestCase
         $state = AbstractState::find('a', new Payment());
 
         $this->assertInstanceOf(StateA::class, $state);
+    }
+
+    /** @test */
+    public function scope_where_state()
+    {
+        $createdPayment = Payment::create();
+
+        $paidPayment = Payment::create(['state' => Paid::class]);
+
+        $this->assertEquals(1, Payment::whereState('state', Paid::class)->count());
+        $this->assertEquals(1, Payment::whereState('state', Created::class)->count());
+
+        $this->assertTrue($paidPayment->is(Payment::whereState('state', Paid::class)->first()));
+        $this->assertTrue($createdPayment->is(Payment::whereState('state', Created::class)->first()));
+    }
+
+    /** @test */
+    public function scope_where_state_with_invalid_field_throws_exception()
+    {
+        $this->expectException(UnknownState::class);
+
+        Payment::whereState('abc', Paid::class);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace Spatie\State;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\State\Exceptions\UnknownState;
 use TypeError;
 
 trait HasStates
@@ -65,5 +67,19 @@ trait HasStates
     private static function resolveStateFields(): array
     {
         return (new static)->states ?? [];
+    }
+
+    public function scopeWhereState(Builder $builder, string $field, $state): Builder
+    {
+        /** @var \Spatie\State\State|null $abstractStateClass */
+        $abstractStateClass = self::resolveStateFields()[$field] ?? null;
+
+        if (! $abstractStateClass) {
+            throw UnknownState::make($field, static::class);
+        }
+
+        $stateName = $abstractStateClass::resolveStateName($state);
+
+        return $builder->where($field, $stateName);
     }
 }
