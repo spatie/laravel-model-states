@@ -2,24 +2,15 @@
 
 namespace Spatie\State\Tests;
 
-use Spatie\State\Exceptions\CannotPerformTransition;
-use Spatie\State\Exceptions\UnknownState;
+use Spatie\State\Exceptions\StateConfigError;
 use Spatie\State\Tests\Dummy\AutoDetectStates\AbstractState;
 use Spatie\State\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\State\Tests\Dummy\Dependency;
-use Spatie\State\Tests\Dummy\DummyModel;
 use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\Failed;
 use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\PaidWithoutName;
 use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToFailed;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
-use Spatie\State\Tests\Dummy\Transitions\PendingToPaid;
-use Spatie\State\Tests\Dummy\Transitions\TransitionWithDependency;
 use Spatie\State\Tests\Dummy\WrongState;
-use TypeError;
 
 class StateTest extends TestCase
 {
@@ -75,64 +66,12 @@ class StateTest extends TestCase
     }
 
     /** @test */
-    public function transitions_can_be_performed()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(CreatedToPending::class);
-
-        $this->assertInstanceOf(Pending::class, $payment->state);
-    }
-
-    /** @test */
-    public function transitions_can_be_performed_with_extra_parameters()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(CreatedToFailed::class, 'error message');
-
-        $this->assertEquals('error message', $payment->error_message);
-        $this->assertTrue($payment->state->is(Failed::class));
-    }
-
-    /** @test */
-    public function transitions_objects_can_also_be_performed()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(new CreatedToFailed($payment, 'error message'));
-
-        $this->assertEquals('error message', $payment->error_message);
-        $this->assertTrue($payment->state->is(Failed::class));
-    }
-
-    /** @test */
-    public function transitions_with_dependencies_in_handle()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(TransitionWithDependency::class);
-
-        $this->assertInstanceOf(Dependency::class, $payment->dependency);
-    }
-
-    /** @test */
-    public function invalid_transitions_cannot_be_performed()
-    {
-        $payment = Payment::create();
-
-        $this->expectException(CannotPerformTransition::class);
-
-        $payment->state->transition(PendingToPaid::class);
-    }
-
-    /** @test */
     public function only_states_of_the_correct_type_are_allowed_via_create()
     {
-        $this->expectException(TypeError::class);
+        $this->expectException(StateConfigError::class);
 
         Payment::create([
-            'state' => new WrongState()
+            'state' => WrongState::class,
         ]);
     }
 
@@ -141,9 +80,9 @@ class StateTest extends TestCase
     {
         $payment = Payment::create();
 
-        $this->expectException(TypeError::class);
+        $this->expectException(StateConfigError::class);
 
-        $payment->state = new WrongState();
+        $payment->state = new WrongState($payment);
 
         $payment->save();
     }
@@ -259,43 +198,5 @@ class StateTest extends TestCase
         $state = AbstractState::find('a', new Payment());
 
         $this->assertInstanceOf(StateA::class, $state);
-    }
-
-    /** @test */
-    public function scope_where_state()
-    {
-        $createdPayment = Payment::create();
-
-        $paidPayment = Payment::create(['state' => Paid::class]);
-
-        $this->assertEquals(1, Payment::whereState('state', Paid::class)->count());
-        $this->assertEquals(1, Payment::whereState('state', Created::class)->count());
-        $this->assertEquals(2, Payment::whereState('state', [Created::class, Paid::class])->count());
-
-        $this->assertTrue($paidPayment->is(Payment::whereState('state', Paid::class)->first()));
-        $this->assertTrue($createdPayment->is(Payment::whereState('state', Created::class)->first()));
-    }
-
-    /** @test */
-    public function scope_where_not_state()
-    {
-        $createdPayment = Payment::create();
-
-        $paidPayment = Payment::create(['state' => Paid::class]);
-
-        $this->assertEquals(1, Payment::whereNotState('state', Paid::class)->count());
-        $this->assertEquals(1, Payment::whereNotState('state', Created::class)->count());
-        $this->assertEquals(0, Payment::whereNotState('state', [Created::class, Paid::class])->count());
-
-        $this->assertFalse($paidPayment->is(Payment::whereNotState('state', Paid::class)->first()));
-        $this->assertFalse($createdPayment->is(Payment::whereNotState('state', Created::class)->first()));
-    }
-
-    /** @test */
-    public function scope_where_state_with_invalid_field_throws_exception()
-    {
-        $this->expectException(UnknownState::class);
-
-        Payment::whereState('abc', Paid::class);
     }
 }

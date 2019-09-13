@@ -5,7 +5,12 @@ namespace Spatie\State\Tests\Dummy;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\State\HasStates;
 use Spatie\State\Tests\Dummy\States\Created;
+use Spatie\State\Tests\Dummy\States\Failed;
+use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\PaymentState;
+use Spatie\State\Tests\Dummy\States\Pending;
+use Spatie\State\Tests\Dummy\Transitions\CreatedToFailed;
+use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
 
 /**
  * @method static self first
@@ -18,14 +23,14 @@ use Spatie\State\Tests\Dummy\States\PaymentState;
  * @property string error_message
  *
  * @property \Spatie\State\Tests\Dummy\States\PaymentState state
+ *
+ * @method static self whereState(string $field, $state)
+ * @method static self whereNotState(string $field, $state)
+ * @method int count
  */
 class Payment extends Model
 {
     use HasStates;
-
-    protected $states = [
-        'state' => PaymentState::class,
-    ];
 
     protected $guarded = [];
 
@@ -34,5 +39,13 @@ class Payment extends Model
         parent::__construct($attributes);
 
         $this->state = $this->state ?? new Created($this);
+    }
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class)
+            ->allowTransition(Created::class, Pending::class, CreatedToPending::class)
+            ->allowTransition(Created::class, Failed::class, CreatedToFailed::class)
+            ->allowTransition(Pending::class, Paid::class);
     }
 }

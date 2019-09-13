@@ -19,9 +19,8 @@ composer require spatie/laravel-state
 
 This package adds state support to your Laravel models. 
 
-Start of by using the `Spatie\State\HasStates` trait in your model. Now you're able to define state fields. 
-These are defined in the `$states` array on your model class. It requires you to map a field name unto a state class.
-Here's an example of a `Payment` class with one state field, simply called `state`.
+Start of by using the `Spatie\State\HasStates` trait in your model. Now you can implement the `registerStates()`. 
+This method is used to define all possible states for your model. Here's an example: 
 
 ```php
 use App\States\PaymentState;
@@ -34,9 +33,12 @@ class Payment extends Model
 {
     use HasStates;
 
-    protected $states = [
-        'state' => PaymentState::class,
-    ];
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class);
+
+        // $this->addState('other_state_field', OtherState::class);
+    }
 }
 ```
 
@@ -140,11 +142,48 @@ abstract class PaymentState extends State
 }
 ```
 
-Note that you only need to provide a manual mapping, if the concrete state classes don't live within the same directory as their abstract state class.
+Note that you only need to provide a manual mapping, if the concrete state classes don't live within the same directory as their abstract state class. The following would work out of the box, without adding an explicit mapping:
+
+```
+States/
+  ├── Canceled.php
+  ├── Created.php
+  ├── Failed.php
+  ├── Paid.php
+  ├── PaymentState.php // This abstract class will automatically detect all relevant states within this directory.
+  └── Pending.php
+```
 
 ### State transitions
 
-Transitions offer a structured way of transitioning the state of a model from one to another.
+If you want to, you can specify which transitions are possible between states. Defining transitions can be done in the `registerStates()` method.
+
+```php
+class Payment extends Model
+{
+    // …
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class)
+            ->allowTransition(Created::class, Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class);
+    }
+}
+```
+
+You can transition a model's state like so:
+
+```php
+$payment->state->transitionTo(Paid::class);
+```
+
+If the current state doesn't allow for the transition you want to perform, a `\Spatie\State\Exceptions\TransitionError` will be thrown.
+
+#### Transition classes
+
+If you want more control over what happens during a state transition, you can provide transition classes.
 
 Imagine transitioning a payment's state from pending to failed, which will also save an error message to the database.
 Here's what such a basic transition class might look like.
@@ -176,27 +215,38 @@ class PendingToFailed extends Transition
 }
 ```
 
-And this is how it would be used:
+Now the transition should be configured in the model:
 
 ```php
-$payment->state->transition(PendingToFailed::class, 'error message');
+class Payment extends Model
+{
+    // …
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class)
+            ->allowTransition(Pending::class, Failed::class, PendingToFailed::class);
+    }
+}
 ```
 
-> **Note**: the `State::transition` method will take as much additional arguments as you'd like, 
+It can be used like so:
+
+```php
+$payment->state->transitionTo(Failed::class, 'error message');
+```
+
+> **Note**: the `State::transitionTo` method will take as much additional arguments as you'd like, 
 > these arguments will be passed to the transition's constructor. 
 > The first argument in the transition's constructor will always be the model that the transition is performed on. 
 
-If you want to be more explicit about configuring your transition, you can also use it like so:
+Another way of handling transitions is by working directly with the transition classes, this allows for better IDE autocompletion, which can be useful to some people. Instead of using `transitionTo()`, you can use the `transition()` and pass it a transition class directly.
 
 ```php
 $payment->state->transition(new CreatedToFailed($payment, 'error message'));
 ```
 
-#### Ensuring valid transitions
-
-Our above example is still flawed, as it's possible to perform this transition whatever the current state of the payment.
-
-If you want transitions to only work with specific states, you may implement the `canTransition()` method.
+If you're using this above approach, and want to ensure that this transition can only be performed when the payment is in the `Created` state, you may implement the `canTransition()` method on the transition class itself.
 
 ```php
 class CreatedToFailed extends Transition
@@ -212,7 +262,9 @@ class CreatedToFailed extends Transition
 }
 ```
 
-If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\CannotPerformTransition` exception will be thrown.
+If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\TransitionError` will be thrown.
+
+> **Note** `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.
 
 #### Injecting dependencies in transitions
 

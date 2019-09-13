@@ -4,8 +4,8 @@ namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Model;
 use ReflectionClass;
-use Spatie\State\Exceptions\CannotPerformTransition;
-use Spatie\State\Exceptions\InvalidState;
+use Spatie\State\Exceptions\TransitionError;
+use Spatie\State\Exceptions\StateConfigError;
 
 abstract class State
 {
@@ -35,15 +35,29 @@ abstract class State
      *
      * @return \Spatie\State\State
      */
-    public static function find(string $name, Model $model): State
+    public static function make(string $name, Model $model): State
     {
         $stateClass = static::resolveStateClass($name);
 
         if (! is_subclass_of($stateClass, static::class)) {
-            throw InvalidState::make($name, static::class);
+            throw StateConfigError::doesNotExtendBaseClass($name, static::class);
         }
 
         return new $stateClass($model);
+    }
+
+    /**
+     * Create a state object based on a value (classname or name),
+     * and optionally provide its constructor arguments.
+     *
+     * @param string $name
+     * @param mixed ...$args
+     *
+     * @return \Spatie\State\State
+     */
+    public static function find(string $name, Model $model): State
+    {
+        return static::make($name, $model);
     }
 
     /**
@@ -179,21 +193,45 @@ abstract class State
         return static::getMorphClass();
     }
 
-    public function transition($transitionClass, ...$args): Model
+    /**
+     * @param string|\Spatie\State\Transition $transitionClass
+     * @param mixed ...$args
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function transition($transition, ...$args): Model
     {
-        if (is_string($transitionClass)) {
-            $transition = new $transitionClass($this->model, ...$args);
-        } else {
-            $transition = $transitionClass;
+        if (is_string($transition)) {
+            $transition = new $transition($this->model, ...$args);
         }
 
         if (method_exists($transition, 'canTransition')) {
             if (! $transition->canTransition()) {
-                throw CannotPerformTransition::make($this->model, $transition);
+                throw TransitionError::notAllowed($this->model, $transition);
             };
         }
 
         return app()->call([$transition, 'handle']);
+    }
+
+    /**
+     * @param string|\Spatie\State\State $state
+     * @param mixed ...$args
+     *
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function transitionTo($state, ...$args): Model
+    {
+        if (! method_exists($this->model, 'resolveTransitionClass')) {
+            throw StateConfigError::resolveTransitionNotFound($this->model);
+        }
+
+        $transition = $this->model->resolveTransitionClass(
+            static::resolveStateClass($this),
+            static::resolveStateClass($state)
+        );
+
+        return $this->transition($transition, ...$args);
     }
 
     /**

@@ -4,11 +4,19 @@ namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\UnknownState;
-use TypeError;
+use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\TransitionError;
 
+/**
+ * @mixin \Illuminate\Database\Eloquent\Model
+ */
 trait HasStates
 {
+    /** @var \Spatie\State\StateConfig[]|null */
+    private static $stateFields = null;
+
+    abstract protected function registerStates(): void;
+
     public static function bootHasStates(): void
     {
         /** @var \Spatie\State\State $expectedStateClass */
@@ -22,12 +30,8 @@ trait HasStates
 
                 $stateClass = $expectedStateClass::resolveStateClass($value);
 
-                if (! is_subclass_of($stateClass, State::class)) {
-                    throw new TypeError("State field `{$field}` value must extend from `" . State::class . "`, instead got `{$stateClass}`");
-                }
-
                 if (! is_subclass_of($stateClass, $expectedStateClass)) {
-                    throw new TypeError("State field `{$field}` expects state to be of type `{$expectedStateClass}`, instead got `{$stateClass}`");
+                    throw StateConfigError::fieldDoesNotExtendState($field, $expectedStateClass, $stateClass);
                 }
 
                 $model->setAttribute(
@@ -42,18 +46,19 @@ trait HasStates
             return function (Model $model) use ($field, $expectedStateClass) {
                 $stateClass = $expectedStateClass::resolveStateClass($model->getAttribute($field));
 
-                if ($stateClass === null) {
-                    return;
-                }
-
                 $model->setAttribute(
                     $field,
-                    new $stateClass($model)
+                    $stateClass
+                        ? new $stateClass($model)
+                        : null
                 );
             };
         };
 
-        foreach (self::resolveStateFields() as $field => $expectedStateClass) {
+        foreach (self::getStateConfig() as $stateConfig) {
+            $field = $stateConfig->field;
+            $expectedStateClass = $stateConfig->stateClass;
+
             static::retrieved($unserialiseState($field, $expectedStateClass));
             static::created($unserialiseState($field, $expectedStateClass));
             static::saved($unserialiseState($field, $expectedStateClass));
@@ -64,19 +69,18 @@ trait HasStates
         }
     }
 
-    private static function resolveStateFields(): array
-    {
-        return (new static)->states ?? [];
-    }
-
     public function scopeWhereState(Builder $builder, string $field, $states): Builder
     {
-        /** @var \Spatie\State\State|null $abstractStateClass */
-        $abstractStateClass = self::resolveStateFields()[$field] ?? null;
+        self::getStateConfig();
 
-        if (! $abstractStateClass) {
-            throw UnknownState::make($field, static::class);
+        /** @var \Spatie\State\StateConfig|null $stateConfig */
+        $stateConfig = self::getStateConfig()[$field] ?? null;
+
+        if (! $stateConfig) {
+            throw StateConfigError::unknownState($field, $this);
         }
+
+        $abstractStateClass = $stateConfig->stateClass;
 
         $stateNames = collect((array) $states)->map(function ($state) use ($abstractStateClass) {
             return $abstractStateClass::resolveStateName($state);
@@ -87,17 +91,59 @@ trait HasStates
 
     public function scopeWhereNotState(Builder $builder, string $field, $states): Builder
     {
-        /** @var \Spatie\State\State|null $abstractStateClass */
-        $abstractStateClass = self::resolveStateFields()[$field] ?? null;
+        /** @var \Spatie\State\StateConfig|null $stateConfig */
+        $stateConfig = self::getStateConfig()[$field] ?? null;
 
-        if (! $abstractStateClass) {
-            throw UnknownState::make($field, static::class);
+        if (! $stateConfig) {
+            throw StateConfigError::unknownState($field, $this);
         }
 
-        $stateNames = collect((array) $states)->map(function ($state) use ($abstractStateClass) {
-            return $abstractStateClass::resolveStateName($state);
+        $stateNames = collect((array) $states)->map(function ($state) use ($stateConfig) {
+            return $stateConfig->stateClass::resolveStateName($state);
         });
 
         return $builder->whereNotIn($field, $stateNames);
+    }
+
+    /**
+     * @param string $fromClass
+     * @param string $toClass
+     *
+     * @return \Spatie\State\Transition|string|null
+     */
+    public function resolveTransitionClass(string $fromClass, string $toClass)
+    {
+        foreach (static::getStateConfig() as $stateConfig) {
+            $transitionClass = $stateConfig->resolveTransition($this, $fromClass, $toClass);
+
+            if ($transitionClass) {
+                return $transitionClass;
+            }
+        }
+
+        throw TransitionError::notFound($fromClass, $toClass, $this);
+    }
+
+    protected function addState(string $field, string $stateClass): StateConfig
+    {
+        $stateConfig = new StateConfig($field, $stateClass);
+
+        static::$stateFields[$stateConfig->field] = $stateConfig;
+
+        return $stateConfig;
+    }
+
+    /**
+     * @return \Spatie\State\StateConfig[]
+     */
+    private static function getStateConfig(): array
+    {
+        if (static::$stateFields === null) {
+            static::$stateFields = [];
+
+            (new static)->registerStates();
+        }
+
+        return static::$stateFields ?? [];
     }
 }
