@@ -19,7 +19,7 @@ composer require spatie/laravel-state
 
 This package adds state support to your Laravel models. 
 
-Start of by using the `Spatie\State\HasStates` trait in your model. Now you can implement the `registerStates()`. 
+Start of by using the `Spatie\State\HasStates` trait in your model. Now you must implement the `registerStates()` method on your model. 
 This method is used to define all possible states for your model. Here's an example: 
 
 ```php
