@@ -264,7 +264,7 @@ class CreatedToFailed extends Transition
 
 If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\TransitionError` will be thrown.
 
-> **Note** `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.
+> **Note**: `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.
 
 #### Injecting dependencies in transitions
 
