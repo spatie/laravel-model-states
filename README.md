@@ -76,7 +76,7 @@ Now you can use the `state` field on your model directly as a `PaymentState` obj
 ```php
 $payment = Payment::create();
 
-$payment->state = new Paid();
+$payment->state = new Paid($payment);
 
 $payment->save();
 
