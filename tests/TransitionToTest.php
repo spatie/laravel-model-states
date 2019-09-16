@@ -4,6 +4,8 @@ namespace Spatie\State\Tests;
 
 use Spatie\State\Exceptions\TransitionError;
 use Spatie\State\Tests\Dummy\Payment;
+use Spatie\State\Tests\Dummy\PaymentWithAllowTransitions;
+use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\Failed;
 use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\Pending;
@@ -49,7 +51,20 @@ class TransitionToTest extends TestCase
         ]);
 
         $payment->state->transitionTo(Paid::class);
+        $this->assertTrue($payment->state->is(Paid::class));
+    }
 
+    /** @test */
+    public function multiple_transitions_can_be_set_up_in_one_go()
+    {
+        $payment = PaymentWithAllowTransitions::create([
+            'state' => Created::class,
+        ]);
+
+        $payment->state->transitionTo(Pending::class);
+        $this->assertTrue($payment->state->is(Pending::class));
+
+        $payment->state->transitionTo(Paid::class);
         $this->assertTrue($payment->state->is(Paid::class));
     }
 }

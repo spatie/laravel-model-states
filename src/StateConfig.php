@@ -45,6 +45,16 @@ class StateConfig
         return $this;
     }
 
+    /** TODO: add to documentation */
+    public function allowTransitions(array $transitions): StateConfig
+    {
+        foreach($transitions as $transition) {
+            $this->allowTransition($transition[0], $transition[1], $transition[2] ?? null);
+        }
+
+        return $this;
+    }
+
     /**
      * @param string $from
      * @param string $to

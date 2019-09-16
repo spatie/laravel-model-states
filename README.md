@@ -211,12 +211,16 @@ use Spatie\State\Transition;
 
 class PendingToFailed extends Transition
 {
+    /** @var Payment */
     private $payment;
+
+    /** @var string */
     private $message;
 
     public function __construct(Payment $payment, string $message)
     {
         $this->payment = $payment;
+
         $this->message = $message;
     }
 
@@ -264,7 +268,7 @@ Another way of handling transitions is by working directly with the transition c
 $payment->state->transition(new CreatedToFailed($payment, 'error message'));
 ```
 
-If you're using this above approach, and want to ensure that this transition can only be performed when the payment is in the `Created` state, you may implement the `canTransition()` method on the transition class itself.
+If you're using the approach above, and want to ensure that this transition can only be performed when the payment is in the `Created` state, you may implement the `canTransition()` method on the transition class itself.
 
 ```php
 class CreatedToFailed extends Transition
@@ -302,9 +306,9 @@ class TransitionWithDependency extends Transition
 
 > **Note**: be careful not to have too many side effects within a transition. If you're injecting many dependencies, it's probably a sign that you should refactor your code and use an event-based system to handle complex side effects.
 
-### Querybuilder support
+### QueryBuilder support
 
-Every model using the `HasStates` trait will have a `whereState($field, $states)` and a `whereNotState($field, $states)` scope available. They are used like so:
+Every model using the `HasStates` trait will have a `whereState($field, $states)` and a `whereNotState($field, $states)` scope available.
 
 ```php
 $payments = Payment::whereState('state', Paid::class);
@@ -316,7 +320,7 @@ $payments = Payment::whereNotState('state', [Failed::class, Canceled::class]);
 
 ### State validation
 
-This package provides a validation rule to validate incoming request data. It can be used like so:
+This package provides a validation rule to validate incoming request data.
 
 ```php
 use Spatie\State\Validation\ValidStateRule;
