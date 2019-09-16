@@ -16,7 +16,7 @@ abstract class State
      *
      * @see State::resolveStateMapping
      */
-    private static $generatedMapping = [];
+    protected static $generatedMapping = [];
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;
 

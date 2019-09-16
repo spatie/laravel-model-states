@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 class DefaultTransition extends Transition
 {
     /** @var \Illuminate\Database\Eloquent\Model */
-    private $model;
+    protected $model;
 
     /** @var string */
-    private $field;
+    protected $field;
 
     /** @var \Spatie\State\State */
-    private $newState;
+    protected $newState;
 
     public function __construct(
         Model $model,

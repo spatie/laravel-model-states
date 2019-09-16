@@ -13,7 +13,7 @@ use Spatie\State\Exceptions\TransitionError;
 trait HasStates
 {
     /** @var \Spatie\State\StateConfig[]|null */
-    private static $stateFields = null;
+    protected static $stateFields = null;
 
     abstract protected function registerStates(): void;
 

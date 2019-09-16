@@ -23,6 +23,7 @@ class StateConfig
         }
 
         $this->field = $field;
+
         $this->stateClass = $stateClass;
     }
 
