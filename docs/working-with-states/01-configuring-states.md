@@ -1,5 +1,5 @@
 ---
-title: Configuring model states
+title: Configuring states
 weight: 1
 ---
 
