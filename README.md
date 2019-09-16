@@ -1,4 +1,6 @@
-# WIP states for Laravel
+# Adding state behaviour to Eloquent models
+
+//TODO: add practical example (payments, states, color) on how the package can be used.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/state.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
 [![Build Status](https://img.shields.io/travis/spatie/state/master.svg?style=flat-square)](https://travis-ci.org/spatie/:package_name)
@@ -13,38 +15,23 @@ You can install the package via composer:
 composer require spatie/laravel-state
 ```
 
+## Background
+
+It can be helpful to be familiar with the basics of the [state pattern](https://en.wikipedia.org/wiki/State_pattern) before using this package.
+
 ## Usage
 
-> **Note**: make sure you're familiar with the basics of the [state pattern](https://en.wikipedia.org/wiki/State_pattern) before using this package.
+### Adding your first behaviour
 
-This package adds state support to your Laravel models. 
+#### 1. Adding a field to your model
+// TODO: instruct the user to create a `state` field on the model (using a migration)
 
-Start of by using the `Spatie\State\HasStates` trait in your model. Now you must implement the `registerStates()` method on your model. 
-This method is used to define all possible states for your model. Here's an example: 
+First, create a migration to add...
 
-```php
-use App\States\PaymentState;
-use Spatie\State\HasStates;
 
-/**
- * @property \App\States\PaymentState state
- */
-class Payment extends Model
-{
-    use HasStates;
+#### 2. Create your behaviour classes
 
-    protected function registerStates(): void
-    {
-        $this->addState('state', PaymentState::class);
-
-        // $this->addState('other_state_field', OtherState::class);
-    }
-}
-```
-
-> **Note**: by adding a `@property` docblock, you'll get IDE autocompletion and static analysis support on your state fields.
-
-You will always have to create an abstract class which will represent the possible states for that field. This class should extend the `Spatie\State\State` class. In our case, this class is called `PaymentState`. All concrete payment states should extend it. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
+You will have to create an abstract class which will represent the possible states for that field. This class should extend the `Spatie\State\State` class. In our case, this class is called `PaymentState`. All concrete payment states should extend it. Each concrete implementation can provide state-specific behaviour, as described by the [state pattern](https://en.wikipedia.org/wiki/State_pattern). 
 
 This is what such a base class might look like:
 
@@ -70,6 +57,37 @@ class Paid extends PaymentState
     }
 }
 ```
+
+#### 3. Preparing your model
+
+Use the `Spatie\State\HasStates` trait on your model. Now you must implement the `registerStates()` method on your model. 
+This method is used to define all possible states for your model. Here's an example: 
+
+```php
+use App\States\PaymentState;
+use Spatie\State\HasStates;
+
+/**
+ * @property \App\States\PaymentState state
+ */
+class Payment extends Model
+{
+    use HasStates;
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class);
+
+        // TODO: verwijder deze lijn en leg multiple state fields in een aparte sectie uit. Hier alles lekker simpel houden
+        // $this->addState('other_state_field', OtherState::class);
+    }
+}
+```
+
+We recommend adding a `@property` docblock, you'll get IDE autocompletion and static analysis support on your state fields.
+
+#### 4. Using the state
+
 
 Now you can use the `state` field on your model directly as a `PaymentState` object, it will be properly saved and loaded to and from the database behind the scenes.
 
