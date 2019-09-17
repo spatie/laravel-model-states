@@ -42,7 +42,7 @@ class Payment extends Model
     {
         parent::__construct($attributes);
         
-        $this->state = $this->state ?? new Created();
+        $this->state = $this->state ?? new Created($this);
     }
 }
 ``` 
