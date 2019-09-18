@@ -9,6 +9,7 @@ use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\PaidWithoutName;
+use Spatie\State\Tests\Dummy\States\PaymentState;
 use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Tests\Dummy\WrongState;
 
@@ -198,5 +199,15 @@ class StateTest extends TestCase
         $state = AbstractState::find('a', new Payment());
 
         $this->assertInstanceOf(StateA::class, $state);
+    }
+
+    /** @test */
+    public function all()
+    {
+        $all = PaymentState::all();
+
+        $this->assertNotNull($all->first(function (string $className) {
+            return $className === Paid::class;
+        }));
     }
 }

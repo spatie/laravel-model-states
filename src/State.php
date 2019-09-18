@@ -3,6 +3,7 @@
 namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use ReflectionClass;
 use Spatie\State\Exceptions\TransitionError;
 use Spatie\State\Exceptions\StateConfigError;
@@ -17,6 +18,7 @@ abstract class State
      * @see State::resolveStateMapping
      */
     protected static $generatedMapping = [];
+
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;
 
@@ -57,6 +59,16 @@ abstract class State
     public static function find(string $name, Model $model): State
     {
         return static::make($name, $model);
+    }
+
+    /**
+     * Get all registered state classes.
+     *
+     * @return \Illuminate\Support\Collection|string[]|static[] A list of class names.
+     */
+    public static function all(): Collection
+    {
+        return collect(self::resolveStateMapping());
     }
 
     /**
