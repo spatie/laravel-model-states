@@ -163,7 +163,8 @@ class StateTest extends TestCase
         $payment = new Payment();
 
         $this->assertTrue($payment->state->isOneOf(
-            Created::class
+            Created::class,
+            Paid::class,
         ));
 
         $this->assertTrue($payment->state->isOneOf(
@@ -177,6 +178,17 @@ class StateTest extends TestCase
         $this->assertFalse($payment->state->isOneOf(
             Paid::class
         ));
+    }
+
+    /** @test */
+    public function is_one_of_with_array()
+    {
+        $payment = new Payment();
+
+        $this->assertTrue($payment->state->isOneOf([
+            Created::class,
+            Paid::class,
+        ]));
     }
 
     /** @test */

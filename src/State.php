@@ -157,12 +157,14 @@ abstract class State
      * Determine if the current state is one of an arbitrary number of other states.
      * This can be either a classname or a name.
      *
-     * @param string ...$stateClasses
+     * @param string|array ...$stateClasses
      *
      * @return bool
      */
-    public function isOneOf(string ...$statesNames): bool
+    public function isOneOf(...$statesNames): bool
     {
+        $statesNames = collect($statesNames)->flatten()->toArray();
+
         foreach ($statesNames as $statesName) {
             if ($this->equals($statesName)) {
                 return true;
