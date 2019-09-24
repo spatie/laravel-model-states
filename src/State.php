@@ -5,6 +5,7 @@ namespace Spatie\State;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use ReflectionClass;
+use Spatie\State\Events\StateChanged;
 use Spatie\State\Exceptions\CouldNotPerformTransition;
 use Spatie\State\Exceptions\InvalidConfig;
 
@@ -224,7 +225,11 @@ abstract class State
             };
         }
 
-        return app()->call([$transition, 'handle']);
+        $mutatedModel = app()->call([$transition, 'handle']);
+
+        event(new StateChanged($this, $mutatedModel->state, $transition, $this->model));
+
+        return $mutatedModel;
     }
 
     /**
