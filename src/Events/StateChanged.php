@@ -11,43 +11,27 @@ class StateChanged
 {
     use SerializesModels;
 
-    /**
-     * @var State
-     */
+    /** @var \Spatie\State\State */
     public $initialState;
 
-    /**
-     * @var State
-     */
+    /** @var \Spatie\State\State */
     public $finalState;
 
-    /**
-     * @var Transition
-     */
+    /** @var \Spatie\State\Transition */
     public $transition;
 
-    /**
-     * @var Model
-     */
-    public $subject;
+    /** @var \Illuminate\Database\Eloquent\Model */
+    public $model;
 
-    /**
-     * StateChanged constructor.
-     *
-     * @param State      $initialState
-     * @param State      $finalState
-     * @param Transition $transition
-     * @param Model      $subject
-     */
     public function __construct(
         State $initialState,
         State $finalState,
         Transition $transition,
-        Model $subject
+        Model $model
     ) {
         $this->initialState = $initialState;
         $this->finalState = $finalState;
         $this->transition = $transition;
-        $this->subject = $subject;
+        $this->model = $model;
     }
 }

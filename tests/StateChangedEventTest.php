@@ -4,9 +4,7 @@ namespace Spatie\State\Tests;
 
 use Illuminate\Support\Facades\Event;
 use Spatie\State\Events\StateChanged;
-use Spatie\State\Exceptions\CouldNotPerformTransition;
 use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Paid;
 use Spatie\State\Tests\Dummy\States\Pending;
 use Spatie\State\Tests\Dummy\Transitions\PendingToPaid;
 
@@ -23,16 +21,20 @@ class StateChangedEventTest extends TestCase
 
         $original = $payment->state;
 
-        try {
-            $payment->state->transition(PendingToPaid::class);
-        } catch (CouldNotPerformTransition $e) {
-        }
+        $payment->state->transition(PendingToPaid::class);
 
         Event::assertDispatched(StateChanged::class);
 
-        /** StateChanged $e */
-        Event::assertDispatched(StateChanged::class, function ($e) use ($original, $payment) {
-            return ($e->finalState == $payment->state) == ($e->initialState == $original);
-        });
+        Event::assertDispatched(
+        StateChanged::class,
+            function (StateChanged $event) use ($original, $payment) {
+                $this->assertTrue($original === $event->initialState);
+                $this->assertTrue($payment->state === $event->finalState);
+                $this->assertTrue($payment === $event->model);
+                $this->assertInstanceOf(PendingToPaid::class, $event->transition);
+
+                return true;
+            }
+        );
     }
 }
