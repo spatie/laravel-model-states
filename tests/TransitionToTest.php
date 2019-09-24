@@ -2,7 +2,7 @@
 
 namespace Spatie\State\Tests;
 
-use Spatie\State\Exceptions\TransitionError;
+use Spatie\State\Exceptions\CouldNotPerformTransition;
 use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\PaymentWithAllowTransitions;
 use Spatie\State\Tests\Dummy\States\Created;
@@ -27,7 +27,7 @@ class TransitionToTest extends TestCase
     {
         $payment = Payment::create();
 
-        $this->expectException(TransitionError::class);
+        $this->expectException(CouldNotPerformTransition::class);
 
         $payment->state->transitionTo(Paid::class);
     }

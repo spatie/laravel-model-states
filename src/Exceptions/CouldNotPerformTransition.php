@@ -5,9 +5,9 @@ namespace Spatie\State\Exceptions;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
-class TransitionError extends Exception
+class CouldNotPerformTransition extends Exception
 {
-    public static function notAllowed(Model $model, $transitionClass): TransitionError
+    public static function notAllowed(Model $model, $transitionClass): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 
@@ -16,7 +16,7 @@ class TransitionError extends Exception
         return new self("The transition `{$transitionClass}` is not allowed on model `{$modelClass}` at the moment.");
     }
 
-    public static function notFound(string $from, string $to, Model $model): TransitionError
+    public static function notFound(string $from, string $to, Model $model): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 

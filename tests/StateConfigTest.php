@@ -3,7 +3,7 @@
 namespace Spatie\State\Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\InvalidConfig;
 use Spatie\State\HasStates;
 use Spatie\State\StateConfig;
 use Spatie\State\Tests\Dummy\States\Paid;
@@ -15,7 +15,7 @@ class StateConfigTest extends TestCase
     /** @test */
     public function allow_transition_from_is_wrong_subclass()
     {
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         (new StateConfig('state', PaymentState::class))
             ->allowTransition('wrong', Pending::class);
@@ -24,7 +24,7 @@ class StateConfigTest extends TestCase
     /** @test */
     public function allow_transition_to_is_wrong_subclass()
     {
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         (new StateConfig('state', PaymentState::class))
             ->allowTransition(Pending::class, 'wrong');
@@ -33,7 +33,7 @@ class StateConfigTest extends TestCase
     /** @test */
     public function allow_transition_transition_is_wrong_subclass()
     {
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         (new StateConfig('state', PaymentState::class))
             ->allowTransition(Pending::class, Paid::class, 'wrong');

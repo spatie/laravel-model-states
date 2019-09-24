@@ -3,7 +3,7 @@
 namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\InvalidConfig;
 
 class StateConfig
 {
@@ -19,7 +19,7 @@ class StateConfig
     public function __construct(string $field, string $stateClass)
     {
         if (! is_subclass_of($stateClass, State::class)) {
-            throw StateConfigError::doesNotExtendState($stateClass);
+            throw InvalidConfig::doesNotExtendState($stateClass);
         }
 
         $this->field = $field;
@@ -30,15 +30,15 @@ class StateConfig
     public function allowTransition(string $from, string $to, string $transition = null): StateConfig
     {
         if (! is_subclass_of($from, $this->stateClass)) {
-            throw StateConfigError::doesNotExtendBaseClass($from, $this->stateClass);
+            throw InvalidConfig::doesNotExtendBaseClass($from, $this->stateClass);
         }
 
         if (! is_subclass_of($to, $this->stateClass)) {
-            throw StateConfigError::doesNotExtendBaseClass($to, $this->stateClass);
+            throw InvalidConfig::doesNotExtendBaseClass($to, $this->stateClass);
         }
 
         if ($transition && ! is_subclass_of($transition, Transition::class)) {
-            throw StateConfigError::doesNotExtendTransition($transition);
+            throw InvalidConfig::doesNotExtendTransition($transition);
         }
 
         $this->allowedTransitions[$this->createTransitionKey($from, $to)] = $transition;

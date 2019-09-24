@@ -4,8 +4,8 @@ namespace Spatie\State;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\StateConfigError;
-use Spatie\State\Exceptions\TransitionError;
+use Spatie\State\Exceptions\InvalidConfig;
+use Spatie\State\Exceptions\CouldNotPerformTransition;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
@@ -31,7 +31,7 @@ trait HasStates
                 $stateClass = $expectedStateClass::resolveStateClass($value);
 
                 if (! is_subclass_of($stateClass, $expectedStateClass)) {
-                    throw StateConfigError::fieldDoesNotExtendState($field, $expectedStateClass, $stateClass);
+                    throw InvalidConfig::fieldDoesNotExtendState($field, $expectedStateClass, $stateClass);
                 }
 
                 $model->setAttribute(
@@ -77,7 +77,7 @@ trait HasStates
         $stateConfig = self::getStateConfig()[$field] ?? null;
 
         if (! $stateConfig) {
-            throw StateConfigError::unknownState($field, $this);
+            throw InvalidConfig::unknownState($field, $this);
         }
 
         $abstractStateClass = $stateConfig->stateClass;
@@ -95,7 +95,7 @@ trait HasStates
         $stateConfig = self::getStateConfig()[$field] ?? null;
 
         if (! $stateConfig) {
-            throw StateConfigError::unknownState($field, $this);
+            throw InvalidConfig::unknownState($field, $this);
         }
 
         $stateNames = collect((array) $states)->map(function ($state) use ($stateConfig) {
@@ -121,7 +121,7 @@ trait HasStates
             }
         }
 
-        throw TransitionError::notFound($fromClass, $toClass, $this);
+        throw CouldNotPerformTransition::notFound($fromClass, $toClass, $this);
     }
 
     protected function addState(string $field, string $stateClass): StateConfig

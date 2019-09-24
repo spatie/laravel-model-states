@@ -5,8 +5,8 @@ namespace Spatie\State;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use ReflectionClass;
-use Spatie\State\Exceptions\TransitionError;
-use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\CouldNotPerformTransition;
+use Spatie\State\Exceptions\InvalidConfig;
 
 abstract class State
 {
@@ -41,7 +41,7 @@ abstract class State
         $stateClass = static::resolveStateClass($name);
 
         if (! is_subclass_of($stateClass, static::class)) {
-            throw StateConfigError::doesNotExtendBaseClass($name, static::class);
+            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
         }
 
         return new $stateClass($model);
@@ -220,7 +220,7 @@ abstract class State
 
         if (method_exists($transition, 'canTransition')) {
             if (! $transition->canTransition()) {
-                throw TransitionError::notAllowed($this->model, $transition);
+                throw CouldNotPerformTransition::notAllowed($this->model, $transition);
             };
         }
 
@@ -236,7 +236,7 @@ abstract class State
     public function transitionTo($state, ...$args): Model
     {
         if (! method_exists($this->model, 'resolveTransitionClass')) {
-            throw StateConfigError::resolveTransitionNotFound($this->model);
+            throw InvalidConfig::resolveTransitionNotFound($this->model);
         }
 
         $transition = $this->model->resolveTransitionClass(

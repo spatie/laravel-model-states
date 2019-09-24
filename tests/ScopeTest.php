@@ -2,7 +2,7 @@
 
 namespace Spatie\State\Tests;
 
-use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\InvalidConfig;
 use Spatie\State\Tests\Dummy\Payment;
 use Spatie\State\Tests\Dummy\States\Created;
 use Spatie\State\Tests\Dummy\States\Paid;
@@ -42,7 +42,7 @@ class ScopeTest extends TestCase
     /** @test */
     public function scope_where_state_with_invalid_field_throws_exception()
     {
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         Payment::whereState('abc', Paid::class);
     }

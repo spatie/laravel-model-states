@@ -2,7 +2,7 @@
 
 namespace Spatie\State\Tests;
 
-use Spatie\State\Exceptions\StateConfigError;
+use Spatie\State\Exceptions\InvalidConfig;
 use Spatie\State\Tests\Dummy\AutoDetectStates\AbstractState;
 use Spatie\State\Tests\Dummy\AutoDetectStates\StateA;
 use Spatie\State\Tests\Dummy\Payment;
@@ -69,7 +69,7 @@ class StateTest extends TestCase
     /** @test */
     public function only_states_of_the_correct_type_are_allowed_via_create()
     {
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         Payment::create([
             'state' => WrongState::class,
@@ -81,7 +81,7 @@ class StateTest extends TestCase
     {
         $payment = Payment::create();
 
-        $this->expectException(StateConfigError::class);
+        $this->expectException(InvalidConfig::class);
 
         $payment->state = new WrongState($payment);
 
