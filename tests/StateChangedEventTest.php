@@ -28,9 +28,9 @@ class StateChangedEventTest extends TestCase
         Event::assertDispatched(
         StateChanged::class,
             function (StateChanged $event) use ($original, $payment) {
-                $this->assertTrue($original === $event->initialState);
-                $this->assertTrue($payment->state === $event->finalState);
-                $this->assertTrue($payment === $event->model);
+                $this->assertEquals($original, $event->initialState);
+                $this->assertEquals($payment->state, $event->finalState);
+                $this->assertEquals($payment, $event->model);
                 $this->assertInstanceOf(PendingToPaid::class, $event->transition);
 
                 return true;

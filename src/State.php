@@ -225,11 +225,9 @@ abstract class State
             };
         }
 
-        $initialState = $this;
-
         $mutatedModel = app()->call([$transition, 'handle']);
 
-        event(new StateChanged($initialState, $mutatedModel->state, $transition, $this->model));
+        event(new StateChanged($this, $mutatedModel->state, $transition, $this->model));
 
         return $mutatedModel;
     }
