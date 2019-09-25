@@ -11,10 +11,10 @@ class StateChanged
 {
     use SerializesModels;
 
-    /** @var \Spatie\ModelStates\State */
+    /** @var \Spatie\ModelStates\State|null */
     public $initialState;
 
-    /** @var \Spatie\ModelStates\State */
+    /** @var \Spatie\ModelStates\State|null */
     public $finalState;
 
     /** @var \Spatie\ModelStates\Transition */
@@ -24,8 +24,8 @@ class StateChanged
     public $model;
 
     public function __construct(
-        State $initialState,
-        State $finalState,
+        ?State $initialState,
+        ?State $finalState,
         Transition $transition,
         Model $model
     ) {
