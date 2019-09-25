@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy;
+namespace Spatie\ModelStates\Tests\Dummy;
 
 class Dependency
 {

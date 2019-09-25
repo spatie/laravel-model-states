@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Schema\Blueprint;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\ModelStates;
 
 abstract class Transition
 {

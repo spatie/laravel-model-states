@@ -1,23 +1,23 @@
 <?php
 
-namespace Spatie\State\Events;
+namespace Spatie\ModelStates\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
-use Spatie\State\State;
-use Spatie\State\Transition;
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\Transition;
 
 class StateChanged
 {
     use SerializesModels;
 
-    /** @var \Spatie\State\State */
+    /** @var \Spatie\ModelStates\State */
     public $initialState;
 
-    /** @var \Spatie\State\State */
+    /** @var \Spatie\ModelStates\State */
     public $finalState;
 
-    /** @var \Spatie\State\Transition */
+    /** @var \Spatie\ModelStates\Transition */
     public $transition;
 
     /** @var \Illuminate\Database\Eloquent\Model */

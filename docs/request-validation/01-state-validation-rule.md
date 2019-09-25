@@ -6,7 +6,7 @@ weight: 1
 This package provides a validation rule to validate incoming request data.
 
 ```php
-use Spatie\State\Validation\ValidStateRule;
+use Spatie\ModelStates\Validation\ValidStateRule;
 
 request()->validate([
     'state' => new ValidStateRule(PaymentState::class),

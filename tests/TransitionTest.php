@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
-use Spatie\State\Exceptions\CouldNotPerformTransition;
-use Spatie\State\Tests\Dummy\Dependency;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Failed;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToFailed;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
-use Spatie\State\Tests\Dummy\Transitions\PendingToPaid;
-use Spatie\State\Tests\Dummy\Transitions\TransitionWithDependency;
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Tests\Dummy\Dependency;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToFailed;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
+use Spatie\ModelStates\Tests\Dummy\Transitions\PendingToPaid;
+use Spatie\ModelStates\Tests\Dummy\Transitions\TransitionWithDependency;
 
 class TransitionTest extends TestCase
 {

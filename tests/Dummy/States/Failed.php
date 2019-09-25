@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\States;
+namespace Spatie\ModelStates\Tests\Dummy\States;
 
 class Failed extends PaymentState
 {

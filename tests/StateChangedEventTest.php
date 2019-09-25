@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\Event;
-use Spatie\State\Events\StateChanged;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Tests\Dummy\Transitions\PendingToPaid;
+use Spatie\ModelStates\Events\StateChanged;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\Transitions\PendingToPaid;
 
 class StateChangedEventTest extends TestCase
 {

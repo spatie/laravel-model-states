@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\State\Validation;
+namespace Spatie\ModelStates\Validation;
 
 use Illuminate\Contracts\Validation\Rule;
 
 class ValidStateRule implements Rule
 {
-    /** @var string|\Spatie\State\State */
+    /** @var string|\Spatie\ModelStates\State */
     private $abstractStateClass;
 
     /** @var bool */

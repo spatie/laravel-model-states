@@ -16,7 +16,7 @@ For the sake of our example, let's say that, depending on the state, a the color
 Here's what the `Payment` model would look like:
 
 ```php
-use Spatie\State\HasStates;
+use Spatie\ModelStates\HasStates;
 
 /**
  * @property \App\States\PaymentState state
@@ -38,7 +38,7 @@ class Payment extends Model
 This is what the abstract `PaymentState` class would look like:
 
 ```php
-use Spatie\State\State;
+use Spatie\ModelStates\State;
 
 abstract class PaymentState extends State
 {

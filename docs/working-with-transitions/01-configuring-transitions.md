@@ -29,4 +29,4 @@ In this example we're using both a simple transition, and a custom one. Transiti
 $payment->state->transitionTo(Paid::class);
 ```
 
-This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\State\Exceptions\TransitionError` will be thrown instead of changing the state. 
+This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionError` will be thrown instead of changing the state. 

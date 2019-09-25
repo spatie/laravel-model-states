@@ -1,18 +1,20 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\Transitions;
+namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Transition;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Transition;
 
 class CreatedToPending extends Transition
 {
-    /** @var \Spatie\State\Tests\Dummy\Payment */
+    /** @var \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment */
     private $payment;
 
-    public function __construct(Payment $payment)
+    /**
+     * @var \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment $payment
+     */
+    public function __construct($payment)
     {
         $this->payment = $payment;
     }
@@ -22,7 +24,10 @@ class CreatedToPending extends Transition
         return $this->payment->state->equals(Created::class);
     }
 
-    public function handle(): Payment
+    /**
+     * @return \Spatie\ModelStates\Tests\Dummy\Payment|\Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions
+     */
+    public function handle()
     {
         $this->payment->state = new Pending($this->payment);
 

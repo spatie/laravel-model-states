@@ -9,7 +9,7 @@ Imagine transitioning a payment's state from pending to failed, which will also 
 Here's what such a basic transition class might look like.
 
 ```php
-use Spatie\State\Transition;
+use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
@@ -86,6 +86,6 @@ class CreatedToFailed extends Transition
 }
 ```
 
-If the check in `canTransition()` fails, a `\Spatie\State\Exceptions\TransitionError` will be thrown.
+If the check in `canTransition()` fails, a `\Spatie\ModelStates\Exceptions\TransitionError` will be thrown.
 
 > **Note**: `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.

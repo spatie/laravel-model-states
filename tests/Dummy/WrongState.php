@@ -1,8 +1,8 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy;
+namespace Spatie\ModelStates\Tests\Dummy;
 
-use Spatie\State\State;
+use Spatie\ModelStates\State;
 
 class WrongState extends State
 {

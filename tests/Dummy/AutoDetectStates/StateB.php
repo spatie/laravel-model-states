@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\AutoDetectStates;
+namespace Spatie\ModelStates\Tests\Dummy\AutoDetectStates;
 
 class StateB extends AbstractState
 {

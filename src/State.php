@@ -1,13 +1,13 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use ReflectionClass;
-use Spatie\State\Events\StateChanged;
-use Spatie\State\Exceptions\CouldNotPerformTransition;
-use Spatie\State\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Events\StateChanged;
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 abstract class State
 {
@@ -35,7 +35,7 @@ abstract class State
      * @param string $name
      * @param mixed ...$args
      *
-     * @return \Spatie\State\State
+     * @return \Spatie\ModelStates\State
      */
     public static function make(string $name, Model $model): State
     {
@@ -55,7 +55,7 @@ abstract class State
      * @param string $name
      * @param mixed ...$args
      *
-     * @return \Spatie\State\State
+     * @return \Spatie\ModelStates\State
      */
     public static function find(string $name, Model $model): State
     {
@@ -95,7 +95,7 @@ abstract class State
     /**
      * Resolve the state class based on a value, for example a stored value in the database.
      *
-     * @param string|\Spatie\State\State $state
+     * @param string|\Spatie\ModelStates\State $state
      *
      * @return string
      */
@@ -179,7 +179,7 @@ abstract class State
      * Determine if the current state equals another.
      * This can be either a classname or a name.
      *
-     * @param string|\Spatie\State\State $state
+     * @param string|\Spatie\ModelStates\State $state
      *
      * @return bool
      */
@@ -193,7 +193,7 @@ abstract class State
      * Determine if the current state equals another.
      * This can be either a classname or a name.
      *
-     * @param string|\Spatie\State\State $state
+     * @param string|\Spatie\ModelStates\State $state
      *
      * @return bool
      */
@@ -208,7 +208,7 @@ abstract class State
     }
 
     /**
-     * @param string|\Spatie\State\Transition $transitionClass
+     * @param string|\Spatie\ModelStates\Transition $transitionClass
      * @param mixed ...$args
      *
      * @return \Illuminate\Database\Eloquent\Model
@@ -233,7 +233,7 @@ abstract class State
     }
 
     /**
-     * @param string|\Spatie\State\State $state
+     * @param string|\Spatie\ModelStates\State $state
      * @param mixed ...$args
      *
      * @return \Illuminate\Database\Eloquent\Model

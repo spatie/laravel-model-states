@@ -1,14 +1,14 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\Transitions;
+namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Spatie\State\Tests\Dummy\Dependency;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Transition;
+use Spatie\ModelStates\Tests\Dummy\Dependency;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Transition;
 
 class TransitionWithDependency extends Transition
 {
-    /** @var \Spatie\State\Tests\Dummy\Payment */
+    /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
     private $payment;
 
     public function __construct(Payment $payment)

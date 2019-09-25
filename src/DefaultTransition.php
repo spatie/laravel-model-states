@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,7 +12,7 @@ class DefaultTransition extends Transition
     /** @var string */
     protected $field;
 
-    /** @var \Spatie\State\State */
+    /** @var \Spatie\ModelStates\State */
     protected $newState;
 
     public function __construct(

@@ -10,7 +10,7 @@ This way you don't have to worry about whether a state is in its textual form or
 For this reason, it's recommended to add a `@property` docblock on your model class, to make sure you always have IDE autocompletion.
 
 ```php
-use Spatie\State\HasStates;
+use Spatie\ModelStates\HasStates;
 
 /**
  * @property \App\States\PaymentState state
@@ -50,7 +50,7 @@ class Payment extends Model
 Each state field should be represented by a class, which itself extends an abstract class you also must provide. An example would be `PaymentState`, having three concrete implementations: `Pending`, `Paid` and `Failed`.
 
 ```php
-use Spatie\State\State;
+use Spatie\ModelStates\State;
 
 abstract class PaymentState extends State
 {

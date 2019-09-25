@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\Validator;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\PaymentState;
-use Spatie\State\Validation\ValidStateRule;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Validation\ValidStateRule;
 
 class ValidationRuleTest extends TestCase
 {

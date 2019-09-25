@@ -1,25 +1,25 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\InvalidConfig;
-use Spatie\State\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
  */
 trait HasStates
 {
-    /** @var \Spatie\State\StateConfig[]|null */
+    /** @var \Spatie\ModelStates\StateConfig[]|null */
     protected static $stateFields = null;
 
     abstract protected function registerStates(): void;
 
     public static function bootHasStates(): void
     {
-        /** @var \Spatie\State\State $expectedStateClass */
+        /** @var \Spatie\ModelStates\State $expectedStateClass */
         $serialiseState = function (string $field, string $expectedStateClass) {
             return function (Model $model) use ($field, $expectedStateClass) {
                 $value = $model->getAttribute($field);
@@ -41,7 +41,7 @@ trait HasStates
             };
         };
 
-        /** @var \Spatie\State\State $expectedStateClass */
+        /** @var \Spatie\ModelStates\State $expectedStateClass */
         $unserialiseState = function (string $field, string $expectedStateClass) {
             return function (Model $model) use ($field, $expectedStateClass) {
                 $stateClass = $expectedStateClass::resolveStateClass($model->getAttribute($field));
@@ -73,7 +73,7 @@ trait HasStates
     {
         self::getStateConfig();
 
-        /** @var \Spatie\State\StateConfig|null $stateConfig */
+        /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
 
         if (! $stateConfig) {
@@ -91,7 +91,7 @@ trait HasStates
 
     public function scopeWhereNotState(Builder $builder, string $field, $states): Builder
     {
-        /** @var \Spatie\State\StateConfig|null $stateConfig */
+        /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
 
         if (! $stateConfig) {
@@ -109,7 +109,7 @@ trait HasStates
      * @param string $fromClass
      * @param string $toClass
      *
-     * @return \Spatie\State\Transition|string|null
+     * @return \Spatie\ModelStates\Transition|string|null
      */
     public function resolveTransitionClass(string $fromClass, string $toClass)
     {
@@ -134,7 +134,7 @@ trait HasStates
     }
 
     /**
-     * @return \Spatie\State\StateConfig[]
+     * @return \Spatie\ModelStates\StateConfig[]
      */
     private static function getStateConfig(): array
     {

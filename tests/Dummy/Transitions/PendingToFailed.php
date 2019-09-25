@@ -1,15 +1,15 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\Transitions;
+namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Failed;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Transition;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
-    /** @var \Spatie\State\Tests\Dummy\Payment */
+    /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
     private $payment;
 
     /** @var string */

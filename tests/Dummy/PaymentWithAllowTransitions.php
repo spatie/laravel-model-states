@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy;
+namespace Spatie\ModelStates\Tests\Dummy;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\HasStates;
-use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\Failed;
-use Spatie\State\Tests\Dummy\States\Paid;
-use Spatie\State\Tests\Dummy\States\PaymentState;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToFailed;
-use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToFailed;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 
 /**
  * @method static self first
@@ -22,13 +22,13 @@ use Spatie\State\Tests\Dummy\Transitions\CreatedToPending;
  * @property \Carbon\Carbon pending_at
  * @property string error_message
  *
- * @property \Spatie\State\Tests\Dummy\States\PaymentState state
+ * @property \Spatie\ModelStates\Tests\Dummy\States\PaymentState state
  *
  * @method static self whereState(string $field, $state)
  * @method static self whereNotState(string $field, $state)
  * @method int count
  */
-class PaymentWithAllowTransitions extends Payment
+class PaymentWithAllowTransitions extends Model
 {
     use HasStates;
 

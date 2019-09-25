@@ -1,11 +1,11 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
-use Spatie\State\Exceptions\InvalidConfig;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
 
 class ScopeTest extends TestCase
 {

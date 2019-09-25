@@ -1,14 +1,14 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\InvalidConfig;
-use Spatie\State\HasStates;
-use Spatie\State\StateConfig;
-use Spatie\State\Tests\Dummy\States\Paid;
-use Spatie\State\Tests\Dummy\States\PaymentState;
-use Spatie\State\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\StateConfig;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
 
 class StateConfigTest extends TestCase
 {

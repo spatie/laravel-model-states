@@ -1,13 +1,12 @@
 <?php
 
-namespace Spatie\State\Tests\Dummy\States;
+namespace Spatie\ModelStates\Tests\Dummy\States;
 
-use Spatie\State\State;
-use Spatie\State\Tests\Dummy\Payment;
+use Spatie\ModelStates\State;
 
 abstract class PaymentState extends State
 {
-    /** @var \Spatie\State\Tests\Dummy\Payment */
+    /** @var \Spatie\ModelStates\Tests\Dummy\Payment|\Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions */
     protected $model;
 
     public static $states =[
@@ -19,7 +18,10 @@ abstract class PaymentState extends State
         PaidWithoutName::class,
     ];
 
-    public function __construct(Payment $payment)
+    /**
+     * @var \Spatie\ModelStates\Tests\Dummy\Payment|\Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions
+     */
+    public function __construct($payment)
     {
         parent::__construct($payment);
     }

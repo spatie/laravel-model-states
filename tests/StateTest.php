@@ -1,17 +1,17 @@
 <?php
 
-namespace Spatie\State\Tests;
+namespace Spatie\ModelStates\Tests;
 
-use Spatie\State\Exceptions\InvalidConfig;
-use Spatie\State\Tests\Dummy\AutoDetectStates\AbstractState;
-use Spatie\State\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\State\Tests\Dummy\Payment;
-use Spatie\State\Tests\Dummy\States\Created;
-use Spatie\State\Tests\Dummy\States\Paid;
-use Spatie\State\Tests\Dummy\States\PaidWithoutName;
-use Spatie\State\Tests\Dummy\States\PaymentState;
-use Spatie\State\Tests\Dummy\States\Pending;
-use Spatie\State\Tests\Dummy\WrongState;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\WrongState;
 
 class StateTest extends TestCase
 {

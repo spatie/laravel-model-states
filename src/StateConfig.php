@@ -1,16 +1,16 @@
 <?php
 
-namespace Spatie\State;
+namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
 {
     /** @var string */
     public $field;
 
-    /** @var string|\Spatie\State\State */
+    /** @var string|\Spatie\ModelStates\State */
     public $stateClass;
 
     /** @var string[] */
@@ -60,7 +60,7 @@ class StateConfig
      * @param string $from
      * @param string $to
      *
-     * @return string|\Spatie\State\Transition|null
+     * @return string|\Spatie\ModelStates\Transition|null
      */
     public function resolveTransition(Model $model, string $from, string $to)
     {

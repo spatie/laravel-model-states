@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\State\Exceptions;
+namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;

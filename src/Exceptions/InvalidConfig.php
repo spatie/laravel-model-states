@@ -1,12 +1,12 @@
 <?php
 
-namespace Spatie\State\Exceptions;
+namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\State\HasStates;
-use Spatie\State\State;
-use Spatie\State\Transition;
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\Transition;
 
 class InvalidConfig extends Exception
 {

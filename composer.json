@@ -27,12 +27,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spatie\\State\\": "src"
+            "Spatie\\ModelStates\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Spatie\\State\\Tests\\": "tests"
+            "Spatie\\ModelStates\\Tests\\": "tests"
         }
     },
     "scripts": {
