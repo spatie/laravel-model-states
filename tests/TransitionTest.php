@@ -5,9 +5,10 @@ namespace Spatie\ModelStates\Tests;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Tests\Dummy\Dependency;
 use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToFailed;
+use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 use Spatie\ModelStates\Tests\Dummy\Transitions\PendingToPaid;
 use Spatie\ModelStates\Tests\Dummy\Transitions\TransitionWithDependency;
@@ -29,7 +30,7 @@ class TransitionTest extends TestCase
     {
         $payment = Payment::create();
 
-        $payment->state->transition(CreatedToFailed::class, 'error message');
+        $payment->state->transition(ToFailed::class, 'error message');
 
         $this->assertEquals('error message', $payment->error_message);
         $this->assertTrue($payment->state->is(Failed::class));
@@ -40,7 +41,7 @@ class TransitionTest extends TestCase
     {
         $payment = Payment::create();
 
-        $payment->state->transition(new CreatedToFailed($payment, 'error message'));
+        $payment->state->transition(new ToFailed($payment, 'error message'));
 
         $this->assertEquals('error message', $payment->error_message);
         $this->assertTrue($payment->state->is(Failed::class));
@@ -64,5 +65,25 @@ class TransitionTest extends TestCase
         $this->expectException(CouldNotPerformTransition::class);
 
         $payment->state->transition(PendingToPaid::class);
+    }
+
+    /** @test */
+    public function multiple_from_transitions_can_be_configured_at_once()
+    {
+        $payment = Payment::create([
+            'state' => Pending::class,
+        ]);
+
+        $payment->state->transitionTo(Failed::class, 'message');
+
+        $this->assertTrue($payment->state->is(Failed::class));
+
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $payment->state->transitionTo(Failed::class, 'message');
+
+        $this->assertTrue($payment->state->is(Failed::class));
     }
 }

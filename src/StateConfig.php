@@ -27,8 +27,23 @@ class StateConfig
         $this->stateClass = $stateClass;
     }
 
-    public function allowTransition(string $from, string $to, string $transition = null): StateConfig
+    /**
+     * @param string|array $from
+     * @param string $to
+     * @param string|null $transition
+     *
+     * @return \Spatie\ModelStates\StateConfig
+     */
+    public function allowTransition($from, string $to, string $transition = null): StateConfig
     {
+        if (is_array($from)) {
+            foreach ($from as $fromState) {
+                $this->allowTransition($fromState, $to, $transition);
+            }
+
+            return $this;
+        }
+
         if (! is_subclass_of($from, $this->stateClass)) {
             throw InvalidConfig::doesNotExtendBaseClass($from, $this->stateClass);
         }

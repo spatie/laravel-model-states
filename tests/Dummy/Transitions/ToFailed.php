@@ -4,9 +4,10 @@ namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Transition;
 
-class CreatedToFailed extends Transition
+class ToFailed extends Transition
 {
     /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
     private $payment;
@@ -22,12 +23,16 @@ class CreatedToFailed extends Transition
 
     public function canTransition(): bool
     {
-        return $this->payment->state->equals(Created::class);
+        return $this->payment->state->isOneOf(Pending::class, Created::class);
     }
 
     public function handle()
     {
-        $payment = (new CreatedToPending($this->payment))->handle();
+        $payment = $this->payment;
+
+        if ($payment->state->is(Created::class)) {
+            $payment = (new CreatedToPending($this->payment))->handle();
+        }
 
         $payment = (new PendingToFailed($payment, $this->message))->handle();
 

@@ -9,13 +9,13 @@ use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToFailed;
+use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 
 /**
- * @method static self first
- * @method static self find(int $id)
- * @method static self create(array $data = [])
+ * @method static \Spatie\ModelStates\Tests\Dummy\Payment first
+ * @method static \Spatie\ModelStates\Tests\Dummy\Payment find(int $id)
+ * @method static \Spatie\ModelStates\Tests\Dummy\Payment create(array $data = [])
  * @property int id
  * @property \Carbon\Carbon failed_at
  * @property \Carbon\Carbon paid_at
@@ -45,7 +45,8 @@ class Payment extends Model
     {
         $this->addState('state', PaymentState::class)
             ->allowTransition(Created::class, Pending::class, CreatedToPending::class)
-            ->allowTransition(Created::class, Failed::class, CreatedToFailed::class)
-            ->allowTransition(Pending::class, Paid::class);
+            ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class)
+            ->allowTransition(Pending::class, Paid::class)
+        ;
     }
 }

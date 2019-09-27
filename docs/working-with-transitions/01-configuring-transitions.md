@@ -51,6 +51,23 @@ class Payment extends Model
 }
 ```
 
+## Allowing multiple from states
+
+If you've got multiple states that can transition to the same state, you can define all of them in one `allowTransition` call:
+
+```php
+class Payment extends Model
+{
+    // …
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class)
+            ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class);
+    }
+}
+```
+
 ## Using transitions
 
 Transitions can be used by calling the `transitionTo` method on the state field like so:
