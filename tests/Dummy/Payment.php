@@ -2,13 +2,13 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 
@@ -46,7 +46,6 @@ class Payment extends Model
         $this->addState('state', PaymentState::class)
             ->allowTransition(Created::class, Pending::class, CreatedToPending::class)
             ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class)
-            ->allowTransition(Pending::class, Paid::class)
-        ;
+            ->allowTransition(Pending::class, Paid::class);
     }
 }

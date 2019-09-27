@@ -6,5 +6,4 @@ use Spatie\ModelStates\State;
 
 class WrongState extends State
 {
-
 }

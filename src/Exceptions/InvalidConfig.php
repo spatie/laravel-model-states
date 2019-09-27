@@ -3,10 +3,10 @@
 namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
-use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\State;
+use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\Transition;
+use Illuminate\Database\Eloquent\Model;
 
 class InvalidConfig extends Exception
 {

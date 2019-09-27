@@ -9,7 +9,7 @@ abstract class PaymentState extends State
     /** @var \Spatie\ModelStates\Tests\Dummy\Payment|\Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions */
     protected $model;
 
-    public static $states =[
+    public static $states = [
         Canceled::class,
         Created::class,
         Failed::class,

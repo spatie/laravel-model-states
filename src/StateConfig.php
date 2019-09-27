@@ -63,7 +63,7 @@ class StateConfig
 
     public function allowTransitions(array $transitions): StateConfig
     {
-        foreach($transitions as $transition) {
+        foreach ($transitions as $transition) {
             $this->allowTransition($transition[0], $transition[1], $transition[2] ?? null);
         }
 
@@ -81,7 +81,7 @@ class StateConfig
         $transitionKey = $this->createTransitionKey($from, $to);
 
         if (! array_key_exists($transitionKey, $this->allowedTransitions)) {
-            return null;
+            return;
         }
 
         return $this->allowedTransitions[$transitionKey]
