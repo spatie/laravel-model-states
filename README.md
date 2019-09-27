@@ -15,7 +15,7 @@ composer require spatie/laravel-model-states
 
 ## Usage
 
-Please refer to the [docs](https://docs.spatie.be/laravel-model-states/v1/01-introduction/) to know how to use this package.
+Please refer to the [docs](https://docs.spatie.be/laravel-model-states/v1/01-introduction/) to learn how to use this package.
 
 ### Testing
 
