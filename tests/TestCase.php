@@ -36,5 +36,12 @@ abstract class TestCase extends Orchestra
             $table->string('error_message')->nullable();
             $table->timestamps();
         });
+
+        $this->app->get('db')->connection()->getSchemaBuilder()->create('model_with_multiple_states', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('stateA')->nullable();
+            $table->string('stateB')->nullable();
+            $table->timestamps();
+        });
     }
 }

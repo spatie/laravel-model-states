@@ -3,6 +3,8 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Tests\Dummy\DummyState;
+use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
@@ -66,5 +68,36 @@ class TransitionToTest extends TestCase
 
         $payment->state->transitionTo(Paid::class);
         $this->assertTrue($payment->state->is(Paid::class));
+    }
+
+    /** @test */
+    public function transition_to_directly_on_the_model()
+    {
+        $payment = Payment::create([
+            'state' => Pending::class,
+        ]);
+
+        $payment->transitionTo(Paid::class);
+        $this->assertTrue($payment->state->is(Paid::class));
+    }
+
+    /** @test */
+    public function transition_to_directly_on_the_model_throws_exception_when_there_are_multiple_state_fields()
+    {
+        $model = new ModelWithMultipleStates();
+
+        $this->expectException(CouldNotPerformTransition::class);
+
+        $model->transitionTo(DummyState::class);
+    }
+
+    /** @test */
+    public function transition_to_directly_on_the_model_with_multiple_fields()
+    {
+        $model = new ModelWithMultipleStates();
+
+        $model->transitionTo(DummyState::class, 'stateA');
+
+        $this->assertInstanceOf(DummyState::class, $model->stateA);
     }
 }

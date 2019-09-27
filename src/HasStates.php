@@ -106,6 +106,23 @@ trait HasStates
     }
 
     /**
+     * @param \Spatie\ModelStates\State|string $state
+     * @param string|null $field
+     */
+    public function transitionTo($state, string $field = null)
+    {
+        $stateConfig = self::getStateConfig();
+
+        if ($field === null && count($stateConfig) > 1) {
+            throw CouldNotPerformTransition::couldNotResolveTransitionField($this);
+        }
+
+        $field = $field ?? reset($stateConfig)->field;
+
+        $this->{$field}->transitionTo($state);
+    }
+
+    /**
      * @param string $fromClass
      * @param string $toClass
      *
