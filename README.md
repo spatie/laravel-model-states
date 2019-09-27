@@ -1,18 +1,16 @@
 # Adding state behaviour to Eloquent models
 
-//TODO: add practical example (payments, states, color) on how the package can be used.
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/state.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
-[![Build Status](https://img.shields.io/travis/spatie/state/master.svg?style=flat-square)](https://travis-ci.org/spatie/:package_name)
-[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/state.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/:package_name)
-[![Total Downloads](https://img.shields.io/packagist/dt/spatie/state.svg?style=flat-square)](https://packagist.org/packages/spatie/:package_name)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
+[![Build Status](https://img.shields.io/travis/spatie/laravel-model-states/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-model-states)
+[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-model-states.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-model-states)
+[![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require spatie/laravel-state
+composer require spatie/laravel-model-states
 ```
 
 ## Usage

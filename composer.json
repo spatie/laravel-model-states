@@ -5,7 +5,7 @@
         "spatie",
         "state"
     ],
-    "homepage": "https://github.com/spatie/laravel-state",
+    "homepage": "https://github.com/spatie/laravel-model-states",
     "license": "MIT",
     "authors": [
         {
