@@ -164,15 +164,15 @@ class StateTest extends TestCase
 
         $this->assertTrue($payment->state->isOneOf(
             Created::class,
-            Paid::class,
+            Paid::class
         ));
 
         $this->assertTrue($payment->state->isOneOf(
-            new Created($payment),
+            new Created($payment)
         ));
 
         $this->assertTrue($payment->state->isOneOf(
-            'created',
+            'created'
         ));
 
         $this->assertFalse($payment->state->isOneOf(
@@ -187,7 +187,7 @@ class StateTest extends TestCase
 
         $this->assertTrue($payment->state->isOneOf([
             Created::class,
-            Paid::class,
+            Paid::class
         ]));
     }
 
