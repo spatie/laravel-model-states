@@ -30,3 +30,23 @@ $payment->state->transitionTo(Paid::class);
 ```
 
 This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionError` will be thrown instead of changing the state. 
+
+## Allow multiple transitions at once
+
+A little shorthand `allowTransitions` can be used to allow multiple transitions at once:
+
+```php
+class Payment extends Model
+{
+    // …
+
+    protected function registerStates(): void
+    {
+        $this->addState('state', PaymentState::class)
+            ->allowTransitions([
+                [Pending::class, Paid::class],
+                [Pending::class, Failed::class, PendingToFailed::class],
+            ]);
+    }
+}
+```
