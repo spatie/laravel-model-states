@@ -2,10 +2,10 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
 
 class ScopeTest extends TestCase
 {

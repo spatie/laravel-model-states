@@ -2,15 +2,15 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
-use Spatie\ModelStates\Tests\Dummy\Dependency;
 use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\Dependency;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
-use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Tests\Dummy\Transitions\PendingToPaid;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 use Spatie\ModelStates\Tests\Dummy\Transitions\TransitionWithDependency;
 
 class TransitionTest extends TestCase

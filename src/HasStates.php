@@ -2,8 +2,8 @@
 
 namespace Spatie\ModelStates;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 

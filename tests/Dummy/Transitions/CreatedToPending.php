@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
+use Spatie\ModelStates\Transition;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Transition;
 
 class CreatedToPending extends Transition
 {
@@ -12,7 +12,7 @@ class CreatedToPending extends Transition
     private $payment;
 
     /**
-     * @var \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment $payment
+     * @var \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment
      */
     public function __construct($payment)
     {

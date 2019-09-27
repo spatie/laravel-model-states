@@ -2,12 +2,12 @@
 
 namespace Spatie\ModelStates;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use ReflectionClass;
+use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\Events\StateChanged;
-use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 abstract class State
 {
@@ -222,7 +222,7 @@ abstract class State
         if (method_exists($transition, 'canTransition')) {
             if (! $transition->canTransition()) {
                 throw CouldNotPerformTransition::notAllowed($this->model, $transition);
-            };
+            }
         }
 
         $mutatedModel = app()->call([$transition, 'handle']);
@@ -254,7 +254,7 @@ abstract class State
 
     /**
      * This method is used to find all available implementations of a given abstract state class.
-     * Finding all implementations can be done in two ways:
+     * Finding all implementations can be done in two ways:.
      *
      *    - The developer can define his own mapping directly in abstract state classes
      *      via the `protected $states = []` property
@@ -288,7 +288,7 @@ abstract class State
         foreach ($files as $file) {
             ['filename' => $className] = pathinfo($file);
 
-            $stateClass = $namespace . '\\' . $className;
+            $stateClass = $namespace.'\\'.$className;
 
             if (! is_subclass_of($stateClass, static::class)) {
                 continue;

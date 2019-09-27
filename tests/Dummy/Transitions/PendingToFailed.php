@@ -2,10 +2,10 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
+use Spatie\ModelStates\Transition;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
