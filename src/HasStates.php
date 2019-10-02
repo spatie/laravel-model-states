@@ -48,7 +48,7 @@ trait HasStates
 
                 $model->setAttribute(
                     $field,
-                    $stateClass
+                    class_exists($stateClass)
                         ? new $stateClass($model)
                         : null
                 );
