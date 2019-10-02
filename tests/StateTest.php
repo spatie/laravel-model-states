@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -221,5 +222,13 @@ class StateTest extends TestCase
         $this->assertNotNull($all->first(function (string $className) {
             return $className === Paid::class;
         }));
+    }
+
+    /** @test */
+    public function default_state()
+    {
+        $payment = PaymentWithDefaultStatePaid::create();
+
+        $this->assertTrue($payment->state->is(Paid::class));
     }
 }

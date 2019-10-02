@@ -16,6 +16,9 @@ class StateConfig
     /** @var string[] */
     public $allowedTransitions = [];
 
+    /** @var string|null */
+    public $defaultStateClass;
+
     public function __construct(string $field, string $stateClass)
     {
         if (! is_subclass_of($stateClass, State::class)) {
@@ -25,6 +28,13 @@ class StateConfig
         $this->field = $field;
 
         $this->stateClass = $stateClass;
+    }
+
+    public function default(string $defaultStateClass): StateConfig
+    {
+        $this->defaultStateClass = $defaultStateClass;
+
+        return $this;
     }
 
     /**

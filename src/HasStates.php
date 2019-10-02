@@ -19,53 +19,60 @@ trait HasStates
 
     public static function bootHasStates(): void
     {
-        /** @var \Spatie\ModelStates\State $expectedStateClass */
-        $serialiseState = function (string $field, string $expectedStateClass) {
-            return function (Model $model) use ($field, $expectedStateClass) {
-                $value = $model->getAttribute($field);
+        $serialiseState = function (StateConfig $stateConfig) {
+            return function (Model $model) use ($stateConfig) {
+                $value = $model->getAttribute($stateConfig->field);
+
+                if ($value === null) {
+                    $value = $stateConfig->defaultStateClass;
+                }
 
                 if ($value === null) {
                     return;
                 }
 
-                $stateClass = $expectedStateClass::resolveStateClass($value);
+                $stateClass = $stateConfig->stateClass::resolveStateClass($value);
 
-                if (! is_subclass_of($stateClass, $expectedStateClass)) {
-                    throw InvalidConfig::fieldDoesNotExtendState($field, $expectedStateClass, $stateClass);
+                if (! is_subclass_of($stateClass, $stateConfig->stateClass)) {
+                    throw InvalidConfig::fieldDoesNotExtendState(
+                        $stateConfig->field,
+                        $stateConfig->stateClass,
+                        $stateClass
+                    );
                 }
 
                 $model->setAttribute(
-                    $field,
+                    $stateConfig->field,
                     State::resolveStateName($value)
                 );
             };
         };
 
-        /** @var \Spatie\ModelStates\State $expectedStateClass */
-        $unserialiseState = function (string $field, string $expectedStateClass) {
-            return function (Model $model) use ($field, $expectedStateClass) {
-                $stateClass = $expectedStateClass::resolveStateClass($model->getAttribute($field));
+        $unserialiseState = function (StateConfig $stateConfig) {
+            return function (Model $model) use ($stateConfig) {
+                $stateClass = $stateConfig->stateClass::resolveStateClass($model->getAttribute($stateConfig->field));
+
+                $defaultState = $stateConfig->defaultStateClass
+                    ? new $stateConfig->defaultStateClass($model)
+                    : null;
 
                 $model->setAttribute(
-                    $field,
+                    $stateConfig->field,
                     class_exists($stateClass)
                         ? new $stateClass($model)
-                        : null
+                        : $defaultState
                 );
             };
         };
 
         foreach (self::getStateConfig() as $stateConfig) {
-            $field = $stateConfig->field;
-            $expectedStateClass = $stateConfig->stateClass;
+            static::retrieved($unserialiseState($stateConfig));
+            static::created($unserialiseState($stateConfig));
+            static::saved($unserialiseState($stateConfig));
 
-            static::retrieved($unserialiseState($field, $expectedStateClass));
-            static::created($unserialiseState($field, $expectedStateClass));
-            static::saved($unserialiseState($field, $expectedStateClass));
-
-            static::updating($serialiseState($field, $expectedStateClass));
-            static::creating($serialiseState($field, $expectedStateClass));
-            static::saving($serialiseState($field, $expectedStateClass));
+            static::updating($serialiseState($stateConfig));
+            static::creating($serialiseState($stateConfig));
+            static::saving($serialiseState($stateConfig));
         }
     }
 
