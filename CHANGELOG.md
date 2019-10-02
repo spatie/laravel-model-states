@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.1.1 - 2019-10-02
+
+- Default support via `new`
+
 ## 1.1.0 - 2019-10-02
 
 - Improved default support

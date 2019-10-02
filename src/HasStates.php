@@ -76,6 +76,17 @@ trait HasStates
         }
     }
 
+    public function initializeHasStates(): void
+    {
+        foreach (self::getStateConfig() as $stateConfig) {
+            if (! $stateConfig->defaultStateClass) {
+                continue;
+            }
+
+            $this->{$stateConfig->field} = new $stateConfig->defaultStateClass($this);
+        }
+    }
+
     public function scopeWhereState(Builder $builder, string $field, $states): Builder
     {
         self::getStateConfig();

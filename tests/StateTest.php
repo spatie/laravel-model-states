@@ -225,9 +225,17 @@ class StateTest extends TestCase
     }
 
     /** @test */
-    public function default_state()
+    public function default_state_via_create()
     {
         $payment = PaymentWithDefaultStatePaid::create();
+
+        $this->assertTrue($payment->state->is(Paid::class));
+    }
+
+    /** @test */
+    public function default_state_via_new()
+    {
+        $payment = new PaymentWithDefaultStatePaid();
 
         $this->assertTrue($payment->state->is(Paid::class));
     }
