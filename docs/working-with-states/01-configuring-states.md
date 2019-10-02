@@ -31,22 +31,6 @@ Schema::table('payments', function (Blueprint $table) {
 });
 ```
 
-You can make state fields nullable if you want to, though it's recommended to set a default state in the model's constructor:
-
-```php
-class Payment extends Model
-{
-    // …
-
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-        
-        $this->state = $this->state ?? new Created($this);
-    }
-}
-``` 
-
 Each state field should be represented by a class, which itself extends an abstract class you also must provide. An example would be `PaymentState`, having three concrete implementations: `Pending`, `Paid` and `Failed`.
 
 ```php
@@ -81,6 +65,22 @@ class Payment extends Model
     {
         $this
             ->addState('state', PaymentState::class);
+    }
+}
+```
+
+If you want to, you can add a default state like so:
+
+```php
+class Payment extends Model
+{
+    // …
+
+    protected function registerStates(): void
+    {
+        $this
+            ->addState('state', PaymentState::class)
+            ->default(Pending::class);
     }
 }
 ```
