@@ -239,4 +239,16 @@ class StateTest extends TestCase
 
         $this->assertTrue($payment->state->is(Paid::class));
     }
+
+    /** @test */
+    public function to_json_works_properly()
+    {
+        $payment = new Payment();
+
+        $this->assertEquals(<<<JSON
+            {"state":"created"}
+            JSON,
+            $payment->toJson()
+        );
+    }
 }

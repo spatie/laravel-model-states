@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use JsonSerializable;
 use ReflectionClass;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,7 @@ use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
-abstract class State
+abstract class State implements JsonSerializable
 {
     /**
      * Static cache for generated state maps.
@@ -300,5 +301,9 @@ abstract class State
         self::$generatedMapping[static::class] = $resolvedStates;
 
         return self::$generatedMapping[static::class];
+    }
+
+    public function jsonSerialize() {
+        return $this->getValue();
     }
 }

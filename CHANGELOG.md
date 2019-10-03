@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.1.2 - 2019-10-03
+
+- Proper support for JSON serialise
+
 ## 1.1.1 - 2019-10-02
 
 - Default support via `new`
