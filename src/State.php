@@ -2,8 +2,8 @@
 
 namespace Spatie\ModelStates;
 
-use JsonSerializable;
 use ReflectionClass;
+use JsonSerializable;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\Events\StateChanged;
@@ -303,7 +303,8 @@ abstract class State implements JsonSerializable
         return self::$generatedMapping[static::class];
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this->getValue();
     }
 }
