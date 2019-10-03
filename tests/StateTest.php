@@ -3,7 +3,6 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -12,6 +11,7 @@ use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 
 class StateTest extends TestCase
@@ -245,7 +245,7 @@ class StateTest extends TestCase
     {
         $payment = new Payment();
 
-        $this->assertEquals(<<<JSON
+        $this->assertEquals(<<<'JSON'
             {"state":"created"}
             JSON,
             $payment->toJson()
