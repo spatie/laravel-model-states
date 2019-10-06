@@ -13,7 +13,7 @@ For this reason, it's recommended to add a `@property` docblock on your model cl
 use Spatie\ModelStates\HasStates;
 
 /**
- * @property \App\States\PaymentState state
+ * @property \App\States\PaymentState $state
  */
 class Payment extends Model
 {
