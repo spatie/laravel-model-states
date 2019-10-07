@@ -245,7 +245,7 @@ class StateTest extends TestCase
     {
         $payment = new Payment();
 
-    $expected = <<<JSON
+        $expected = <<<JSON
 {"state":"created"}
 JSON;
 
