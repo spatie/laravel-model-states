@@ -245,9 +245,12 @@ class StateTest extends TestCase
     {
         $payment = new Payment();
 
-        $this->assertEquals(<<<'JSON'
-            {"state":"created"}
-            JSON,
+        $expected = <<<'JSON'
+{"state":"created"}
+JSON;
+
+        $this->assertEquals(
+            $expected,
             $payment->toJson()
         );
     }
