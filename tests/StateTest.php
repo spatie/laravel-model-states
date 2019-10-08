@@ -2,7 +2,9 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateIntOne;
 use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\PaidWithCode;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -16,6 +18,7 @@ use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 
 class StateTest extends TestCase
 {
+    /** @test */
     public function state_with_name_is_saved_with_its_class_name()
     {
         $payment = Payment::create([
@@ -28,6 +31,21 @@ class StateTest extends TestCase
         ]);
 
         $this->assertInstanceOf(PaidWithoutName::class, $payment->state);
+    }
+
+    /** @test */
+    public function state_with_int_code_is_saved_with_int_name_property()
+    {
+        $payment = Payment::create([
+            'state' => PaidWithCode::class,
+        ]);
+
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'state' => PaidWithCode::getMorphClass(),
+        ]);
+
+        $this->assertInstanceOf(PaidWithCode::class, $payment->state);
     }
 
     /** @test */
@@ -212,6 +230,14 @@ class StateTest extends TestCase
         $state = AbstractState::find('a', new Payment());
 
         $this->assertInstanceOf(StateA::class, $state);
+    }
+
+    /** @test */
+    public function resolve_state_with_int_name()
+    {
+        $state = AbstractState::find(1, new Payment());
+
+        $this->assertInstanceOf(StateIntOne::class, $state);
     }
 
     /** @test */
