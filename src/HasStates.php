@@ -141,6 +141,21 @@ trait HasStates
     }
 
     /**
+    * @param \Spatie\ModelStates\State|string $state
+    * @param string $fromClass
+    */
+    public function getAllowedTransitionsFrom($state, string $fromClass)
+    {
+        if (array_key_exists($state, static::getStateConfig())) {
+            $stateConfig = static::getStateConfig()[$state];
+
+            return $stateConfig->allowedTransitionsFrom($this, $fromClass);
+        }
+
+        throw InvalidConfig::unknownState($state, $this);
+    }
+
+    /**
      * @param string $fromClass
      * @param string $toClass
      *

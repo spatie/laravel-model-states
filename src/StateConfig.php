@@ -81,6 +81,25 @@ class StateConfig
     }
 
     /**
+    * @param \Illuminate\Database\Eloquent\Model $model
+    * @param string $fromClass
+    */
+    public function allowedTransitionsFrom(Model $model, string $fromClass)
+    {
+        $allowedTransitionsFrom = [];
+
+        foreach ($this->allowedTransitions as $allowedTransition => $value) {
+            list($from, $to) = explode('-', $allowedTransition);
+
+            if ($from === $fromClass) {
+                $allowedTransitionsFrom[] = get_class($this->stateClass::make($to, $model));
+            }
+        }
+
+        return $allowedTransitionsFrom;
+    }
+
+    /**
      * @param string $from
      * @param string $to
      *

@@ -2,17 +2,19 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\WrongState;
-use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
-use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
+use Spatie\ModelStates\StateConfig;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\WrongState;
 
 class StateTest extends TestCase
 {
@@ -253,5 +255,28 @@ JSON;
             $expected,
             $payment->toJson()
         );
+    }
+
+    /** @test */
+    public function allowed_transactions_from_existing_state()
+    {
+        $payment = new Payment();
+
+        $allowedTransitions = $payment->getAllowedTransitionsFrom('state', Created::class);
+
+        $this->assertEquals(
+            $allowedTransitions,
+            [Pending::class, Failed::class]
+        );
+    }
+
+    /** @test */
+    public function allowed_transactions_from_non_existing_state()
+    {
+        $this->expectException(InvalidConfig::class);
+
+        $payment = new Payment();
+
+        $allowedTransitions = $payment->getAllowedTransitionsFrom('wrong', Created::class);
     }
 }
