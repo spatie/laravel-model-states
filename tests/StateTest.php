@@ -6,8 +6,8 @@ use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
@@ -257,25 +257,25 @@ JSON;
     }
 
     /** @test */
-    public function allowed_transactions_from_existing_state()
+    public function transitionable_states_from_valid_state()
     {
         $payment = new Payment();
 
-        $allowedTransitions = $payment->getAllowedTransitionsFrom('state', Created::class);
+        $transitionableStates = $payment->transitionableStates('state', Created::class);
 
         $this->assertEquals(
-            $allowedTransitions,
-            [Pending::class, Failed::class]
+            $transitionableStates,
+            [Pending::getMorphClass(), Failed::getMorphClass()]
         );
     }
 
     /** @test */
-    public function allowed_transactions_from_non_existing_state()
+    public function transitionable_states_from_invalid_state()
     {
         $this->expectException(InvalidConfig::class);
 
         $payment = new Payment();
 
-        $allowedTransitions = $payment->getAllowedTransitionsFrom('wrong', Created::class);
+        $transitionableStates = $payment->transitionableStates('wrong', Created::class);
     }
 }

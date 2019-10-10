@@ -81,22 +81,23 @@ class StateConfig
     }
 
     /**
-    * @param \Illuminate\Database\Eloquent\Model $model
-    * @param string $fromClass
-    */
-    public function allowedTransitionsFrom(Model $model, string $fromClass)
+     * @param string $fromClass
+     */
+    public function transitionableStates(string $fromClass)
     {
-        $allowedTransitionsFrom = [];
+        $transitionableStates = [];
 
         foreach ($this->allowedTransitions as $allowedTransition => $value) {
-            list($from, $to) = explode('-', $allowedTransition);
+            [$from, $to] = explode('-', $allowedTransition);
 
-            if ($from === $fromClass) {
-                $allowedTransitionsFrom[] = get_class($this->stateClass::make($to, $model));
+            if ($from !== $fromClass) {
+                continue;
             }
+
+            $transitionableStates[] = $to::getMorphClass();
         }
 
-        return $allowedTransitionsFrom;
+        return $transitionableStates;
     }
 
     /**
