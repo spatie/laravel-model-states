@@ -146,7 +146,7 @@ trait HasStates
      */
     public function transitionableStates($state, string $fromClass)
     {
-        if (!array_key_exists($state, static::getStateConfig())) {
+        if (! array_key_exists($state, static::getStateConfig())) {
             throw InvalidConfig::unknownState($state, $this);
         }
 
