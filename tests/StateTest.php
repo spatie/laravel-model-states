@@ -2,6 +2,8 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
+use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
@@ -253,5 +255,24 @@ JSON;
             $expected,
             $payment->toJson()
         );
+    }
+
+    /** @test */
+    public function states_saved_as_tiny_ints()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $this->assertDatabaseHas('model_with_int_state', [
+            'id' => $model->id,
+            'state' => 1,
+        ]);
+
+        $model = ModelWithIntState::find($model->id);
+
+        $this->assertTrue($model->state->is(IntStateA::class));
     }
 }

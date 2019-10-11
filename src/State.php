@@ -115,7 +115,9 @@ abstract class State implements JsonSerializable
                 continue;
             }
 
-            if (($stateClass::$name ?? null) === $state) {
+            // Loose comparison is needed here in order to support non-string values,
+            // Laravel casts their database value automatically to strings if we didn't specify the fields in `$casts`.
+            if (($stateClass::$name ?? null) == $state) {
                 return $stateClass;
             }
         }
