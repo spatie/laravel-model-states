@@ -254,7 +254,7 @@ abstract class State implements JsonSerializable
     }
 
     /**
-     * Get the transitionable states from this state
+     * Get the transitionable states from this state.
      *
      * @return array
      */
