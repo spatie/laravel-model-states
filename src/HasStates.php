@@ -141,18 +141,24 @@ trait HasStates
     }
 
     /**
-     * @param \Spatie\ModelStates\State|string $state
      * @param string $fromClass
+     * @param string|null $field
      */
-    public function transitionableStates($state, string $fromClass)
+    public function transitionableStates(string $fromClass, string $field = null)
     {
-        if (! array_key_exists($state, static::getStateConfig())) {
-            throw InvalidConfig::unknownState($state, $this);
+        $stateConfig = self::getStateConfig();
+
+        if ($field === null && count($stateConfig) > 1) {
+            throw InvalidConfig::fieldNotFound($fromClass, $this);
         }
 
-        $stateConfig = static::getStateConfig()[$state];
+        $field = $field ?? reset($stateConfig)->field;
 
-        return $stateConfig->transitionableStates($fromClass);
+        if (! array_key_exists($field, static::getStateConfig())) {
+            throw InvalidConfig::unknownState($field, $this);
+        }
+
+        return static::getStateConfig()[$field]->transitionableStates($fromClass);
     }
 
     /**
