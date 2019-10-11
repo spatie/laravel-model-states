@@ -9,10 +9,10 @@ use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
 
-class TransitionableStateTest extends TestCase
+class TransitionableStatesTest extends TestCase
 {
     /** @test */
-    public function transitionable_states_with_field()
+    public function transitionable_states_with_fieldname()
     {
         $payment = new Payment();
 
@@ -25,7 +25,7 @@ class TransitionableStateTest extends TestCase
     }
 
     /** @test */
-    public function transitionable_states_without_field()
+    public function transitionable_states_without_fieldname()
     {
         $payment = new Payment();
 
@@ -38,7 +38,7 @@ class TransitionableStateTest extends TestCase
     }
 
     /** @test */
-    public function transitionable_states_with_invalid_field_fails()
+    public function transitionable_states_with_invalid_fieldname_fails()
     {
         $this->expectException(InvalidConfig::class);
 
@@ -48,7 +48,7 @@ class TransitionableStateTest extends TestCase
     }
 
     /** @test */
-    public function transitionable_states_with_multiple_states_without_field_faild()
+    public function transitionable_states_with_multiple_states_without_fieldname_fails()
     {
         $this->expectException(InvalidConfig::class);
 
