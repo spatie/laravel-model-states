@@ -80,10 +80,7 @@ class StateConfig
         return $this;
     }
 
-    /**
-     * @param string $fromClass
-     */
-    public function transitionableStates(string $fromClass)
+    public function transitionableStates(string $fromClass): array
     {
         $transitionableStates = [];
 

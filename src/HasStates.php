@@ -140,11 +140,7 @@ trait HasStates
         $this->{$field}->transitionTo($state);
     }
 
-    /**
-     * @param string $fromClass
-     * @param string|null $field
-     */
-    public function transitionableStates(string $fromClass, string $field = null)
+    public function transitionableStates(string $fromClass, ?string $field = null): array
     {
         $stateConfig = self::getStateConfig();
 
@@ -154,11 +150,11 @@ trait HasStates
 
         $field = $field ?? reset($stateConfig)->field;
 
-        if (! array_key_exists($field, static::getStateConfig())) {
+        if (! array_key_exists($field, $stateConfig)) {
             throw InvalidConfig::unknownState($field, $this);
         }
 
-        return static::getStateConfig()[$field]->transitionableStates($fromClass);
+        return $stateConfig[$field]->transitionableStates($fromClass);
     }
 
     /**
