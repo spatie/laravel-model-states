@@ -2,8 +2,6 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
-use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
@@ -12,6 +10,8 @@ use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\States\Canceled;
+use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
@@ -296,7 +296,7 @@ JSON;
         $this->assertTrue(
             $states
                 ->get('state')
-                ->map(function($state) {
+                ->map(function ($state) {
                     return get_class($state);
                 })
                 ->diff($expected_states)
@@ -320,7 +320,7 @@ JSON;
 
         $this->assertTrue(
             $states
-                ->map(function($state) {
+                ->map(function ($state) {
                     return get_class($state);
                 })
                 ->diff($expected_states)

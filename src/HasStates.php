@@ -190,9 +190,9 @@ trait HasStates
     public static function getStates(): \Illuminate\Support\Collection
     {
         return collect(static::getStateConfig())
-            ->map(function($state) {
+            ->map(function ($state) {
                 return $state->stateClass::all()
-                    ->map(function($state) {
+                    ->map(function ($state) {
                         return new $state(new static);
                     });
             });
@@ -217,7 +217,7 @@ trait HasStates
     public static function getDefaultStates(): \Illuminate\Support\Collection
     {
         return collect(static::getStateConfig())
-            ->map(function($state) {
+            ->map(function ($state) {
                 return is_null($state->defaultStateClass)
                     ? null
                     : new $state->defaultStateClass(new static);
