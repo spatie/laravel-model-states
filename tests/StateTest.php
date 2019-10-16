@@ -296,9 +296,6 @@ JSON;
         $this->assertTrue(
             $states
                 ->get('state')
-                ->map(function ($state) {
-                    return get_class($state);
-                })
                 ->diff($expected_states)
                 ->isEmpty()
         );
@@ -318,14 +315,7 @@ JSON;
 
         $states = Payment::getStatesFor('state');
 
-        $this->assertTrue(
-            $states
-                ->map(function ($state) {
-                    return get_class($state);
-                })
-                ->diff($expected_states)
-                ->isEmpty()
-        );
+        $this->assertTrue($expected_states->diff($states)->isEmpty());
     }
 
     /** @test */
@@ -334,7 +324,7 @@ JSON;
         $states = PaymentWithDefaultStatePaid::getDefaultStates();
 
         $this->assertTrue($states->has('state'));
-        $this->assertTrue($states->get('state') instanceof Paid);
+        $this->assertEquals($states->get('state'), Paid::class);
     }
 
     /** @test */
@@ -342,6 +332,6 @@ JSON;
     {
         $state = PaymentWithDefaultStatePaid::getDefaultStateFor('state');
 
-        $this->assertTrue($state instanceof Paid);
+        $this->assertEquals($state, Paid::class);
     }
 }

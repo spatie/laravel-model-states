@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -182,55 +183,28 @@ trait HasStates
         return static::$stateFields ?? [];
     }
 
-    /**
-     * Get the registered states for the model.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public static function getStates(): \Illuminate\Support\Collection
+    public static function getStates(): Collection
     {
         return collect(static::getStateConfig())
             ->map(function ($state) {
-                return $state->stateClass::all()
-                    ->map(function ($state) {
-                        return new $state(new static);
-                    });
+                return $state->stateClass::all();
             });
     }
 
-    /**
-     * Get registered states for a specfic model column.
-     *
-     * @param  string $column
-     * @return \Illuminate\Support\Collection
-     */
-    public static function getStatesFor(string $column): \Illuminate\Support\Collection
+    public static function getStatesFor(string $column): Collection
     {
-        return static::getStates()->get($column, new \Illuminate\Support\Collection);
+        return static::getStates()->get($column, new Collection);
     }
 
-    /**
-     * Get default states for the model.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public static function getDefaultStates(): \Illuminate\Support\Collection
+    public static function getDefaultStates(): Collection
     {
         return collect(static::getStateConfig())
             ->map(function ($state) {
-                return is_null($state->defaultStateClass)
-                    ? null
-                    : new $state->defaultStateClass(new static);
+                return $state->defaultStateClass;
             });
     }
 
-    /**
-     * Get the default state for a specfic model column.
-     *
-     * @param  string $column
-     * @return \Illuminate\Support\Collection|
-     */
-    public static function getDefaultStateFor(string $column): ?\Spatie\ModelStates\State
+    public static function getDefaultStateFor(string $column): string
     {
         return static::getDefaultStates()->get($column);
     }

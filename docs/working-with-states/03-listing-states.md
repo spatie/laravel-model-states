@@ -19,11 +19,6 @@ use App\States\Fulfillment\Unfulfilled;
 use Illuminate\Database\Eloquent\Model;
 use App\States\Fulfillment\FulfillmentState;
 
-/**
- * @property \App\States\Invoice\InvoiceState state
- * @property \App\States\Fulfillment\FulfillmentState fulfillment
- */
-
 class Invoice extends Model
 {
     use HasStates;
@@ -48,56 +43,46 @@ class Invoice extends Model
 
 ## Get Registered States
 
-You can get all the registered states with `Invoice::getStates()`, which returns:
+You can get all the registered states with `Invoice::getStates()`, which returns a collection of state classes, grouped by column:
 
 ```php
-Illuminate\Support\Collection {
-     all: [
-       "state" => Illuminate\Support\Collection {
-         all: [
-           App\States\Invoice\Declined,
-           App\States\Invoice\Paid,
-           App\States\Invoice\Pending,
-         ],
-       },
-       "fulfillment" => Illuminate\Support\Collection {
-         all: [
-           App\States\Fulfillment\Complete,
-           App\States\Fulfillment\Partial,
-           App\States\Fulfillment\Unfulfilled,
-         ],
-       },
-     ],
-   }
+[
+    "state" => [
+        'App\States\Invoice\Declined',
+        'App\States\Invoice\Paid',
+        'App\States\Invoice\Pending',
+    ],
+    "fulfillment" => [
+        'App\States\Fulfillment\Complete',
+        'App\States\Fulfillment\Partial',
+        'App\States\Fulfillment\Unfulfilled',
+    ]
+]
 ```
 
-You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns:
+You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns a colelctions of state classes:
 
 ```php
-Illuminate\Support\Collection {
-     all: [
-       App\States\Invoice\Declined,
-       App\States\Invoice\Paid,
-       App\States\Invoice\Pending,
-     ],
-   }
+[
+    'App\States\Invoice\Declined',
+    'App\States\Invoice\Paid',
+    'App\States\Invoice\Pending',
+],
 ```
 
 ## Get Default States
 
-You can get all the default states with `Invoice::getDefaultStates()`, which returns:
+You can get all the default states with `Invoice::getDefaultStates()`, which returns a collection of state classed, keyed by column:
 
 ```php
-Illuminate\Support\Collection {
-    all: [
-        "state" => App\States\Invoice\Pending,
-        "fulfillment" => null,
-    ],
-}
+[
+    "state" => 'App\States\Invoice\Pending',
+    "fulfillment" => null,
+]
 ```
 
 You can also get the default state for a specific column with `Invoice::getDefaultStateFor('state')`, which returns:
 
 ```php
-App\States\Invoice\Pending
+'App\States\Invoice\Pending'
 ```
