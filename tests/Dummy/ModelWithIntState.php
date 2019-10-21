@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
+use Spatie\ModelStates\HasStates;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
-use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\Tests\Dummy\IntStates\IntState;
 use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
 
