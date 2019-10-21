@@ -72,7 +72,7 @@ You can also get the registered states for a specific column with `Invoice::getS
 
 ## Get Default States
 
-You can get all the default states with `Invoice::getDefaultStates()`, which returns a collection of state classed, keyed by column:
+You can get all the default states with `Invoice::getDefaultStates()`, which returns a collection of state classes, keyed by column:
 
 ```php
 [
