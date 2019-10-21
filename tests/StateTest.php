@@ -2,14 +2,16 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
-use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Canceled;
+use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
@@ -274,5 +276,62 @@ JSON;
         $model = ModelWithIntState::find($model->id);
 
         $this->assertTrue($model->state->is(IntStateA::class));
+    }
+
+    /** @test */
+    public function registered_states_can_be_listed()
+    {
+        $expected_states = collect([
+            Paid::class,
+            Failed::class,
+            Created::class,
+            Pending::class,
+            Canceled::class,
+            PaidWithoutName::class,
+        ]);
+
+        $states = Payment::getStates();
+
+        $this->assertTrue($states->has('state'));
+        $this->assertTrue(
+            $states
+                ->get('state')
+                ->diff($expected_states)
+                ->isEmpty()
+        );
+    }
+
+    /** @test */
+    public function registered_states_for_specific_column_can_be_listed()
+    {
+        $expected_states = collect([
+            Paid::class,
+            Failed::class,
+            Created::class,
+            Pending::class,
+            Canceled::class,
+            PaidWithoutName::class,
+        ]);
+
+        $states = Payment::getStatesFor('state');
+
+        $this->assertTrue($expected_states->diff($states)->isEmpty());
+    }
+
+    /** @test */
+    public function defaults_states_can_be_listed()
+    {
+        $states = PaymentWithDefaultStatePaid::getDefaultStates();
+
+        $this->assertTrue($states->has('state'));
+        $this->assertEquals($states->get('state'), Paid::class);
+    }
+
+    /** @test */
+    public function default_state_for_specific_column_can_be_listed()
+    {
+        $state = PaymentWithDefaultStatePaid::getDefaultStateFor('state');
+
+        $this->assertEquals($state, Paid::class);
     }
 }

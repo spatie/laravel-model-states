@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -180,5 +181,31 @@ trait HasStates
         }
 
         return static::$stateFields ?? [];
+    }
+
+    public static function getStates(): Collection
+    {
+        return collect(static::getStateConfig())
+            ->map(function ($state) {
+                return $state->stateClass::all();
+            });
+    }
+
+    public static function getStatesFor(string $column): Collection
+    {
+        return static::getStates()->get($column, new Collection);
+    }
+
+    public static function getDefaultStates(): Collection
+    {
+        return collect(static::getStateConfig())
+            ->map(function ($state) {
+                return $state->defaultStateClass;
+            });
+    }
+
+    public static function getDefaultStateFor(string $column): string
+    {
+        return static::getDefaultStates()->get($column);
     }
 }
