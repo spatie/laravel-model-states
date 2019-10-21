@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.2.0 - 2019-10-21
+
+- Add state listing methods (#21)
+
 ## 1.1.3 - 2019-10-11
 
 - Proper support for non-string columns
