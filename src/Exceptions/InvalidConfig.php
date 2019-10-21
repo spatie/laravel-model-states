@@ -14,7 +14,7 @@ class InvalidConfig extends Exception
     {
         $modelClass = get_class($model);
 
-        return new self("No state field found for {$modelClass}::{$field}, did you forget to provide a mapping in {$modelClass}::registerStates()?");
+        return UnknownState::make($field, $modelClass);
     }
 
     public static function fieldNotFound(string $stateClass, Model $model): InvalidConfig

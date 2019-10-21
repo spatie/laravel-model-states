@@ -17,8 +17,9 @@
     ],
     "require": {
         "php": "^7.2",
-        "laravel/framework": "~5.8|^6.0",
-        "ext-json" : "*"
+        "ext-json": "*",
+        "facade/ignition-contracts": "^1.0",
+        "laravel/framework": "~5.8|^6.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",
