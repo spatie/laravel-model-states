@@ -26,7 +26,7 @@ class InvalidConfig extends Exception
 
     public static function fieldDoesNotExtendState(string $field, string $expectedStateClass, string $actualClass): InvalidConfig
     {
-        return new self("State field `{$field}` expects state to be of type `{$expectedStateClass}`, instead got `{$actualClass}`");
+        return FieldDoesNotExtendState::make($field, $expectedStateClass, $actualClass);
     }
 
     public static function doesNotExtendState(string $class): InvalidConfig
