@@ -20,7 +20,7 @@ class CouldNotPerformTransition extends Exception
     {
         $modelClass = get_class($model);
 
-        return new self("Transition from `{$from}` to `{$to}` on model `{$modelClass}` was not found, did you forget to register it in `{$modelClass}::registerStates()`?");
+        return TransitionNotFound::make($from, $to, $modelClass);
     }
 
     public static function couldNotResolveTransitionField(Model $model)
