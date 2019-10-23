@@ -13,7 +13,7 @@ class CouldNotPerformTransition extends Exception
 
         $transitionClass = get_class($transitionClass);
 
-        return new self("The transition `{$transitionClass}` is not allowed on model `{$modelClass}` at the moment.");
+        return TransitionNotAllowed::make($modelClass, $transitionClass);
     }
 
     public static function notFound(string $from, string $to, Model $model): CouldNotPerformTransition
