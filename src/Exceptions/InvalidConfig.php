@@ -41,7 +41,7 @@ class InvalidConfig extends Exception
 
     public static function doesNotExtendBaseClass(string $class, string $baseClass): InvalidConfig
     {
-        return new self("Class {$class} does not extend the `{$baseClass}` base class.");
+        return ClassDoesNotExtendBaseClass::make($class, $baseClass);
     }
 
     public static function resolveTransitionNotFound(Model $model): InvalidConfig
