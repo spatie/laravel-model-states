@@ -23,10 +23,10 @@ class CouldNotPerformTransition extends Exception
         return TransitionNotFound::make($from, $to, $modelClass);
     }
 
-    public static function couldNotResolveTransitionField(Model $model)
+    public static function couldNotResolveTransitionField(Model $model): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 
-        return new self("You tried to invoke {$modelClass}::transitionTo() directly, though there are multiple state fields configured. Please use {$modelClass}->stateField->transitionTo() instead.");
+        return CouldNotResolveTransitionField::make($modelClass);
     }
 }
