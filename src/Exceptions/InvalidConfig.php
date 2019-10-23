@@ -50,6 +50,6 @@ class InvalidConfig extends Exception
 
         $trait = HasStates::class;
 
-        return new self("The method `resolveTransition` was not found on model `{$modelClass}`, are you sure it uses the `{$trait} trait?`");
+        return MissingTraitOnModel::make($modelClass, $trait);
     }
 }
