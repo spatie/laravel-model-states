@@ -3,7 +3,7 @@ title: Listing states
 weight: 3
 ---
 
-Say you have setup the invoice model as follows:
+Say you have set up the invoice model as follows:
 
 ```php
 namespace App;
@@ -60,13 +60,42 @@ You can get all the registered states with `Invoice::getStates()`, which returns
 ]
 ```
 
-You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns a colelctions of state classes:
+You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns a collections of state classes:
 
 ```php
 [
     'App\States\Invoice\Declined',
     'App\States\Invoice\Paid',
     'App\States\Invoice\Pending',
+],
+```
+
+## Get Names of Registered States
+
+If you want the state names instead of the class names, you can call `Invoice::getStateNamesFor('state')` instead. 
+
+```php
+[
+    "state" => [
+        'declined',
+        'paid',
+        'pending',
+    ],
+    "fulfillment" => [
+        'complete',
+        'partial',
+        'unfulfilled',
+    ]
+]
+```
+
+Like the classes, you can also get the registered states for a specific column with `Invoice::getStateNamesFor('state')`:
+
+```php
+[
+    'declined',
+    'paid',
+    'pending',
 ],
 ```
 

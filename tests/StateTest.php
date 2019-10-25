@@ -319,6 +319,46 @@ JSON;
     }
 
     /** @test */
+    public function names_for_registered_states_can_be_listed()
+    {
+        $expected_states = collect([
+            'paid',
+            'failed',
+            'created',
+            'pending',
+            'canceled',
+            PaidWithoutName::class,
+        ]);
+
+        $states = Payment::getStateNames();
+
+        $this->assertTrue($states->has('state'));
+        $this->assertTrue(
+            $states
+                ->get('state')
+                ->diff($expected_states)
+                ->isEmpty()
+        );
+    }
+
+    /** @test */
+    public function names_for_registered_states_for_specific_column_can_be_listed()
+    {
+        $expected_states = collect([
+            'paid',
+            'failed',
+            'created',
+            'pending',
+            'canceled',
+            PaidWithoutName::class,
+        ]);
+
+        $states = Payment::getStateNamesFor('state');
+
+        $this->assertTrue($expected_states->diff($states)->isEmpty());
+    }
+
+    /** @test */
     public function defaults_states_can_be_listed()
     {
         $states = PaymentWithDefaultStatePaid::getDefaultStates();

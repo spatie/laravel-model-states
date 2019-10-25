@@ -196,6 +196,21 @@ trait HasStates
         return static::getStates()->get($column, new Collection);
     }
 
+    public static function getStateNames(): Collection
+    {
+        return collect(static::getStateConfig())
+            ->map(function ($state) {
+                return $state->stateClass::all()->map(function ($stateClass) {
+                    return $stateClass::resolveStateName($stateClass);
+                });
+            });
+    }
+
+    public static function getStateNamesFor(string $column): Collection
+    {
+        return static::getStateNames()->get($column, new Collection);
+    }
+
     public static function getDefaultStates(): Collection
     {
         return collect(static::getStateConfig())
