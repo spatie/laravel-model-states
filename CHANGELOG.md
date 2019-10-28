@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.3.1 - 2019-10-28
+
+- Revert 06a4359a184bc747d7fd8c9b062e4333e9b30f80
+
 ## 1.3.0 - 2019-10-28
 
 - Allow to get transitional states (#17)
