@@ -256,6 +256,16 @@ abstract class State implements JsonSerializable
     }
 
     /**
+     * Get the transitionable states from this state.
+     *
+     * @return array
+     */
+    public function transitionableStates($field = null): array
+    {
+        return $this->model->transitionableStates(get_class($this), $field);
+    }
+
+    /**
      * This method is used to find all available implementations of a given abstract state class.
      * Finding all implementations can be done in two ways:.
      *

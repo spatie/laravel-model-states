@@ -141,6 +141,23 @@ trait HasStates
         $this->{$field}->transitionTo($state);
     }
 
+    public function transitionableStates(string $fromClass, ?string $field = null): array
+    {
+        $stateConfig = self::getStateConfig();
+
+        if ($field === null && count($stateConfig) > 1) {
+            throw InvalidConfig::fieldNotFound($fromClass, $this);
+        }
+
+        $field = $field ?? reset($stateConfig)->field;
+
+        if (! array_key_exists($field, $stateConfig)) {
+            throw InvalidConfig::unknownState($field, $this);
+        }
+
+        return $stateConfig[$field]->transitionableStates($fromClass);
+    }
+
     /**
      * @param string $fromClass
      * @param string $toClass

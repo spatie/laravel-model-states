@@ -80,6 +80,23 @@ class StateConfig
         return $this;
     }
 
+    public function transitionableStates(string $fromClass): array
+    {
+        $transitionableStates = [];
+
+        foreach ($this->allowedTransitions as $allowedTransition => $value) {
+            [$from, $to] = explode('-', $allowedTransition);
+
+            if ($from !== $fromClass) {
+                continue;
+            }
+
+            $transitionableStates[] = $to::getMorphClass();
+        }
+
+        return $transitionableStates;
+    }
+
     /**
      * @param string $from
      * @param string $to
