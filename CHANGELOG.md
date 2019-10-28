@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.3.0 - 2019-10-28
+
+- Allow to get transitional states (#17)
+
 ## 1.2.0 - 2019-10-21
 
 - Add state listing methods (#21)
