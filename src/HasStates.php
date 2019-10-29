@@ -66,10 +66,14 @@ trait HasStates
                     ? new $stateConfig->defaultStateClass($model)
                     : null;
 
-                /** @var \Spatie\ModelStates\State $state */
-                $state = class_exists($stateClass)
-                    ? new $stateClass($model)
-                    : $defaultState;
+                /** @var null|\Spatie\ModelStates\State $state */
+                $state = $defaultState;
+
+                if(class_exists($stateClass)){
+                    $state = new $stateClass($model);
+
+                    $state->setField($stateConfig->field);
+                }
 
                 $state->setField($stateConfig->field);
 
