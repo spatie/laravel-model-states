@@ -20,7 +20,7 @@ class Payment extends Model
 ```
 
 ```php
-$transitionableStates = $payment->transitionableStates(Pending::class);
+$transitionableStates = $payment->transitionableStates(Pending::class, 'state');
 ```
 
 This will return an array with all transitionable states for `Pending::class`
@@ -37,16 +37,4 @@ Its also possible to use `transitionableStates()` method directly on a state:
 
 ```php
 $payment->state->transitionableStates();
-```
-
-## Multiple state fields on model
-
-If there are multiple fields, a `\Spatie\ModelStates\Exceptions\InvalidConfig` exception will be thrown. You can pass the state field name explicitly as a parameter:
-
-```php
-// From a model
-$payment->transitionableStates(Pending::class, 'fieldName')
-
-// From a state
-$payment->state->transitionableStates('fieldName');
 ```

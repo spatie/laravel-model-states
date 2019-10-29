@@ -2,6 +2,11 @@
 
 All notable changes to `state` will be documented in this file
 
+## 2.0.0 - ?
+
+- `HasStates::transitionableStates(string $fromClass, string $field)` now always requires the `$field` parameter
+- `State::transitionableStates()` now doesn't need the `$field` parameter anymore
+
 ## 1.6.0 - 2020-03-03
 
 - add support for Laravel 7

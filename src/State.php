@@ -49,6 +49,11 @@ abstract class State implements JsonSerializable
         return $this->field;
     }
 
+    public function getStateConfig(): StateConfig
+    {
+        return $this->model::getStateConfig()[$this->field];
+    }
+
     /**
      * Create a state object based on a value (classname or name),
      * and optionally provide its constructor arguments.
@@ -289,14 +294,12 @@ abstract class State implements JsonSerializable
         return $this->transition($transition, ...$args);
     }
 
-    /**
-     * Get the transitionable states from this state.
-     *
-     * @return array
-     */
-    public function transitionableStates($field = null): array
+    public function transitionableStates(): array
     {
-        return $this->model->transitionableStates(get_class($this), $field);
+        return $this->model->transitionableStates(
+            get_class($this),
+            $this->field
+        );
     }
 
     /**
