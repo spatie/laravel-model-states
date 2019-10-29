@@ -166,19 +166,6 @@ trait HasStates
         return $this->{$field}->transitionTo($state);
     }
 
-    public function transitionableStates(string $fromClass, string $field): array
-    {
-        $stateConfig = self::getStateConfig();
-
-        $field = $field ?? reset($stateConfig)->field;
-
-        if (! array_key_exists($field, $stateConfig)) {
-            throw InvalidConfig::unknownState($field, $this);
-        }
-
-        return $stateConfig[$field]->transitionableStates($fromClass);
-    }
-
     /**
      * @param \Spatie\ModelStates\State|string $to
      * @param string|null $field
