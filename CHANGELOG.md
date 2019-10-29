@@ -4,7 +4,7 @@ All notable changes to `state` will be documented in this file
 
 ## 2.0.0 - ?
 
-- `HasStates::transitionableStates(string $fromClass, string $field)` now always requires the `$field` parameter.
+- `HasStates::transitionableStates(string $fromClass, string $field)` has been removed.
 - `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
 - `HasStates::getStates()` now returns the morph values instead of the hardcoded class names. You can easily construct a state instance from the morph value using `ConcreteState::make($morphValue, $model)`.
 
