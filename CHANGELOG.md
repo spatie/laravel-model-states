@@ -2,6 +2,11 @@
 
 All notable changes to `state` will be documented in this file
 
+## 2.0.0 - ?
+
+- `HasStates::transitionableStates(string $fromClass, string $field)` now always requires the `$field` parameter
+- `State::transitionableStates()` now doesn't need the `$field` parameter anymore
+
 ## 1.8.0 - 2020-08-19
 
 - Add getters for `TransitionNotFound` attributes (#99)
