@@ -29,7 +29,7 @@ In this example we're using both a simple transition, and a custom one. Transiti
 $payment->state->transitionTo(Paid::class);
 ```
 
-This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionError` will be thrown instead of changing the state. 
+This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionNotFound` will be thrown instead of changing the state. 
 
 ## Allow multiple transitions at once
 
@@ -82,7 +82,7 @@ If you only have one state field on your model, you can use the `transitionTo` m
 $payment->transitionTo(Paid::class);
 ```
 
-If there are multiple fields, a `\Spatie\ModelStates\Exceptions\CouldNotPerformTransition` exception will be thrown. You can pass the state field name explicitly as a second parameter if you want to: 
+If there are multiple fields, a `\Spatie\ModelStates\Exceptions\CouldNotResolveTransitionField` exception will be thrown. You can pass the state field name explicitly as a second parameter if you want to: 
 
 ```php
 $payment->transitionTo(Paid::class, 'fieldName');

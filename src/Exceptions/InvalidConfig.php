@@ -14,7 +14,7 @@ class InvalidConfig extends Exception
     {
         $modelClass = get_class($model);
 
-        return new self("No state field found for {$modelClass}::{$field}, did you forget to provide a mapping in {$modelClass}::registerStates()?");
+        return UnknownState::make($field, $modelClass);
     }
 
     public static function fieldNotFound(string $stateClass, Model $model): InvalidConfig
@@ -26,7 +26,7 @@ class InvalidConfig extends Exception
 
     public static function fieldDoesNotExtendState(string $field, string $expectedStateClass, string $actualClass): InvalidConfig
     {
-        return new self("State field `{$field}` expects state to be of type `{$expectedStateClass}`, instead got `{$actualClass}`");
+        return FieldDoesNotExtendState::make($field, $expectedStateClass, $actualClass);
     }
 
     public static function doesNotExtendState(string $class): InvalidConfig
@@ -41,7 +41,7 @@ class InvalidConfig extends Exception
 
     public static function doesNotExtendBaseClass(string $class, string $baseClass): InvalidConfig
     {
-        return new self("Class {$class} does not extend the `{$baseClass}` base class.");
+        return ClassDoesNotExtendBaseClass::make($class, $baseClass);
     }
 
     public static function resolveTransitionNotFound(Model $model): InvalidConfig
@@ -50,6 +50,6 @@ class InvalidConfig extends Exception
 
         $trait = HasStates::class;
 
-        return new self("The method `resolveTransition` was not found on model `{$modelClass}`, are you sure it uses the `{$trait} trait?`");
+        return MissingTraitOnModel::make($modelClass, $trait);
     }
 }
