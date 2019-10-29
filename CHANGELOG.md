@@ -13,9 +13,9 @@ All notable changes to `laravel-model-states` will be documented in this file
 
 ## 2.0.0 - ?
 
-- `HasStates::transitionableStates(string $fromClass, string $field)` now always requires the `$field` parameter
-- `State::transitionableStates()` now doesn't need the `$field` parameter anymore
-- `HasStates::getStates()` now returns the morphclass values instead of the hardcoded class names
+- `HasStates::transitionableStates(string $fromClass, string $field)` now always requires the `$field` parameter.
+- `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
+- `HasStates::getStates()` now returns the morph values instead of the hardcoded class names. You can easily construct a state instance from the morph value using `ConcreteState::make($morphValue, $model)`.
 
 ## 1.8.0 - 2020-08-19
 
