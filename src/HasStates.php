@@ -255,7 +255,10 @@ trait HasStates
     {
         return collect(static::getStateConfig())
             ->map(function ($state) {
-                return $state->stateClass::all();
+                return $state->stateClass::all()->map(function ($stateClass) {
+                    /** @var \Spatie\ModelStates\State $stateClass */
+                    return $stateClass::getMorphClass();
+                });
             });
     }
 
