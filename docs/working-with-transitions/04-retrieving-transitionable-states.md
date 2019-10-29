@@ -38,4 +38,11 @@ It's also possible to use `transitionableStates()` method directly on a state:
 
 ```php
 $payment->state->transitionableStates();
+
+## Can transition to
+
+If you want to know whether a state can be transitioned to another one, you can use the `canTransitionTo` method:
+
+```php
+$payment->state->canTransitionTo(Paid::class);
 ```
