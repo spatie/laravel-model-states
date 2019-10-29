@@ -5,6 +5,7 @@ weight: 4
 
 An array of transitionable states can be retrieved with the `transitionableStates()` method on your model.
 
+
 ```php
 class Payment extends Model
 {
@@ -20,7 +21,7 @@ class Payment extends Model
 ```
 
 ```php
-$transitionableStates = $payment->transitionableStates(Pending::class, 'state');
+$transitionableStates = $payment->state->transitionableStates();
 ```
 
 This will return an array with all transitionable states for `Pending::class`

@@ -296,12 +296,26 @@ abstract class State implements JsonSerializable
         return $this->transition($transition, ...$args);
     }
 
+    /**
+     * Check whether the current state can transition to another one
+     *
+     * @param string|\Spatie\ModelStates\State $state
+     *
+     * @return bool
+     */
+    public function canTransitionTo($state): bool
+    {
+        return in_array(
+            static::resolveStateName($state),
+            $this->transitionableStates()
+        );
+    }
+
     public function transitionableStates(): array
     {
-        return $this->model->transitionableStates(
-            get_class($this),
-            $this->field
-        );
+        $stateConfig = $this->getStateConfig();
+
+        return $stateConfig->transitionableStates(get_class($this));
     }
 
     /**
