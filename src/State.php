@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Exception;
 use ReflectionClass;
 use JsonSerializable;
 use Illuminate\Support\Collection;
@@ -24,9 +25,28 @@ abstract class State implements JsonSerializable
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;
 
+    /** @var string|null */
+    protected $field;
+
     public function __construct(Model $model)
     {
         $this->model = $model;
+    }
+
+    public function setField(string $field): State
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    public function getField(): string
+    {
+        if (! $this->field) {
+            throw new Exception("Could not determine the field name of this state class.");
+        }
+
+        return $this->field;
     }
 
     /**
@@ -301,7 +321,7 @@ abstract class State implements JsonSerializable
         foreach ($files as $file) {
             ['filename' => $className] = pathinfo($file);
 
-            $stateClass = $namespace.'\\'.$className;
+            $stateClass = $namespace . '\\' . $className;
 
             if (! is_subclass_of($stateClass, static::class)) {
                 continue;

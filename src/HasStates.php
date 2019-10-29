@@ -18,6 +18,15 @@ trait HasStates
 
     abstract protected function registerStates(): void;
 
+    public function __set($name, $value): void
+    {
+        if ($value instanceof State) {
+            $value->setField($name);
+        }
+
+        parent::__set($name, $value);
+    }
+
     public static function bootHasStates(): void
     {
         $serialiseState = function (StateConfig $stateConfig) {
@@ -57,11 +66,16 @@ trait HasStates
                     ? new $stateConfig->defaultStateClass($model)
                     : null;
 
+                /** @var \Spatie\ModelStates\State $state */
+                $state = class_exists($stateClass)
+                    ? new $stateClass($model)
+                    : $defaultState;
+
+                $state->setField($stateConfig->field);
+
                 $model->setAttribute(
                     $stateConfig->field,
-                    class_exists($stateClass)
-                        ? new $stateClass($model)
-                        : $defaultState
+                    $state
                 );
             };
         };
