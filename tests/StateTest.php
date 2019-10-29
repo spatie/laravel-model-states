@@ -335,4 +335,24 @@ JSON;
 
         $this->assertEquals($state, Paid::class);
     }
+
+    /** @test */
+    public function the_field_is_correctly_set_on_the_state()
+    {
+        $payment = new Payment();
+        $this->assertEquals('state', $payment->state->getField());
+
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+        $this->assertEquals('state', $payment->state->getField());
+
+        $payment = new Payment();
+        $payment->state = new Paid($payment);
+        $this->assertEquals('state', $payment->state->getField());
+
+        $payment = new Payment();
+        $payment->state->transitionTo(Pending::class);
+        $this->assertEquals('state', $payment->state->getField());
+    }
 }
