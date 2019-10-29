@@ -28,6 +28,26 @@ abstract class State implements JsonSerializable
     /** @var string|null */
     protected $field;
 
+    /**
+     * Create a state object based on a value (classname or name),
+     * and optionally provide its constructor arguments.
+     *
+     * @param string $name
+     * @param mixed ...$args
+     *
+     * @return \Spatie\ModelStates\State
+     */
+    public static function make(string $name, Model $model): State
+    {
+        $stateClass = static::resolveStateClass($name);
+
+        if (! is_subclass_of($stateClass, static::class)) {
+            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
+        }
+
+        return new $stateClass($model);
+    }
+
     public function __construct(Model $model)
     {
         $this->model = $model;
@@ -52,26 +72,6 @@ abstract class State implements JsonSerializable
     public function getStateConfig(): StateConfig
     {
         return $this->model::getStateConfig()[$this->field];
-    }
-
-    /**
-     * Create a state object based on a value (classname or name),
-     * and optionally provide its constructor arguments.
-     *
-     * @param string $name
-     * @param mixed ...$args
-     *
-     * @return \Spatie\ModelStates\State
-     */
-    public static function make(string $name, Model $model): State
-    {
-        $stateClass = static::resolveStateClass($name);
-
-        if (! is_subclass_of($stateClass, static::class)) {
-            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
-        }
-
-        return new $stateClass($model);
     }
 
     /**
