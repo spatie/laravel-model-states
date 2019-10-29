@@ -283,12 +283,12 @@ JSON;
     public function registered_states_can_be_listed()
     {
         $expected_states = collect([
-            Paid::class,
-            Failed::class,
-            Created::class,
-            Pending::class,
-            Canceled::class,
-            PaidWithoutName::class,
+            Paid::getMorphClass(),
+            Failed::getMorphClass(),
+            Created::getMorphClass(),
+            Pending::getMorphClass(),
+            Canceled::getMorphClass(),
+            PaidWithoutName::getMorphClass(),
         ]);
 
         $states = Payment::getStates();
@@ -306,12 +306,12 @@ JSON;
     public function registered_states_for_specific_column_can_be_listed()
     {
         $expected_states = collect([
-            Paid::class,
-            Failed::class,
-            Created::class,
-            Pending::class,
-            Canceled::class,
-            PaidWithoutName::class,
+            Paid::getMorphClass(),
+            Failed::getMorphClass(),
+            Created::getMorphClass(),
+            Pending::getMorphClass(),
+            Canceled::getMorphClass(),
+            PaidWithoutName::getMorphClass(),
         ]);
 
         $states = Payment::getStatesFor('state');
