@@ -79,8 +79,6 @@ trait HasStates
                     $state->setField($stateConfig->field);
                 }
 
-                $state->setField($stateConfig->field);
-
                 $model->setAttribute(
                     $stateConfig->field,
                     $state
@@ -168,13 +166,9 @@ trait HasStates
         return $this->{$field}->transitionTo($state);
     }
 
-    public function transitionableStates(string $fromClass, ?string $field = null): array
+    public function transitionableStates(string $fromClass, string $field): array
     {
         $stateConfig = self::getStateConfig();
-
-        if ($field === null && count($stateConfig) > 1) {
-            throw InvalidConfig::fieldNotFound($fromClass, $this);
-        }
 
         $field = $field ?? reset($stateConfig)->field;
 
@@ -246,7 +240,7 @@ trait HasStates
     /**
      * @return \Spatie\ModelStates\StateConfig[]
      */
-    private static function getStateConfig(): array
+    public static function getStateConfig(): array
     {
         if (static::$stateFields === null) {
             static::$stateFields = [];
