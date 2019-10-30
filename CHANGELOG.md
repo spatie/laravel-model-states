@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.4.1 - 2019-10-30
+
+- Return Eloquent model when using transitionTo method directly (#33)
+
 ## 1.4.0 - 2019-10-29
 
 - Add better exceptions and Ignition support (#23)
