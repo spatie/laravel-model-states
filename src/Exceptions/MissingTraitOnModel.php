@@ -40,7 +40,7 @@ class MissingTraitOnModel extends InvalidConfig implements ProvidesSolution
         return BaseSolution::create('Missing trait on model')
             ->setSolutionDescription("Use the `{$this->trait}` trait on `{$this->modelClass}`")
             ->setDocumentationLinks([
-                'Configuring states' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-states/01-configuring-states/'
+                'Configuring states' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-states/01-configuring-states/',
             ]);
     }
 }
