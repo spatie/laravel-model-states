@@ -51,7 +51,7 @@ class FieldDoesNotExtendState extends InvalidConfig implements ProvidesSolution
         return BaseSolution::create("State field `{$this->field}` is the wrong type")
             ->setSolutionDescription("Make sure that states for state field `{$this->field}` extend `{$this->expectedStateClass}`, not `{$this->actualClass}`")
             ->setDocumentationLinks([
-                'Configuring states' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-states/01-configuring-states/'
+                'Configuring states' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-states/01-configuring-states/',
             ]);
     }
 }

@@ -29,7 +29,7 @@ class CouldNotResolveTransitionField extends CouldNotPerformTransition implement
         return BaseSolution::create('Could not resolve transition field')
             ->setSolutionDescription("Use {$this->modelClass}->stateField->transitionTo()")
             ->setDocumentationLinks([
-                'Using transitions' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-transitions/01-configuring-transitions/#using-transitions'
+                'Using transitions' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-transitions/01-configuring-transitions/#using-transitions',
             ]);
     }
 }

@@ -29,7 +29,7 @@ class TransitionNotAllowed extends CouldNotPerformTransition implements Provides
         return BaseSolution::create('Transition not allowed')
             ->setSolutionDescription("Review your implementation of `canTransition` in {$this->transitionClass} if this is unexpected")
             ->setDocumentationLinks([
-                'Custom transition classes' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-transitions/02-custom-transition-classes/'
+                'Custom transition classes' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-transitions/02-custom-transition-classes/',
             ]);
     }
 }
