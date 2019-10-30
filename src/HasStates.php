@@ -127,6 +127,8 @@ trait HasStates
     /**
      * @param \Spatie\ModelStates\State|string $state
      * @param string|null $field
+     *
+     * @return \Illuminate\Database\Eloquent\Model
      */
     public function transitionTo($state, string $field = null)
     {
@@ -138,7 +140,7 @@ trait HasStates
 
         $field = $field ?? reset($stateConfig)->field;
 
-        $this->{$field}->transitionTo($state);
+        return $this->{$field}->transitionTo($state);
     }
 
     public function transitionableStates(string $fromClass, ?string $field = null): array
