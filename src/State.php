@@ -130,7 +130,7 @@ abstract class State implements JsonSerializable
      *
      * Possible names are:
      *
-     *    - The classname, is no explicit name is provided
+     *    - The classname, if no explicit name is provided
      *    - A name provided in the state class as a public static property:
      *      `public static $name = 'dummy'`
      *
