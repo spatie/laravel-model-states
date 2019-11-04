@@ -20,6 +20,7 @@ use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 
 class StateTest extends TestCase
 {
+    /** @test */
     public function state_with_name_is_saved_with_its_class_name()
     {
         $payment = Payment::create([
