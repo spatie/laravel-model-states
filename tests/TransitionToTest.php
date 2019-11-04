@@ -8,6 +8,7 @@ use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Canceled;
 use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions;
@@ -99,5 +100,15 @@ class TransitionToTest extends TestCase
         $model->transitionTo(DummyState::class, 'stateA');
 
         $this->assertInstanceOf(DummyState::class, $model->stateA);
+    }
+
+    /** @test */
+    public function transition_to_on_a_new_model_instance_does_not_get_persisted_to_database()
+    {
+        $payment = new PaymentWithAllowTransitions();
+
+        $payment->state->transitionTo(Canceled::class);
+
+        $this->assertCount(0, Payment::all());
     }
 }

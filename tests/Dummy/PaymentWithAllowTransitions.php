@@ -8,6 +8,7 @@ use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Canceled;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
@@ -49,6 +50,7 @@ class PaymentWithAllowTransitions extends Model
             ->allowTransitions([
                 [Created::class, Pending::class, CreatedToPending::class],
                 [Created::class, Failed::class, ToFailed::class],
+                [Created::class, Canceled::class],
                 [Pending::class, Paid::class],
             ]);
     }

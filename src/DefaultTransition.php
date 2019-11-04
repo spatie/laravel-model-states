@@ -29,7 +29,9 @@ class DefaultTransition extends Transition
     {
         $this->model->{$this->field} = $this->newState;
 
-        $this->model->save();
+        if ($this->model->exists) {
+            $this->model->save();
+        }
 
         return $this->model;
     }
