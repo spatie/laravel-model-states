@@ -2,11 +2,11 @@
 
 namespace Spatie\ModelStates;
 
-use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
