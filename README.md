@@ -22,7 +22,7 @@ Here's what the `Payment` model would look like:
 use Spatie\ModelStates\HasStates;
 
 /**
- * @property \App\States\PaymentState state
+ * @property \App\States\PaymentState $state
  */
 class Payment extends Model
 {
