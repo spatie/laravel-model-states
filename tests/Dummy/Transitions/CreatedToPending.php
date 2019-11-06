@@ -12,7 +12,7 @@ class CreatedToPending extends Transition
     private $payment;
 
     /**
-     * @var \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment
+     * @param \Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions|\Spatie\ModelStates\Tests\Dummy\Payment
      */
     public function __construct($payment)
     {

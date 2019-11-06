@@ -20,7 +20,7 @@ trait HasStates
 
     public static function bootHasStates(): void
     {
-        $serialiseState = function (StateConfig $stateConfig) {
+        $serializeState = function (StateConfig $stateConfig) {
             return function (Model $model) use ($stateConfig) {
                 $value = $model->getAttribute($stateConfig->field);
 
@@ -49,7 +49,7 @@ trait HasStates
             };
         };
 
-        $unserialiseState = function (StateConfig $stateConfig) {
+        $unserializeState = function (StateConfig $stateConfig) {
             return function (Model $model) use ($stateConfig) {
                 $stateClass = $stateConfig->stateClass::resolveStateClass($model->getAttribute($stateConfig->field));
 
@@ -67,14 +67,15 @@ trait HasStates
         };
 
         foreach (self::getStateConfig() as $stateConfig) {
-            static::retrieved($unserialiseState($stateConfig));
-            static::created($unserialiseState($stateConfig));
-            static::updated($unserializeState($stateConfig));
-            static::saved($unserialiseState($stateConfig));
 
-            static::updating($serialiseState($stateConfig));
-            static::creating($serialiseState($stateConfig));
-            static::saving($serialiseState($stateConfig));
+            static::retrieved($unserializeState($stateConfig));
+            static::created($unserializeState($stateConfig));
+            static::updated($unserializeState($stateConfig));
+            static::saved($unserializeState($stateConfig));
+
+            static::updating($serializeState($stateConfig));
+            static::creating($serializeState($stateConfig));
+            static::saving($serializeState($stateConfig));
         }
     }
 
