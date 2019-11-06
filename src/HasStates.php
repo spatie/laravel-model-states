@@ -69,7 +69,7 @@ trait HasStates
         foreach (self::getStateConfig() as $stateConfig) {
             static::retrieved($unserialiseState($stateConfig));
             static::created($unserialiseState($stateConfig));
-            static::updated($unserialiseState($stateConfig));
+            static::updated($unserializeState($stateConfig));
             static::saved($unserialiseState($stateConfig));
 
             static::updating($serialiseState($stateConfig));
