@@ -67,7 +67,6 @@ trait HasStates
         };
 
         foreach (self::getStateConfig() as $stateConfig) {
-
             static::retrieved($unserializeState($stateConfig));
             static::created($unserializeState($stateConfig));
             static::updated($unserializeState($stateConfig));
