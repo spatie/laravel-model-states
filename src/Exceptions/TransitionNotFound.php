@@ -49,7 +49,7 @@ class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSo
     public function getSolution(): Solution
     {
         return BaseSolution::create('Transition not found')
-            ->setSolutionDescription("Register the transition in `{$modelClass}::registerStates()`")
+            ->setSolutionDescription("Register the transition in `{$this->modelClass}::registerStates()`")
             ->setDocumentationLinks([
                 'Configuring transitions' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-transitions/01-configuring-transitions/',
             ]);
