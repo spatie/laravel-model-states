@@ -16,17 +16,14 @@ abstract class State implements JsonSerializable
     /**
      * Static cache for generated state maps.
      *
-     * @var array
-     *
      * @see State::resolveStateMapping
      */
-    protected static $generatedMapping = [];
+    protected static array $generatedMapping = [];
 
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;
 
-    /** @var string|null */
-    protected $field;
+    protected ?string $field = null;
 
     /**
      * Create a state object based on a value (classname or name),

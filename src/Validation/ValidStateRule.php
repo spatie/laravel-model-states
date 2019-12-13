@@ -9,8 +9,7 @@ class ValidStateRule implements Rule
     /** @var string|\Spatie\ModelStates\State */
     private $abstractStateClass;
 
-    /** @var bool */
-    private $nullable;
+    private bool $nullable = false;
 
     public static function make(string $abstractStateClass): ValidStateRule
     {

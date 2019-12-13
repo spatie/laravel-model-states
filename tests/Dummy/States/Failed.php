@@ -4,7 +4,7 @@ namespace Spatie\ModelStates\Tests\Dummy\States;
 
 class Failed extends PaymentState
 {
-    public static $name = 'failed';
+    public static string $name = 'failed';
 
     public function color(): string
     {

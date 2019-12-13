@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class DefaultTransition extends Transition
 {
-    /** @var \Illuminate\Database\Eloquent\Model */
-    protected $model;
+    protected Model $model;
 
-    /** @var string */
-    protected $field;
+    protected string $field;
 
-    /** @var \Spatie\ModelStates\State */
-    protected $newState;
+    protected State $newState;
 
     public function __construct(
         Model $model,
