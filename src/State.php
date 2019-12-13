@@ -257,21 +257,7 @@ abstract class State implements JsonSerializable
 
         $mutatedModel = app()->call([$transition, 'handle']);
 
-        /*
-         * There's a bug with the `finalState` variable:
-         *      `$mutatedModel->state`
-         * was used, but this is wrong because we cannot determine the model field within this state class.
-         * Hence `state` is hardcoded, but that's wrong.
-         *
-         * @see https://github.com/spatie/laravel-model-states/issues/49
-         */
-        $finalState = $mutatedModel->state;
-
-        if (! $finalState instanceof State) {
-            $finalState = null;
-        }
-
-        event(new StateChanged($this, $finalState, $transition, $this->model));
+        event(new StateChanged($this, $mutatedModel->{$this->field}, $transition, $this->model));
 
         return $mutatedModel;
     }
