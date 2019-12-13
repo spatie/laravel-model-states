@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Exceptions;
 
-use Facade\IgnitionContracts\Solution;
 use Facade\IgnitionContracts\BaseSolution;
 use Facade\IgnitionContracts\ProvidesSolution;
+use Facade\IgnitionContracts\Solution;
 
 class FieldDoesNotExtendState extends InvalidConfig implements ProvidesSolution
 {

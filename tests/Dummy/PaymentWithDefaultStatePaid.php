@@ -2,8 +2,8 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
-use Spatie\ModelStates\HasStates;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 
