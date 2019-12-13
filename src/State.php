@@ -2,13 +2,13 @@
 
 namespace Spatie\ModelStates;
 
-use ReflectionClass;
-use JsonSerializable;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use JsonSerializable;
+use ReflectionClass;
 use Spatie\ModelStates\Events\StateChanged;
-use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 abstract class State implements JsonSerializable
 {
@@ -230,7 +230,7 @@ abstract class State implements JsonSerializable
 
         $mutatedModel = app()->call([$transition, 'handle']);
 
-        /**
+        /*
          * There's a bug with the `finalState` variable:
          *      `$mutatedModel->state`
          * was used, but this is wrong because we cannot determine the model field within this state class.

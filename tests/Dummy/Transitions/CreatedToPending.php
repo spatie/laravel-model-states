@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Spatie\ModelStates\Transition;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Transition;
 
 class CreatedToPending extends Transition
 {

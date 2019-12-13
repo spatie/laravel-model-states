@@ -2,12 +2,12 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
 
 class TransitionableStatesTest extends TestCase
 {

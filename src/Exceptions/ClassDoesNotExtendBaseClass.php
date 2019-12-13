@@ -2,10 +2,10 @@
 
 namespace Spatie\ModelStates\Exceptions;
 
-use Illuminate\Support\Str;
-use Facade\IgnitionContracts\Solution;
 use Facade\IgnitionContracts\BaseSolution;
 use Facade\IgnitionContracts\ProvidesSolution;
+use Facade\IgnitionContracts\Solution;
+use Illuminate\Support\Str;
 
 class ClassDoesNotExtendBaseClass extends InvalidConfig implements ProvidesSolution
 {

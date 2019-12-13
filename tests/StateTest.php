@@ -2,21 +2,21 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\WrongState;
-use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\States\Canceled;
-use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
-use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
-use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
+use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
+use Spatie\ModelStates\Tests\Dummy\States\Canceled;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\WrongState;
 
 class StateTest extends TestCase
 {

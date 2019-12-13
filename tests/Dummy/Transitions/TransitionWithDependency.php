@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Spatie\ModelStates\Transition;
-use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\Dependency;
+use Spatie\ModelStates\Tests\Dummy\Payment;
+use Spatie\ModelStates\Transition;
 
 class TransitionWithDependency extends Transition
 {

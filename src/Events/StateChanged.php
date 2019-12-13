@@ -2,10 +2,10 @@
 
 namespace Spatie\ModelStates\Events;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Queue\SerializesModels;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\Transition;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Database\Eloquent\Model;
 
 class StateChanged
 {

@@ -2,15 +2,15 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
-use Spatie\ModelStates\HasStates;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\ModelStates\Tests\Dummy\States\Paid;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
-use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
+use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 
 /**
  * @method static self first

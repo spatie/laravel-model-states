@@ -2,11 +2,11 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\StateConfig;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
-use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
 
 class StateConfigTest extends TestCase
 {
