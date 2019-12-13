@@ -17,8 +17,7 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
  */
 trait HasStates
 {
-    /** @var \Spatie\ModelStates\StateConfig[]|null */
-    protected static $stateFields = null;
+    protected static ?array $stateFields = null;
 
     abstract protected function registerStates(): void;
 
