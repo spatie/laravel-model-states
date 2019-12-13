@@ -13,7 +13,9 @@ class StateConfig
     public $stateClass;
 
     /** @var string[] */
-    public array $allowedTransitions = [];
+    public array
+
+ $allowedTransitions = [];
 
     public ?string $defaultStateClass = null;
 
