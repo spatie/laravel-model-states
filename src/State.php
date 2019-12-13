@@ -3,9 +3,9 @@
 namespace Spatie\ModelStates;
 
 use Exception;
-use JsonSerializable;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use JsonSerializable;
 use ReflectionClass;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
@@ -18,7 +18,9 @@ abstract class State implements JsonSerializable
      *
      * @see State::resolveStateMapping
      */
-    protected static array $generatedMapping = [];
+    protected static array
+
+ $generatedMapping = [];
 
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;
