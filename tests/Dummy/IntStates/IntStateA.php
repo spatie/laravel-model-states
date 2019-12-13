@@ -4,5 +4,5 @@ namespace Spatie\ModelStates\Tests\Dummy\IntStates;
 
 class IntStateA extends IntState
 {
-    public static $name = 1;
+    public static int $name = 1;
 }

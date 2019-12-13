@@ -8,8 +8,7 @@ use Spatie\ModelStates\Transition;
 
 class TransitionWithDependency extends Transition
 {
-    /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
-    private $payment;
+    private Payment $payment;
 
     public function __construct(Payment $payment)
     {
