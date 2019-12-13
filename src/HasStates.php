@@ -17,7 +17,9 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
  */
 trait HasStates
 {
-    protected static ?array $stateFields = null;
+    protected static ?array
+
+ $stateFields = null;
 
     abstract protected function registerStates(): void;
 
@@ -122,7 +124,7 @@ trait HasStates
         $abstractStateClass = $stateConfig->stateClass;
 
         $stateNames = collect((array) $states)->map(
-            fn($state) => $abstractStateClass::resolveStateName($state)
+            fn ($state) => $abstractStateClass::resolveStateName($state)
         );
 
         return $builder->whereIn($column ?? $column, $stateNames);
@@ -140,7 +142,7 @@ trait HasStates
         }
 
         $stateNames = collect((array) $states)->map(
-            fn($state) => $stateConfig->stateClass::resolveStateName($state)
+            fn ($state) => $stateConfig->stateClass::resolveStateName($state)
         );
 
         return $builder->whereNotIn($column ?? $column, $stateNames);
@@ -241,8 +243,8 @@ trait HasStates
     {
         return collect(static::getStateConfig())
             ->map(
-                fn($state) => $state->stateClass::all()->map(
-                    fn($stateClass) => $stateClass::getMorphClass()
+                fn ($state) => $state->stateClass::all()->map(
+                    fn ($stateClass) => $stateClass::getMorphClass()
                 )
             );
     }
@@ -255,7 +257,7 @@ trait HasStates
     public static function getDefaultStates(): Collection
     {
         return collect(static::getStateConfig())->map(
-            fn($state) => $state->defaultStateClass
+            fn ($state) => $state->defaultStateClass
         );
     }
 
