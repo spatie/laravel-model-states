@@ -11,17 +11,13 @@ class StateChanged
 {
     use SerializesModels;
 
-    /** @var \Spatie\ModelStates\State|null */
-    public $initialState;
+    public ?State $initialState = null;
 
-    /** @var \Spatie\ModelStates\State|null */
-    public $finalState;
+    public ?State $finalState = null;
 
-    /** @var \Spatie\ModelStates\Transition */
-    public $transition;
+    public Transition $transition;
 
-    /** @var \Illuminate\Database\Eloquent\Model */
-    public $model;
+    public Model $model;
 
     public function __construct(
         ?State $initialState,

@@ -7,17 +7,15 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
 {
-    /** @var string */
-    public $field;
+    public string $field;
 
     /** @var string|\Spatie\ModelStates\State */
     public $stateClass;
 
     /** @var string[] */
-    public $allowedTransitions = [];
+    public array $allowedTransitions = [];
 
-    /** @var string|null */
-    public $defaultStateClass;
+    public ?string $defaultStateClass = null;
 
     public function __construct(string $field, string $stateClass)
     {
