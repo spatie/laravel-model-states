@@ -14,7 +14,11 @@ class StateChanged
     /** @var \Spatie\ModelStates\State|null */
     public $initialState;
 
-    /** @var \Spatie\ModelStates\State|null */
+    /**
+     * @var null
+     * @deprecated
+     * @see https://github.com/spatie/laravel-model-states/issues/49
+     */
     public $finalState;
 
     /** @var \Spatie\ModelStates\Transition */

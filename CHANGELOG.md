@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.5.0 - 2019-12-13
+
+- ❗️ `$finalState` in the `StateChanged` event is deprecated and will always be null. This is because of a fix for [bug #49](https://github.com/spatie/laravel-model-states/issues/49). This fix might have unforeseen effects if you're using `StateChanged`.
+
 ## 1.4.1 - 2019-10-30
 
 - Return Eloquent model when using transitionTo method directly (#33)
