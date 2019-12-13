@@ -9,11 +9,9 @@ use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
-    /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
-    private $payment;
+    private Payment $payment;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(Payment $payment, string $message)
     {

@@ -5,6 +5,10 @@ namespace Spatie\ModelStates\Tests\Dummy;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
 
+/**
+ * @property \Spatie\ModelStates\Tests\Dummy\AbstractDummyState stateA
+ * @property \Spatie\ModelStates\Tests\Dummy\AbstractDummyState stateB
+ */
 class ModelWithMultipleStates extends Model
 {
     use HasStates;

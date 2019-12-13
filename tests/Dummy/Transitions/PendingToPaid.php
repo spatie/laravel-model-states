@@ -9,8 +9,7 @@ use Spatie\ModelStates\Transition;
 
 class PendingToPaid extends Transition
 {
-    /** @var \Spatie\ModelStates\Tests\Dummy\Payment */
-    private $payment;
+    private Payment $payment;
 
     public function __construct(Payment $payment)
     {
