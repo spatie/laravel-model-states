@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": "^7.2",
+        "php": "^7.4",
         "ext-json": "*",
         "facade/ignition-contracts": "^1.0",
         "laravel/framework": "~5.8|^6.0|^7.0|^8.0"
