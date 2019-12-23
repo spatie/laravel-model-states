@@ -10,6 +10,9 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 /**
  * @mixin \Illuminate\Database\Eloquent\Model
+ *
+ * @method static Builder whereState(string $field, string|string[] $states)
+ * @method static Builder whereNotState(string $field, string|string[] $states)
  */
 trait HasStates
 {
