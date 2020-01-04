@@ -16,6 +16,7 @@ abstract class PaymentState extends State
         Paid::class,
         Pending::class,
         PaidWithoutName::class,
+        Refunded::class,
     ];
 
     /**

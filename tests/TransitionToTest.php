@@ -10,6 +10,7 @@ use Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Tests\Dummy\States\Refunded;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
 
 class TransitionToTest extends TestCase
@@ -54,6 +55,18 @@ class TransitionToTest extends TestCase
 
         $payment->state->transitionTo(Paid::class);
         $this->assertTrue($payment->state->is(Paid::class));
+    }
+
+    /** @test */
+    public function transition_with_state_timestamp()
+    {
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $payment->state->transitionTo(Refunded::class);
+        $this->assertTrue($payment->state->is(Refunded::class));
+        $this->assertEquals($this->knownDate, $payment->refunded_at);
     }
 
     /** @test */

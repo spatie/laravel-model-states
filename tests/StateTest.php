@@ -16,6 +16,7 @@ use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Refunded;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
 
 class StateTest extends TestCase
@@ -289,6 +290,7 @@ JSON;
             Pending::class,
             Canceled::class,
             PaidWithoutName::class,
+            Refunded::class,
         ]);
 
         $states = Payment::getStates();
@@ -312,6 +314,7 @@ JSON;
             Pending::class,
             Canceled::class,
             PaidWithoutName::class,
+            Refunded::class,
         ]);
 
         $states = Payment::getStatesFor('state');
