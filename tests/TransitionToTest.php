@@ -55,6 +55,7 @@ class TransitionToTest extends TestCase
 
         $payment->state->transitionTo(Paid::class);
         $this->assertTrue($payment->state->is(Paid::class));
+        $this->assertNull($payment->state->getTimestamp());
     }
 
     /** @test */
@@ -66,6 +67,7 @@ class TransitionToTest extends TestCase
 
         $payment->state->transitionTo(Refunded::class);
         $this->assertTrue($payment->state->is(Refunded::class));
+        $this->assertEquals($this->knownDate, $payment->state->getTimestamp());
         $this->assertEquals($this->knownDate, $payment->refunded_at);
     }
 

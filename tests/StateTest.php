@@ -199,6 +199,27 @@ class StateTest extends TestCase
     }
 
     /** @test */
+    public function timestamp_set_at_null()
+    {
+        $payment = Payment::create([
+            'state' => Paid::class,
+        ]);
+
+        $this->assertNull($payment->state->getTimestamp());
+    }
+
+    /** @test */
+    public function timestamp_set_to_transition_time()
+    {
+        $payment = Payment::create([
+            'state' => Refunded::class,
+            'refunded_at' => now(),
+        ]);
+
+        $this->assertEquals($this->knownDate, $payment->state->getTimestamp());
+    }
+
+    /** @test */
     public function equals()
     {
         $createdA = new Created(new Payment());

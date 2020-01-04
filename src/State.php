@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
@@ -329,14 +330,21 @@ abstract class State implements JsonSerializable
         return self::$generatedMapping[static::class];
     }
 
-    public function hasTimestamp() : bool
+    public function shouldSetTimestamp() : bool
     {
         return isset(static::$timestamp);
     }
 
-    public function getTimestamp() : ?string
+    public function getTimestampField() : ?string
     {
         return static::$timestamp ?? null;
+    }
+
+    public function getTimestamp(): ?Carbon
+    {
+        return $this->shouldSetTimestamp()
+            ? $this->model->{$this->getTimestampField()}
+            : null;
     }
 
     public function jsonSerialize()
