@@ -2,7 +2,6 @@
 
 namespace Spatie\ModelStates;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
