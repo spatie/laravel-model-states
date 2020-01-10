@@ -230,4 +230,9 @@ trait HasStates
     {
         return static::getDefaultStates()->get($column);
     }
+
+    public function getDefaultTransitionClass(): string
+    {
+        return DefaultTransition::class;
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\States;
 
+use Carbon\Carbon;
 use Spatie\ModelStates\State;
 
 abstract class PaymentState extends State
@@ -28,4 +29,21 @@ abstract class PaymentState extends State
     }
 
     abstract public function color(): string;
+
+    public function shouldSetTimestamp(): bool
+    {
+        return isset(static::$timestamp);
+    }
+
+    public function getTimestampField(): ?string
+    {
+        return static::$timestamp ?? null;
+    }
+
+    public function getTimestamp(): ?Carbon
+    {
+        return $this->shouldSetTimestamp()
+            ? $this->model->{$this->getTimestampField()}
+            : null;
+    }
 }

@@ -29,10 +29,6 @@ class DefaultTransition extends Transition
     {
         $this->model->{$this->field} = $this->newState;
 
-        if ($this->newState->shouldSetTimestamp()) {
-            $this->model{$this->newState->getTimestampField()} = now();
-        }
-
         $this->model->save();
 
         return $this->model;

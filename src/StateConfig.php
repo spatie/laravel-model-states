@@ -111,8 +111,10 @@ class StateConfig
             return;
         }
 
+        $defaultTransition = $model->getDefaultTransitionClass();
+
         return $this->allowedTransitions[$transitionKey]
-            ?? new DefaultTransition(
+            ?? new $defaultTransition(
                 $model,
                 $this->field,
                 $this->stateClass::make($to, $model)

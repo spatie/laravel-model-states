@@ -7,6 +7,7 @@ use Spatie\ModelStates\Tests\Dummy\DummyState;
 use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithNoneDefaultTransition;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
@@ -59,9 +60,9 @@ class TransitionToTest extends TestCase
     }
 
     /** @test */
-    public function transition_with_state_timestamp()
+    public function transition_with_none_default_default_transition()
     {
-        $payment = Payment::create([
+        $payment = PaymentWithNoneDefaultTransition::create([
             'state' => Paid::class,
         ]);
 

@@ -330,23 +330,6 @@ abstract class State implements JsonSerializable
         return self::$generatedMapping[static::class];
     }
 
-    public function shouldSetTimestamp() : bool
-    {
-        return isset(static::$timestamp);
-    }
-
-    public function getTimestampField() : ?string
-    {
-        return static::$timestamp ?? null;
-    }
-
-    public function getTimestamp(): ?Carbon
-    {
-        return $this->shouldSetTimestamp()
-            ? $this->model->{$this->getTimestampField()}
-            : null;
-    }
-
     public function jsonSerialize()
     {
         return $this->getValue();
