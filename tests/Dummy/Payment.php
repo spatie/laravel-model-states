@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Refunded;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
 use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
 use Spatie\ModelStates\Tests\Dummy\States\Pending;
