@@ -47,7 +47,6 @@ class Payment extends Model
         $this->addState('state', PaymentState::class)
             ->allowTransition(Created::class, Pending::class, CreatedToPending::class)
             ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class)
-            ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Paid::class, Refunded::class);
+            ->allowTransition(Pending::class, Paid::class);
     }
 }
