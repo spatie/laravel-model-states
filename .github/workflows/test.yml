@@ -5,10 +5,11 @@ on: [push]
 jobs:
   test:
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
+        os: [ubuntu-latest, windows-latest]
         php: [ 7.4 ]
         laravel: [ 6.* ]
         dependency-version: [prefer-lowest, prefer-stable]
@@ -16,7 +17,7 @@ jobs:
           -   laravel: 6.*
               testbench: 4.*
 
-    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
     steps:
       -   name: Checkout code
