@@ -14,7 +14,7 @@ To give you a feel about how this package can be used, let's look at a quick exa
 
 Imagine a model `Payment`, which has three possible states: `Pending`, `Paid` and `Failed`. This package allows you to represent each state as a separate class, handles serialization of states to the database behind the scenes, and allows for easy state transitions.
 
-For the sake of our example, let's say that, depending on the state, a the color of a payment should differ.
+For the sake of our example, let's say that, depending on the state, the color of a payment should differ.
 
 Here's what the `Payment` model would look like:
 
