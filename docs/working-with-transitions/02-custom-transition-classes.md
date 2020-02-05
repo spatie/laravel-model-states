@@ -60,7 +60,7 @@ It can be used like so:
 $payment->state->transitionTo(Failed::class, 'error message');
 ```
 
-> **Note**: the `State::transitionTo` method will take as much additional arguments as you'd like, 
+> **Note**: the `State::transitionTo` method will take as many additional arguments as you'd like, 
 > these arguments will be passed to the transition's constructor. 
 > The first argument in the transition's constructor will always be the model that the transition is performed on. 
 
