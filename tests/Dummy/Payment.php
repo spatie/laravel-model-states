@@ -24,8 +24,8 @@ use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
  *
  * @property \Spatie\ModelStates\Tests\Dummy\States\PaymentState state
  *
- * @method static self whereState(string $field, $state)
- * @method static self whereNotState(string $field, $state)
+ * @method static self whereState(string $field, $state, string|null $column = null)
+ * @method static self whereNotState(string $field, $state, string|null $column = null)
  * @method int count
  */
 class Payment extends Model

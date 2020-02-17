@@ -12,3 +12,11 @@ $payments = Payment::whereState('state', [Pending::class, Paid::class]);
 $payments = Payment::whereNotState('state', Pending::class);
 $payments = Payment::whereNotState('state', [Failed::class, Canceled::class]);
 ```
+
+When the state field has another column name in the query(for example due to a join), it is possible to provide the column name as a parameter: 
+
+```php
+$payments = Payment::whereState('state', Paid::class, 'payments.state');
+
+$payments = Payment::whereNotState('state', Pending::class, 'payments.state');
+```

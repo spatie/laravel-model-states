@@ -91,7 +91,7 @@ trait HasStates
         }
     }
 
-    public function scopeWhereState(Builder $builder, string $field, $states): Builder
+    public function scopeWhereState(Builder $builder, string $field, $states, ?string $column = null): Builder
     {
         self::getStateConfig();
 
@@ -108,10 +108,10 @@ trait HasStates
             return $abstractStateClass::resolveStateName($state);
         });
 
-        return $builder->whereIn($field, $stateNames);
+        return $builder->whereIn($column ?? $field, $stateNames);
     }
 
-    public function scopeWhereNotState(Builder $builder, string $field, $states): Builder
+    public function scopeWhereNotState(Builder $builder, string $field, $states, ?string $column = null): Builder
     {
         /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
@@ -124,7 +124,7 @@ trait HasStates
             return $stateConfig->stateClass::resolveStateName($state);
         });
 
-        return $builder->whereNotIn($field, $stateNames);
+        return $builder->whereNotIn($column ?? $field, $stateNames);
     }
 
     /**
