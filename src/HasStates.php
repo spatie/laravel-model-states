@@ -4,6 +4,7 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -91,9 +92,9 @@ trait HasStates
         }
     }
 
-    public function scopeWhereState(Builder $builder, string $field, $states): Builder
+    public function scopeWhereState(Builder $builder, string $column, $states): Builder
     {
-        self::getStateConfig();
+        $field = Arr::last(explode('.', $column));
 
         /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
@@ -108,11 +109,13 @@ trait HasStates
             return $abstractStateClass::resolveStateName($state);
         });
 
-        return $builder->whereIn($field, $stateNames);
+        return $builder->whereIn($column ?? $column, $stateNames);
     }
 
-    public function scopeWhereNotState(Builder $builder, string $field, $states): Builder
+    public function scopeWhereNotState(Builder $builder, string $column, $states): Builder
     {
+        $field = Arr::last(explode('.', $column));
+
         /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
 
@@ -124,7 +127,7 @@ trait HasStates
             return $stateConfig->stateClass::resolveStateName($state);
         });
 
-        return $builder->whereNotIn($field, $stateNames);
+        return $builder->whereNotIn($column ?? $column, $stateNames);
     }
 
     /**

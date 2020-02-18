@@ -46,4 +46,34 @@ class ScopeTest extends TestCase
 
         Payment::whereState('abc', Paid::class);
     }
+
+    /** @test */
+    public function scope_where_state_column_name_differs_from_field_name()
+    {
+        $createdPayment = Payment::create();
+
+        $paidPayment = Payment::create(['state' => Paid::class]);
+
+        $this->assertEquals(1, Payment::whereState('payments.state', Paid::class)->count());
+        $this->assertEquals(1, Payment::whereState('payments.state', Created::class)->count());
+        $this->assertEquals(2, Payment::whereState('payments.state', [Created::class, Paid::class])->count());
+
+        $this->assertTrue($paidPayment->is(Payment::whereState('payments.state', Paid::class)->first()));
+        $this->assertTrue($createdPayment->is(Payment::whereState('payments.state', Created::class)->first()));
+    }
+
+    /** @test */
+    public function scope_where_not_state_column_name_differs_from_field_name()
+    {
+        $createdPayment = Payment::create();
+
+        $paidPayment = Payment::create(['state' => Paid::class]);
+
+        $this->assertEquals(1, Payment::whereNotState('payments.state', Paid::class)->count());
+        $this->assertEquals(1, Payment::whereNotState('payments.state', Created::class)->count());
+        $this->assertEquals(0, Payment::whereNotState('payments.state', [Created::class, Paid::class])->count());
+
+        $this->assertFalse($paidPayment->is(Payment::whereNotState('payments.state', Paid::class)->first()));
+        $this->assertFalse($createdPayment->is(Payment::whereNotState('payments.state', Created::class)->first()));
+    }
 }
