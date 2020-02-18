@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.5.1 - 2020-02-18
+
+- Add support for fully qualified column names in `whereState` scope (#63)
+
 ## 1.5.0 - 2019-12-13
 
 - ❗️ `$finalState` in the `StateChanged` event is deprecated and will always be null. This is because of a fix for [bug #49](https://github.com/spatie/laravel-model-states/issues/49). This fix might have unforeseen effects if you're using `StateChanged`.
