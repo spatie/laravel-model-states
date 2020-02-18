@@ -54,12 +54,12 @@ class ScopeTest extends TestCase
 
         $paidPayment = Payment::create(['state' => Paid::class]);
 
-        $this->assertEquals(1, Payment::whereState('state', Paid::class, 'payments.state')->count());
-        $this->assertEquals(1, Payment::whereState('state', Created::class, 'payments.state')->count());
-        $this->assertEquals(2, Payment::whereState('state', [Created::class, Paid::class], 'payments.state')->count());
+        $this->assertEquals(1, Payment::whereState('payments.state', Paid::class)->count());
+        $this->assertEquals(1, Payment::whereState('payments.state', Created::class)->count());
+        $this->assertEquals(2, Payment::whereState('payments.state', [Created::class, Paid::class])->count());
 
-        $this->assertTrue($paidPayment->is(Payment::whereState('state', Paid::class, 'payments.state')->first()));
-        $this->assertTrue($createdPayment->is(Payment::whereState('state', Created::class, 'payments.state')->first()));
+        $this->assertTrue($paidPayment->is(Payment::whereState('payments.state', Paid::class)->first()));
+        $this->assertTrue($createdPayment->is(Payment::whereState('payments.state', Created::class)->first()));
     }
 
     /** @test */
@@ -69,11 +69,11 @@ class ScopeTest extends TestCase
 
         $paidPayment = Payment::create(['state' => Paid::class]);
 
-        $this->assertEquals(1, Payment::whereNotState('state', Paid::class, 'payments.state')->count());
-        $this->assertEquals(1, Payment::whereNotState('state', Created::class, 'payments.state')->count());
-        $this->assertEquals(0, Payment::whereNotState('state', [Created::class, Paid::class], 'payments.state')->count());
+        $this->assertEquals(1, Payment::whereNotState('payments.state', Paid::class)->count());
+        $this->assertEquals(1, Payment::whereNotState('payments.state', Created::class)->count());
+        $this->assertEquals(0, Payment::whereNotState('payments.state', [Created::class, Paid::class])->count());
 
-        $this->assertFalse($paidPayment->is(Payment::whereNotState('state', Paid::class, 'payments.state')->first()));
-        $this->assertFalse($createdPayment->is(Payment::whereNotState('state', Created::class, 'payments.state')->first()));
+        $this->assertFalse($paidPayment->is(Payment::whereNotState('payments.state', Paid::class)->first()));
+        $this->assertFalse($createdPayment->is(Payment::whereNotState('payments.state', Created::class)->first()));
     }
 }
