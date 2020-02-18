@@ -4,6 +4,7 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -93,9 +94,7 @@ trait HasStates
 
     public function scopeWhereState(Builder $builder, string $column, $states): Builder
     {
-        $columnSegments = explode('.', $column);
-
-        $field = end($columnSegments);
+        $field = Arr::last(explode('.', $column));
 
         /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
@@ -115,9 +114,7 @@ trait HasStates
 
     public function scopeWhereNotState(Builder $builder, string $column, $states): Builder
     {
-        $columnSegments = explode('.', $column);
-
-        $field = end($columnSegments);
+        $field = Arr::last(explode('.', $column));
 
         /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
         $stateConfig = self::getStateConfig()[$field] ?? null;
