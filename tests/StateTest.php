@@ -69,7 +69,7 @@ class StateTest extends TestCase
             'state' => Paid::getMorphClass(),
         ]);
 
-        $this->assertInstanceOf(Paid::class, $payment->state);
+        $this->assertInstanceOf(Paid::class, $payment->fresh()->state);
     }
 
     /** @test */
