@@ -72,7 +72,7 @@ class StateChangedEventTest extends TestCase
 }
 
 /**
- * @property \Spatie\ModelStates\Tests\AbstractState status
+ * @property \Spatie\ModelStates\Tests\AbstractState $status
  */
 class TestModel extends Model
 {
