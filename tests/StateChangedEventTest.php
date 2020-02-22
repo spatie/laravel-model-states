@@ -27,8 +27,6 @@ class StateChangedEventTest extends TestCase
 
         $payment->state->transition(PendingToPaid::class);
 
-        Event::assertDispatched(StateChanged::class);
-
         Event::assertDispatched(
             StateChanged::class,
             function (StateChanged $event) use ($original, $payment) {
