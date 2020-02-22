@@ -9,7 +9,7 @@ use Spatie\ModelStates\Tests\Dummy\IntStates\IntState;
 use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
 
 /**
- * @property \Spatie\ModelStates\Tests\Dummy\IntStates\IntState state
+ * @property \Spatie\ModelStates\Tests\Dummy\IntStates\IntState $state
  */
 class ModelWithIntState extends Model
 {

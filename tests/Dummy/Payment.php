@@ -13,20 +13,20 @@ use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
 use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
 
 /**
- * @method static \Spatie\ModelStates\Tests\Dummy\Payment first
+ * @method static \Spatie\ModelStates\Tests\Dummy\Payment first()
  * @method static \Spatie\ModelStates\Tests\Dummy\Payment find(int $id)
  * @method static \Spatie\ModelStates\Tests\Dummy\Payment create(array $data = [])
- * @property int id
- * @property \Carbon\Carbon failed_at
- * @property \Carbon\Carbon paid_at
- * @property \Carbon\Carbon pending_at
- * @property string error_message
+ * @property int $id
+ * @property string $cancelled_at
+ * @property string $failed_at
+ * @property string $paid_at
+ * @property string $error_message
  *
- * @property \Spatie\ModelStates\Tests\Dummy\States\PaymentState state
+ * @property \Spatie\ModelStates\Tests\Dummy\States\PaymentState $state
  *
  * @method static self whereState(string $field, $state)
  * @method static self whereNotState(string $field, $state)
- * @method int count
+ * @method int count()
  */
 class Payment extends Model
 {
