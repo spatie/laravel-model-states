@@ -22,7 +22,6 @@
         "laravel/framework": "~5.8|^6.0"
     },
     "require-dev": {
-        "barryvdh/laravel-ide-helper": "^2.6",
         "larapack/dd": "^1.0",
         "orchestra/testbench": "^3.8|^4.0",
         "phpunit/phpunit": "^8.2"
