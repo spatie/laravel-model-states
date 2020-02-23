@@ -211,7 +211,7 @@ abstract class State implements JsonSerializable
     }
 
     /**
-     * @param string|\Spatie\ModelStates\Transition $transitionClass
+     * @param string|\Spatie\ModelStates\Transition $transition
      * @param mixed ...$args
      *
      * @return \Illuminate\Database\Eloquent\Model
