@@ -30,7 +30,6 @@ abstract class TestCase extends Orchestra
             $table->increments('id');
             $table->string('state')->nullable();
             $table->datetime('paid_at')->nullable();
-            $table->datetime('cancelled_at')->nullable();
             $table->datetime('failed_at')->nullable();
             $table->string('error_message')->nullable();
             $table->timestamps();

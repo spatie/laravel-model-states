@@ -17,7 +17,6 @@ use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
  * @method static \Spatie\ModelStates\Tests\Dummy\Payment find(int $id)
  * @method static \Spatie\ModelStates\Tests\Dummy\Payment create(array $data = [])
  * @property int $id
- * @property string $cancelled_at
  * @property string $failed_at
  * @property string $paid_at
  * @property string $error_message

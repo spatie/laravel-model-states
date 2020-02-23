@@ -12,7 +12,6 @@ use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
  * @method static self find(int $id)
  * @method static self create(array $data = [])
  * @property int $id
- * @property string $cancelled_at
  * @property string $failed_at
  * @property string $paid_at
  * @property string $error_message
