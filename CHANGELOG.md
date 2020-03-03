@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.6.0 - 2020-03-03
+
+- add support for Laravel 7
+
 ## 1.5.1 - 2020-02-18
 
 - Add support for fully qualified column names in `whereState` scope ([#63](https://github.com/spatie/laravel-model-states/pull/63))
