@@ -18,9 +18,7 @@ abstract class State implements JsonSerializable
      *
      * @see State::resolveStateMapping
      */
-    protected static array
-
- $generatedMapping = [];
+    protected static array $generatedMapping = [];
 
     /** @var \Illuminate\Database\Eloquent\Model */
     protected $model;

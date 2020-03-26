@@ -23,15 +23,6 @@ trait HasStates
 
     abstract protected function registerStates(): void;
 
-    public function __set($name, $value): void
-    {
-        if ($value instanceof State) {
-            $value->setField($name);
-        }
-
-        parent::__set($name, $value);
-    }
-
     public static function bootHasStates(): void
     {
         $serializeState = function (StateConfig $stateConfig) {
