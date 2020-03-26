@@ -98,6 +98,7 @@ class StateConfig
     }
 
     /**
+     * @param \Illuminate\Database\Eloquent\Model $model
      * @param string $from
      * @param string $to
      *

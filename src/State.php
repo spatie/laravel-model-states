@@ -34,7 +34,7 @@ abstract class State implements JsonSerializable
      * and optionally provide its constructor arguments.
      *
      * @param string $name
-     * @param mixed ...$args
+     * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return \Spatie\ModelStates\State
      */
@@ -54,7 +54,7 @@ abstract class State implements JsonSerializable
      * and optionally provide its constructor arguments.
      *
      * @param string $name
-     * @param mixed ...$args
+     * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return \Spatie\ModelStates\State
      */
@@ -134,7 +134,7 @@ abstract class State implements JsonSerializable
      *    - A name provided in the state class as a public static property:
      *      `public static $name = 'dummy'`
      *
-     * @param $state
+     * @param string|\Spatie\ModelStates\State $state
      *
      * @return string|null
      */
@@ -271,6 +271,8 @@ abstract class State implements JsonSerializable
 
     /**
      * Get the transitionable states from this state.
+     *
+     * @param string|null $field
      *
      * @return array
      */
