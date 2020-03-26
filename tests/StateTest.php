@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Exception;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
@@ -340,6 +341,7 @@ JSON;
     public function the_field_is_correctly_set_on_the_state()
     {
         $payment = new Payment();
+        $payment->save();
         $this->assertEquals('state', $payment->state->getField());
 
         $payment = Payment::create([
@@ -349,10 +351,22 @@ JSON;
 
         $payment = new Payment();
         $payment->state = new Paid($payment);
+        $payment->save();
         $this->assertEquals('state', $payment->state->getField());
 
         $payment = new Payment();
         $payment->state->transitionTo(Pending::class);
         $this->assertEquals('state', $payment->state->getField());
+    }
+
+    /** @test */
+    public function exception_is_thrown_when_model_was_not_saved_and_field_was_accessed()
+    {
+        $payment = new Payment();
+        $payment->state = new Paid($payment);
+
+        $this->expectException(Exception::class);
+
+        $payment->state->getField();
     }
 }
