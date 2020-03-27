@@ -110,7 +110,7 @@ abstract class State implements JsonSerializable
             return get_class($state);
         }
 
-        foreach (static::resolveStateMapping() as $stateClass) {
+        foreach (self::resolveStateMapping() as $stateClass) {
             if (! class_exists($stateClass)) {
                 continue;
             }
