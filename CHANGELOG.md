@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.6.1 - 2020-03-27
+
+- change `static::` call to `self::` for private `State::resolveStateMapping` method (#75)
+
 ## 1.6.0 - 2020-03-03
 
 - add support for Laravel 7
