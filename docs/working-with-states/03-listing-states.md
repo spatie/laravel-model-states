@@ -60,7 +60,7 @@ You can get all the registered states with `Invoice::getStates()`, which returns
 ]
 ```
 
-You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns a colelctions of state classes:
+You can also get the registered states for a specific column with `Invoice::getStatesFor('state')`, which returns a collection of state classes:
 
 ```php
 [
