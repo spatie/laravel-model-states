@@ -2,21 +2,23 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
-use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
 use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
-use Spatie\ModelStates\Tests\Dummy\States\Canceled;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Paid;
-use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
 use Spatie\ModelStates\Tests\Dummy\WrongState;
+use Spatie\ModelStates\Tests\Dummy\States\Paid;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\States\Failed;
+use Spatie\ModelStates\Tests\Dummy\States\Created;
+use Spatie\ModelStates\Tests\Dummy\States\Pending;
+use Spatie\ModelStates\Tests\Dummy\States\Canceled;
+use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
+use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithAutoDetectState;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
+use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 
 class StateTest extends TestCase
 {
@@ -334,5 +336,41 @@ JSON;
         $state = PaymentWithDefaultStatePaid::getDefaultStateFor('state');
 
         $this->assertEquals($state, Paid::class);
+    }
+
+    /** @test */
+    public function equals_without_explicit_mapping()
+    {
+        $stateA = new StateA(new PaymentWithAutoDetectState);
+        $stateB = new StateB(new PaymentWithAutoDetectState);
+
+        $this->assertTrue($stateA->equals(StateA::class));
+        $this->assertTrue($stateB->equals(StateB::class));
+        $this->assertTrue($stateA->equals('a'));
+        $this->assertFalse($stateA->equals($stateB));
+    }
+
+    /** @test */
+    public function is_one_of_without_explicit_mapping()
+    {
+        $stateA = new StateA(new PaymentWithAutoDetectState);
+        $stateB = new StateB(new PaymentWithAutoDetectState);
+
+        $this->assertTrue($stateA->isOneOf(
+            StateA::class,
+            StateB::class
+        ));
+
+        $this->assertTrue($stateA->isOneOf(
+            new StateA(new PaymentWithAutoDetectState)
+        ));
+
+        $this->assertTrue($stateA->isOneOf(
+            'a'
+        ));
+
+        $this->assertFalse($stateA->isOneOf(
+            StateB::class
+        ));
     }
 }

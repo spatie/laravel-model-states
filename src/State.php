@@ -298,11 +298,13 @@ abstract class State implements JsonSerializable
             return static::$states;
         }
 
-        if (isset(self::$generatedMapping[static::class])) {
-            return self::$generatedMapping[static::class];
+        $base_class = static::resolveBaseStateClass();
+
+        if (isset(self::$generatedMapping[$base_class])) {
+            return self::$generatedMapping[$base_class];
         }
 
-        $reflection = new ReflectionClass(static::class);
+        $reflection = new ReflectionClass($base_class);
 
         ['dirname' => $directory] = pathinfo($reflection->getFileName());
 
@@ -319,20 +321,40 @@ abstract class State implements JsonSerializable
 
             $stateClass = $namespace.'\\'.$className;
 
-            if (! is_subclass_of($stateClass, static::class)) {
+            if (! is_subclass_of($stateClass, $base_class)) {
                 continue;
             }
 
             $resolvedStates[] = $stateClass;
         }
 
-        self::$generatedMapping[static::class] = $resolvedStates;
+        self::$generatedMapping[$base_class] = $resolvedStates;
 
-        return self::$generatedMapping[static::class];
+        return self::$generatedMapping[$base_class];
     }
 
     public function jsonSerialize()
     {
         return $this->getValue();
+    }
+
+    /**
+     * This method is used to find the base state class.
+     *
+     * @return string
+     */
+    public static function resolveBaseStateClass(): string
+    {
+        $reflection = new ReflectionClass(static::class);
+
+        if ($reflection->isAbstract() || optional($reflection->getParentClass())->name === self::class) {
+            return static::class;
+        }
+
+        if ($reflection->getParentClass() !== false) {
+            return call_user_func([$reflection->getParentClass()->name, __FUNCTION__]);
+        }
+
+        throw new \Exception('Unable to resolve the classname for ' . static::class);
     }
 }
