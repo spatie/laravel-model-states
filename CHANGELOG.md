@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.6.3 - 2020-06-23
+
+- Support `0` state (#89)
+
 ## 1.6.2 - 2020-06-16
 
 - Support model::updated state casting (#88)
