@@ -168,6 +168,39 @@ trait HasStates
     }
 
     /**
+     * @param \Spatie\ModelStates\State[]|string[] $states
+     * @param string|null $field
+     *
+     * @return bool
+     */
+    public function canTransitionTo(array $states, ?string $field = null): bool
+    {
+        $statesConfig = self::getStateConfig();
+
+        if ($field === null && count($statesConfig) > 1) {
+            throw InvalidConfig::unknownState($field, $this);
+        }
+
+        $field = $field ?? reset($statesConfig)->field;
+
+        $stateConfig = $statesConfig[$field];
+
+        foreach ($states as $to) {
+
+            try {
+                $this->resolveTransitionClass(
+                    $stateConfig->stateClass::resolveStateClass($this->$field),
+                    $stateConfig->stateClass::resolveStateClass($to)
+                );
+            } catch (CouldNotPerformTransition $exception){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param string $fromClass
      * @param string $toClass
      *

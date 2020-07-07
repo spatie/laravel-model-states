@@ -100,4 +100,26 @@ class TransitionToTest extends TestCase
 
         $this->assertInstanceOf(DummyState::class, $model->stateA);
     }
+
+    /** @test */
+    public function state_can_transition_to_class()
+    {
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo([Pending::class]));
+        $this->assertFalse($payment->canTransitionTo([Paid::class]));
+    }
+
+    /** @test */
+    public function state_can_transition_to_name()
+    {
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo(['pending']));
+        $this->assertFalse($payment->canTransitionTo(['paid']));
+    }
 }
