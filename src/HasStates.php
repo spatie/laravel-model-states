@@ -168,12 +168,12 @@ trait HasStates
     }
 
     /**
-     * @param \Spatie\ModelStates\State[]|string[] $states
+     * @param \Spatie\ModelStates\State|string $to
      * @param string|null $field
      *
      * @return bool
      */
-    public function canTransitionTo(array $states, ?string $field = null): bool
+    public function canTransitionTo($to, ?string $field = null): bool
     {
         $statesConfig = self::getStateConfig();
 
@@ -185,16 +185,13 @@ trait HasStates
 
         $stateConfig = $statesConfig[$field];
 
-        foreach ($states as $to) {
-
-            try {
-                $this->resolveTransitionClass(
-                    $stateConfig->stateClass::resolveStateClass($this->$field),
-                    $stateConfig->stateClass::resolveStateClass($to)
-                );
-            } catch (CouldNotPerformTransition $exception){
-                return false;
-            }
+        try {
+            $this->resolveTransitionClass(
+                $stateConfig->stateClass::resolveStateClass($this->$field),
+                $stateConfig->stateClass::resolveStateClass($to)
+            );
+        } catch (CouldNotPerformTransition $exception){
+            return false;
         }
 
         return true;

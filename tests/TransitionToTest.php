@@ -108,8 +108,8 @@ class TransitionToTest extends TestCase
             'state' => Created::class,
         ]);
 
-        $this->assertTrue($payment->canTransitionTo([Pending::class]));
-        $this->assertFalse($payment->canTransitionTo([Paid::class]));
+        $this->assertTrue($payment->canTransitionTo(Pending::class));
+        $this->assertFalse($payment->canTransitionTo(Paid::class));
     }
 
     /** @test */
@@ -119,7 +119,7 @@ class TransitionToTest extends TestCase
             'state' => Created::class,
         ]);
 
-        $this->assertTrue($payment->canTransitionTo(['pending']));
-        $this->assertFalse($payment->canTransitionTo(['paid']));
+        $this->assertTrue($payment->canTransitionTo('pending'));
+        $this->assertFalse($payment->canTransitionTo('paid'));
     }
 }
