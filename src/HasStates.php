@@ -178,7 +178,7 @@ trait HasStates
         $statesConfig = self::getStateConfig();
 
         if ($field === null && count($statesConfig) > 1) {
-            throw InvalidConfig::unknownState($field, $this);
+            throw InvalidConfig::fieldNotFound(($to instanceof State) ? get_class($to) : $to, $this);
         }
 
         $field = $field ?? reset($statesConfig)->field;
@@ -190,7 +190,7 @@ trait HasStates
                 $stateConfig->stateClass::resolveStateClass($this->$field),
                 $stateConfig->stateClass::resolveStateClass($to)
             );
-        } catch (CouldNotPerformTransition $exception){
+        } catch (CouldNotPerformTransition $exception) {
             return false;
         }
 
