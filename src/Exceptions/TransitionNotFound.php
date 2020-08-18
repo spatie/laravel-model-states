@@ -9,13 +9,13 @@ use Facade\IgnitionContracts\Solution;
 class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSolution
 {
     /** @var string */
-    protected $from;
+    public $from;
 
     /** @var string */
-    protected $to;
+    public $to;
 
     /** @var string */
-    protected $modelClass;
+    public $modelClass;
 
     public static function make(string $from, string $to, string $modelClass): self
     {
