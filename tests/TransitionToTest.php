@@ -3,10 +3,12 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Tests\Dummy\DummyState;
 use Spatie\ModelStates\Tests\Dummy\ModelWithMultipleStates;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\PaymentWithAllowTransitions;
+use Spatie\ModelStates\Tests\Dummy\PaymentWithMultipleStates;
 use Spatie\ModelStates\Tests\Dummy\States\Created;
 use Spatie\ModelStates\Tests\Dummy\States\Failed;
 use Spatie\ModelStates\Tests\Dummy\States\Paid;
@@ -99,5 +101,101 @@ class TransitionToTest extends TestCase
         $model->transitionTo(DummyState::class, 'stateA');
 
         $this->assertInstanceOf(DummyState::class, $model->stateA);
+    }
+
+    /** @test */
+    public function state_can_transition_to_class()
+    {
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo(Pending::class));
+        $this->assertFalse($payment->canTransitionTo(Paid::class));
+    }
+
+    /** @test */
+    public function state_can_transition_to_name()
+    {
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo('pending'));
+        $this->assertFalse($payment->canTransitionTo('paid'));
+    }
+
+    /** @test */
+    public function state_can_transition_to_state_instance()
+    {
+        $payment = Payment::create([
+            'state' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo(new Pending($payment)));
+        $this->assertFalse($payment->canTransitionTo(new Paid($payment)));
+    }
+
+    /** @test */
+    public function transition_to_with_multiple_states_throws_exception_on_undefined_class_field()
+    {
+        $this->expectException(InvalidConfig::class);
+
+        $payment = PaymentWithMultipleStates::create();
+
+        $payment->canTransitionTo(Pending::class);
+    }
+
+    /** @test */
+    public function transition_to_with_multiple_states_throws_exception_on_undefined_name_field()
+    {
+        $this->expectException(InvalidConfig::class);
+
+        $payment = PaymentWithMultipleStates::create();
+
+        $payment->canTransitionTo('pending');
+    }
+
+    /** @test */
+    public function transition_to_with_multiple_states_throws_exception_on_undefined_instance_field()
+    {
+        $this->expectException(InvalidConfig::class);
+
+        $payment = PaymentWithMultipleStates::create();
+
+        $payment->canTransitionTo(new Pending($payment));
+    }
+
+    /** @test */
+    public function explicitly_defined_state_can_transition_to_class()
+    {
+        $payment = PaymentWithMultipleStates::create([
+            'stateA' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo(Pending::class, 'stateA'));
+        $this->assertFalse($payment->canTransitionTo(Paid::class, 'stateA'));
+    }
+
+    /** @test */
+    public function explicitly_defined_state_can_transition_to_name()
+    {
+        $payment = PaymentWithMultipleStates::create([
+            'stateA' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo('pending', 'stateA'));
+        $this->assertFalse($payment->canTransitionTo('paid', 'stateA'));
+    }
+
+    /** @test */
+    public function explicitly_defined_state_can_transition_to_state_instance()
+    {
+        $payment = PaymentWithMultipleStates::create([
+            'stateA' => Created::class,
+        ]);
+
+        $this->assertTrue($payment->canTransitionTo(new Pending($payment), 'stateA'));
+        $this->assertFalse($payment->canTransitionTo(new Paid($payment), 'stateA'));
     }
 }
