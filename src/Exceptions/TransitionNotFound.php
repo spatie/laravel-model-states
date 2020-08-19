@@ -32,7 +32,7 @@ class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSo
         return $this;
     }
 
-    public function getFrom(string $from): string
+    public function getFrom(): string
     {
         return $this->from;
     }
@@ -44,7 +44,7 @@ class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSo
         return $this;
     }
 
-    public function getTo(string $to): string
+    public function getTo(): string
     {
        return $this->to;
     }
@@ -56,7 +56,7 @@ class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSo
         return $this;
     }
 
-    public function getModelClass(string $modelClass): string
+    public function getModelClass(): string
     {
         return $this->modelClass;
     }
