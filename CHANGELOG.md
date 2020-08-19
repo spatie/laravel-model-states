@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.7.0 - 2020-08-19
+
+- Add `canTransitionTo` (#92)
+
 ## 1.6.3 - 2020-06-23
 
 - Support `0` state (#89)
