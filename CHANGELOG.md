@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.8.0 - 2020-08-19
+
+- Add getters for `TransitionNotFound` attributes (#99)
+
 ## 1.7.0 - 2020-08-19
 
 - Add `canTransitionTo` (#92)
