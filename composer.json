@@ -1,6 +1,6 @@
 {
     "name": "spatie/laravel-model-states",
-    "description": "",
+    "description": "State support for Eloquent models",
     "keywords": [
         "spatie",
         "state"
