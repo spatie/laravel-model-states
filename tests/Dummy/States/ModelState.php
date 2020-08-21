@@ -6,5 +6,4 @@ use Spatie\ModelStates\State;
 
 abstract class ModelState extends State
 {
-
 }
