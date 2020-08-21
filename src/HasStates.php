@@ -264,4 +264,26 @@ trait HasStates
     {
         return static::getDefaultStates()->get($column);
     }
+
+    /**
+     * Determine if the new and old values for a given key are equivalent.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public function originalIsEquivalent($key)
+    {
+        $original = Arr::get($this->original, $key);
+
+        if ($original instanceof State) {
+            $attribute = $original::resolveStateName(Arr::get($this->attributes, $key));
+            $original = $original::resolveStateName($original);
+
+            if ($original === $attribute) {
+                return true;
+            }
+        }
+
+        return parent::originalIsEquivalent($key);
+    }
 }

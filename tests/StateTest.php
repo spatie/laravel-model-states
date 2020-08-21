@@ -3,9 +3,11 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\State;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
 use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
+use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateB;
 use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
 use Spatie\ModelStates\Tests\Dummy\Payment;
 use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
@@ -334,5 +336,101 @@ JSON;
         $state = PaymentWithDefaultStatePaid::getDefaultStateFor('state');
 
         $this->assertEquals($state, Paid::class);
+    }
+
+    /** @test */
+    public function original_is_equivalent_after_creation()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $this->assertFalse($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_equivalent_after_update_class()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = IntStateA::class;
+
+        $this->assertFalse($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_equivalent_after_update_string()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = IntStateA::resolveStateName(IntStateA::class);
+
+        $this->assertFalse($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_equivalent_after_update_object()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = new IntStateA($model);
+
+        $this->assertFalse($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_not_equivalent_after_update_class()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = IntStateB::class;
+
+        $this->assertTrue($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_not_equivalent_after_update_string()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = IntStateB::resolveStateName(IntStateB::class);
+
+        $this->assertTrue($model->isDirty('state'));
+    }
+
+    /** @test */
+    public function original_is_not_equivalent_after_update_object()
+    {
+        ModelWithIntState::migrate();
+
+        $model = ModelWithIntState::create([
+            'state' => IntStateA::class,
+        ]);
+
+        $model->state = new IntStateB($model);
+
+        $this->assertTrue($model->isDirty('state'));
     }
 }
