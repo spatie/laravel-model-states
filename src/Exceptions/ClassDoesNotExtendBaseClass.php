@@ -9,9 +9,11 @@ use Illuminate\Support\Str;
 
 class ClassDoesNotExtendBaseClass extends InvalidConfig implements ProvidesSolution
 {
-    protected string $class;
+    /** @var string */
+    protected $class;
 
-    protected string $baseClass;
+    /** @var string */
+    protected $baseClass;
 
     public static function make(string $class, string $baseClass): self
     {
