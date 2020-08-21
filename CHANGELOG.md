@@ -7,6 +7,13 @@ All notable changes to `state` will be documented in this file
 - `HasStates::transitionableStates(string $fromClass, string $field)` has been removed.
 - `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
 - `HasStates::getStates()` now returns the morph values instead of the hardcoded class names. You can easily construct a state instance from the morph value using `ConcreteState::make($morphValue, $model)`.
+- Default states are only set on model creations.
+- `State::make()` has been removed.
+- `State::find()` has been removed.
+- `State::all()` has been removed.
+- `State::equals()` only accepts state objects.
+- `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects.
+- `State::is()` is removed, you should use `State::equals()`.
 
 ## 1.8.0 - 2020-08-19
 
