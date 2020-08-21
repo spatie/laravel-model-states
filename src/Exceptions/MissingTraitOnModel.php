@@ -8,9 +8,11 @@ use Facade\IgnitionContracts\Solution;
 
 class MissingTraitOnModel extends InvalidConfig implements ProvidesSolution
 {
-    protected string $modelClass;
+    /** @var string */
+    protected $modelClass;
 
-    protected string $trait;
+    /** @var string */
+    protected $trait;
 
     public static function make(string $modelClass, string $trait): self
     {

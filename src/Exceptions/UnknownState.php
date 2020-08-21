@@ -8,9 +8,11 @@ use Facade\IgnitionContracts\Solution;
 
 class UnknownState extends InvalidConfig implements ProvidesSolution
 {
-    protected string $field;
+    /** @var string */
+    protected $field;
 
-    protected string $modelClass;
+    /** @var string */
+    protected $modelClass;
 
     public static function make(string $field, string $modelClass): self
     {

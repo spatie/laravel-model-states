@@ -8,7 +8,8 @@ use Facade\IgnitionContracts\Solution;
 
 class TransitionNotAllowed extends CouldNotPerformTransition implements ProvidesSolution
 {
-    protected string $transitionClass;
+    /** @var string */
+    protected $transitionClass;
 
     public static function make(string $modelClass, string $transitionClass): self
     {
