@@ -22,7 +22,7 @@ class DefaultTransition extends Transition
         $this->newState = $newState;
     }
 
-    public function handle()
+    public function handle(): Model
     {
         $this->model->{$this->field} = $this->newState;
 
