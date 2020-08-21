@@ -46,7 +46,7 @@ class TransitionNotFound extends CouldNotPerformTransition implements ProvidesSo
 
     public function getTo(): string
     {
-       return $this->to;
+        return $this->to;
     }
 
     public function setModelClass(string $modelClass): self
