@@ -66,8 +66,7 @@ abstract class State implements Castable, JsonSerializable
     {
         foreach ($otherStates as $otherState) {
             if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
-                && $this->getValue() === $otherState->getValue())
-            {
+                && $this->getValue() === $otherState->getValue()) {
                 return true;
             }
         }
