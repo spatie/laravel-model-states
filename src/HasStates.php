@@ -11,12 +11,29 @@ trait HasStates
 
     abstract public function registerStates(): void;
 
+    public static function bootHasStates()
+    {
+        self::creating(function ($model) {
+            $model->initStateConfigs();
+
+            /** @var \Spatie\ModelStates\StateConfig $stateConfig */
+            foreach ($model->stateConfigs as $stateConfig) {
+                if ($stateConfig->defaultStateClass === null) {
+                    continue;
+                }
+
+                if ($model->{$stateConfig->fieldName} !== null) {
+                    continue;
+                }
+
+                $model->{$stateConfig->fieldName} = $stateConfig->defaultStateClass;
+            }
+        });
+    }
+
     public function getCasts(): array
     {
-        if ($this->stateConfigs === null) {
-            $this->stateConfigs = [];
-            $this->registerStates();
-        }
+        $this->initStateConfigs();
 
         return array_merge(
             parent::getCasts(),
@@ -54,5 +71,9 @@ trait HasStates
 
     private function initStateConfigs(): void
     {
+        if ($this->stateConfigs === null) {
+            $this->stateConfigs = [];
+            $this->registerStates();
+        }
     }
 }
