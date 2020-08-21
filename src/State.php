@@ -4,9 +4,10 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Database\Eloquent\Model;
+use JsonSerializable;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
-abstract class State implements Castable
+abstract class State implements Castable, JsonSerializable
 {
     private Model $model;
 
@@ -49,6 +50,39 @@ abstract class State implements Castable
         $model = app()->call([$transition, 'handle']);
 
         return $model;
+    }
+
+    public function transitionableStates(): array
+    {
+        return $this->stateConfig->transitionableStates(self::getMorphClass());
+    }
+
+    public function getValue(): string
+    {
+        return static::getMorphClass();
+    }
+
+    public function equals(State ...$otherStates): bool
+    {
+        foreach ($otherStates as $otherState) {
+            if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
+                && $this->getValue() === $otherState->getValue())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->getValue();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getValue();
     }
 
     private function resolveState($state): self

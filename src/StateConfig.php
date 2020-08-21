@@ -70,11 +70,28 @@ class StateConfig
         return $this;
     }
 
-    public function isTransitionAllowed(string $from, string $to): bool
+    public function isTransitionAllowed(string $fromMorphClass, string $toMorphClass): bool
     {
-        $transitionKey = $this->createTransitionKey($from, $to);
+        $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
 
         return array_key_exists($transitionKey, $this->allowedTransitions);
+    }
+
+    public function transitionableStates(string $fromMorphClass): array
+    {
+        $transitionableStates = [];
+
+        foreach ($this->allowedTransitions as $allowedTransition => $value) {
+            [$transitionFromMorphClass, $transitionToMorphClass] = explode('-', $allowedTransition);
+
+            if ($transitionFromMorphClass !== $fromMorphClass) {
+                continue;
+            }
+
+            $transitionableStates[] = $transitionToMorphClass;
+        }
+
+        return $transitionableStates;
     }
 
     private function createTransitionKey(string $from, string $to): string
