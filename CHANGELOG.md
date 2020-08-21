@@ -4,6 +4,20 @@ All notable changes to `state` will be documented in this file
 
 ## 2.0.0 - ?
 
+The biggest change in v2 is that states now know which fields they belong to. So instead of having to pass in fields like so: 
+
+```php
+$model->canTransitionTo(StateB::class, 'status');
+```
+
+You can now do:
+
+```php
+$model->status->canTransitionTo(StateB::class);
+```
+
+This change means that a lot of boilerplate code can be removed. Also keep in mind that this package wants you to always use state objects, and never their serialized values. That's why many other methods have been removed, in favour of Laravel's built-in model casts.
+
 - `HasStates::transitionableStates(string $fromClass, string $field)` has been removed.
 - `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
 - `HasStates::getStates()` now returns the morph values instead of the hardcoded class names. You can easily construct a state instance from the morph value using `ConcreteState::make($morphValue, $model)`.
