@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `state` will be documented in this file
+All notable changes to `laravel-model-states` will be documented in this file
 
 ## 1.8.0 - 2020-08-19
 
