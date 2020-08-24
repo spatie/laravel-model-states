@@ -4,23 +4,23 @@ All notable changes to `state` will be documented in this file
 
 ## 1.8.0 - 2020-08-19
 
-- Add getters for `TransitionNotFound` attributes (#99)
+- Add getters for `TransitionNotFound` attributes ([#99](https://github.com/spatie/laravel-model-states/pull/99))
 
 ## 1.7.0 - 2020-08-19
 
-- Add `canTransitionTo` (#92)
+- Add `canTransitionTo` ([#92](https://github.com/spatie/laravel-model-states/pull/92))
 
 ## 1.6.3 - 2020-06-23
 
-- Support `0` state (#89)
+- Support `0` state ([#89](https://github.com/spatie/laravel-model-states/pull/89))
 
 ## 1.6.2 - 2020-06-16
 
-- Support model::updated state casting (#88)
+- Support model::updated state casting ([#88](https://github.com/spatie/laravel-model-states/issues/88), [351c008](https://github.com/spatie/laravel-model-states/commit/351c008f9e1ab42ed8f9a598d78615787669f43b))
 
 ## 1.6.1 - 2020-03-27
 
-- change `static::` call to `self::` for private `State::resolveStateMapping` method (#75)
+- change `static::` call to `self::` for private `State::resolveStateMapping` method ([#75](https://github.com/spatie/laravel-model-states/pull/75))
 
 ## 1.6.0 - 2020-03-03
 
@@ -48,7 +48,7 @@ All notable changes to `state` will be documented in this file
 
 ## 1.3.1 - 2019-10-28
 
-- Revert 06a4359a184bc747d7fd8c9b062e4333e9b30f80
+- Revert [06a4359](https://github.com/spatie/laravel-model-states/commit/06a4359a184bc747d7fd8c9b062e4333e9b30f80)
 
 ## 1.3.0 - 2019-10-28
 
