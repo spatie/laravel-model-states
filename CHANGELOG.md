@@ -2,6 +2,10 @@
 
 All notable changes to `state` will be documented in this file
 
+## 1.9.0 - 2020-08-24
+
+- add support for Laravel 8 ([#101](https://github.com/spatie/laravel-model-states/pull/101))
+
 ## 1.8.0 - 2020-08-19
 
 - Add getters for `TransitionNotFound` attributes (#99)
