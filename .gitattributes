@@ -5,6 +5,5 @@
 .gitattributes export-ignore
 .gitignore  export-ignore
 .scrutinizer.yml export-ignore
-.styleci.yml export-ignore
 CHANGELOG.md export-ignore
 phpunit.xml.dist export-ignore
