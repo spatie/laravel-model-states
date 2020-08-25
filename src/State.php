@@ -5,10 +5,13 @@ namespace Spatie\ModelStates;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Database\Eloquent\Model;
 use JsonSerializable;
+use ReflectionClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 abstract class State implements Castable, JsonSerializable
 {
+    private static array $stateMapping = [];
+
     private Model $model;
 
     private StateConfig $stateConfig;
@@ -21,6 +24,42 @@ abstract class State implements Castable, JsonSerializable
     public static function getMorphClass(): string
     {
         return static::$name ?? static::class;
+    }
+
+    public static function getStateMapping(): array
+    {
+        if (! isset(self::$stateMapping[static::class])) {
+            self::$stateMapping[static::class] = static::resolveStateMapping();
+        }
+
+        return self::$stateMapping[static::class];
+    }
+
+    public static function resolveStateClass($state): ?string
+    {
+        if ($state === null) {
+            return null;
+        }
+
+        if ($state instanceof State) {
+            return get_class($state);
+        }
+
+        foreach (self::resolveStateMapping() as $stateClass) {
+            if (! class_exists($stateClass)) {
+                continue;
+            }
+
+            // Loose comparison is needed here in order to support non-string values,
+            // Laravel casts their database value automatically to strings if we didn't specify the fields in `$casts`.
+            $name = isset($stateClass::$name) ? (string) $stateClass::$name : null;
+
+            if ($name == $state) {
+                return $stateClass;
+            }
+        }
+
+        return $state;
     }
 
     public function __construct(Model $model, StateConfig $stateConfig)
@@ -106,5 +145,35 @@ abstract class State implements Castable, JsonSerializable
         }
 
         // TODO: via mapping
+    }
+
+    private static function resolveStateMapping(): array
+    {
+        $reflection = new ReflectionClass(static::class);
+
+        ['dirname' => $directory] = pathinfo($reflection->getFileName());
+
+        $files = scandir($directory);
+
+        unset($files[0], $files[1]);
+
+        $namespace = $reflection->getNamespaceName();
+
+        $resolvedStates = [];
+
+        foreach ($files as $file) {
+            ['filename' => $className] = pathinfo($file);
+
+            /** @var \Spatie\ModelStates\State|mixed $stateClass */
+            $stateClass = $namespace . '\\' . $className;
+
+            if (! is_subclass_of($stateClass, static::class)) {
+                continue;
+            }
+
+            $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
+        }
+
+        return $resolvedStates;
     }
 }
