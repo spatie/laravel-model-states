@@ -5,6 +5,7 @@ namespace Spatie\ModelStates\Tests;
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
 use Spatie\ModelStates\Tests\Dummy\States\StateA;
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
+use Spatie\ModelStates\Tests\Dummy\States\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 
 class TransitionTest extends TestCase
@@ -21,6 +22,20 @@ class TransitionTest extends TestCase
         $model->refresh();
 
         $this->assertInstanceOf(StateB::class, $model->state);
+    }
+
+    /** @test */
+    public function allowed_transition_with_morph_mame()
+    {
+        $model = TestModel::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateD::getMorphClass());
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateD::class, $model->state);
     }
 
     /** @test */
