@@ -2,12 +2,27 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Spatie\ModelStates\Tests\Dummy\States\ModelState;
+use Spatie\ModelStates\Tests\Dummy\States\StateA;
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
 use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\States\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
 {
+    /** @test */
+    public function test_resolve_state_class()
+    {
+        $this->assertEquals(StateA::class, ModelState::resolveStateClass(StateA::class));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::class));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::getMorphClass()));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::$name));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::class));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::getMorphClass()));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::$name));
+    }
+
     /** @test */
     public function transitionable_states()
     {
