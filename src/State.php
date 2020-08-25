@@ -16,7 +16,7 @@ abstract class State implements Castable, JsonSerializable
 
     private StateConfig $stateConfig;
 
-    public static function castUsing()
+    public static function castUsing(array $arguments)
     {
         return new StateCaster(static::class);
     }
