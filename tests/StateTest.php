@@ -4,7 +4,6 @@ namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
 use Spatie\ModelStates\Tests\Dummy\States\StateC;
-use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
