@@ -45,7 +45,7 @@ abstract class State implements Castable, JsonSerializable
             return get_class($state);
         }
 
-        foreach (self::resolveStateMapping() as $stateClass) {
+        foreach (static::getStateMapping() as $stateClass) {
             if (! class_exists($stateClass)) {
                 continue;
             }
@@ -70,7 +70,7 @@ abstract class State implements Castable, JsonSerializable
 
     public function transitionTo($newState): Model
     {
-        $newState = $this->resolveState($newState);
+        $newState = $this->resolveStateObject($newState);
 
         $from = static::getMorphClass();
 
@@ -98,7 +98,7 @@ abstract class State implements Castable, JsonSerializable
 
     public function canTransitionTo($newState): bool
     {
-        $newState = $this->resolveState($newState);
+        $newState = $this->resolveStateObject($newState);
 
         $from = static::getMorphClass();
 
@@ -134,17 +134,15 @@ abstract class State implements Castable, JsonSerializable
         return $this->getValue();
     }
 
-    private function resolveState($state): self
+    private function resolveStateObject($state): self
     {
         if (is_object($state) && is_subclass_of($state, $this->stateConfig->baseStateClass)) {
             return $state;
         }
 
-        if (is_string($state) && is_subclass_of($state, $this->stateConfig->baseStateClass)) {
-            return new $state($this->model, $this->stateConfig);
-        }
+        $stateClassName = $this->stateConfig->baseStateClass::resolveStateClass($state);
 
-        // TODO: via mapping
+        return new $stateClassName($this->model, $this->stateConfig);
     }
 
     private static function resolveStateMapping(): array
