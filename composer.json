@@ -23,7 +23,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^5.0|^6.0",
-        "phpunit/phpunit": "^9.0",
+        "phpunit/phpunit": "^9.3",
         "symfony/var-dumper": "^5.0"
     },
     "autoload": {
