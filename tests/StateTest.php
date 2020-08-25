@@ -4,6 +4,7 @@ namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
 use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
@@ -41,5 +42,21 @@ class StateTest extends TestCase
         ]);
 
         $this->assertFalse($modelA->state->equals($modelB->state));
+    }
+
+    /** @test */
+    public function test_transition_to()
+    {
+        $modelA = TestModelWithDefault::create();
+
+        $this->assertTrue($modelA->state->canTransitionTo(StateB::class));
+        $this->assertTrue($modelA->state->canTransitionTo(StateC::class));
+
+        $modelB = TestModelWithDefault::create([
+            'state' => StateB::class,
+        ]);
+
+        $this->assertFalse($modelB->state->canTransitionTo(StateB::class));
+        $this->assertFalse($modelB->state->canTransitionTo(StateC::class));
     }
 }

@@ -19,11 +19,11 @@
         "php": "^7.4",
         "ext-json": "*",
         "facade/ignition-contracts": "^1.0",
-        "laravel/framework": "^7.0 || ^8.0"
+        "laravel/framework": "^7.11|^8.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^5.0 || ^6.0",
-        "phpunit/phpunit": "^9.3",
+        "orchestra/testbench": "^5.0|^6.0",
+        "phpunit/phpunit": "^9.0",
         "symfony/var-dumper": "^5.0"
     },
     "autoload": {
