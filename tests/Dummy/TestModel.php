@@ -8,6 +8,7 @@ use Spatie\ModelStates\Tests\Dummy\States\ModelState;
 use Spatie\ModelStates\Tests\Dummy\States\StateA;
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
 use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\States\StateD;
 
 /**
  * @method static self create(array $extra = [])
@@ -30,6 +31,7 @@ class TestModel extends Model
         $this
             ->addState('state', ModelState::class)
             ->allowTransition(StateA::class, StateB::class)
-            ->allowTransition(StateA::class, StateC::class);
+            ->allowTransition(StateA::class, StateC::class)
+            ->allowTransition(StateA::class, StateD::class);
     }
 }

@@ -5,10 +5,13 @@ namespace Spatie\ModelStates;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Database\Eloquent\Model;
 use JsonSerializable;
+use ReflectionClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 abstract class State implements Castable, JsonSerializable
 {
+    private static array $stateMapping = [];
+
     private Model $model;
 
     private StateConfig $stateConfig;
@@ -23,6 +26,42 @@ abstract class State implements Castable, JsonSerializable
         return static::$name ?? static::class;
     }
 
+    public static function getStateMapping(): array
+    {
+        if (! isset(self::$stateMapping[static::class])) {
+            self::$stateMapping[static::class] = static::resolveStateMapping();
+        }
+
+        return self::$stateMapping[static::class];
+    }
+
+    public static function resolveStateClass($state): ?string
+    {
+        if ($state === null) {
+            return null;
+        }
+
+        if ($state instanceof State) {
+            return get_class($state);
+        }
+
+        foreach (static::getStateMapping() as $stateClass) {
+            if (! class_exists($stateClass)) {
+                continue;
+            }
+
+            // Loose comparison is needed here in order to support non-string values,
+            // Laravel casts their database value automatically to strings if we didn't specify the fields in `$casts`.
+            $name = isset($stateClass::$name) ? (string) $stateClass::$name : null;
+
+            if ($name == $state) {
+                return $stateClass;
+            }
+        }
+
+        return $state;
+    }
+
     public function __construct(Model $model, StateConfig $stateConfig)
     {
         $this->model = $model;
@@ -31,7 +70,7 @@ abstract class State implements Castable, JsonSerializable
 
     public function transitionTo($newState): Model
     {
-        $newState = $this->resolveState($newState);
+        $newState = $this->resolveStateObject($newState);
 
         $from = static::getMorphClass();
 
@@ -55,6 +94,17 @@ abstract class State implements Castable, JsonSerializable
     public function transitionableStates(): array
     {
         return $this->stateConfig->transitionableStates(self::getMorphClass());
+    }
+
+    public function canTransitionTo($newState): bool
+    {
+        $newState = $this->resolveStateObject($newState);
+
+        $from = static::getMorphClass();
+
+        $to = $newState::getMorphClass();
+
+        return $this->stateConfig->isTransitionAllowed($from, $to);
     }
 
     public function getValue(): string
@@ -84,16 +134,44 @@ abstract class State implements Castable, JsonSerializable
         return $this->getValue();
     }
 
-    private function resolveState($state): self
+    private function resolveStateObject($state): self
     {
         if (is_object($state) && is_subclass_of($state, $this->stateConfig->baseStateClass)) {
             return $state;
         }
 
-        if (is_string($state) && is_subclass_of($state, $this->stateConfig->baseStateClass)) {
-            return new $state($this->model, $this->stateConfig);
+        $stateClassName = $this->stateConfig->baseStateClass::resolveStateClass($state);
+
+        return new $stateClassName($this->model, $this->stateConfig);
+    }
+
+    private static function resolveStateMapping(): array
+    {
+        $reflection = new ReflectionClass(static::class);
+
+        ['dirname' => $directory] = pathinfo($reflection->getFileName());
+
+        $files = scandir($directory);
+
+        unset($files[0], $files[1]);
+
+        $namespace = $reflection->getNamespaceName();
+
+        $resolvedStates = [];
+
+        foreach ($files as $file) {
+            ['filename' => $className] = pathinfo($file);
+
+            /** @var \Spatie\ModelStates\State|mixed $stateClass */
+            $stateClass = $namespace . '\\' . $className;
+
+            if (! is_subclass_of($stateClass, static::class)) {
+                continue;
+            }
+
+            $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
         }
 
-        // TODO: via mapping
+        return $resolvedStates;
     }
 }
