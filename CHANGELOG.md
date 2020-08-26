@@ -37,7 +37,7 @@ This change means that a lot of boilerplate code can be removed. Also keep in mi
 - `State::equals()` only accepts state objects.
 - `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects.
 - `State::is()` is removed, you should use `State::equals()`.
-- Dropped support for Laravel 5 and 6, the minimal required version is `laravel/framework:^7.11`
+- Dropped support for Laravel 5, 6, and 7. The minimal required version is `laravel/framework:^8`
 
 ## 1.8.0 - 2020-08-19
 
