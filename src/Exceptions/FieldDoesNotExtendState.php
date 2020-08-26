@@ -8,14 +8,11 @@ use Facade\IgnitionContracts\Solution;
 
 class FieldDoesNotExtendState extends InvalidConfig implements ProvidesSolution
 {
-    /** @var string */
-    protected $field;
+    protected string $field;
 
-    /** @var string */
-    protected $expectedStateClass;
+    protected string $expectedStateClass;
 
-    /** @var string */
-    protected $actualClass;
+    protected string $actualClass;
 
     public static function make(string $field, string $expectedStateClass, string $actualClass): self
     {
