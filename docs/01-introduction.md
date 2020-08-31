@@ -75,7 +75,7 @@ There's a lot more to tell about how this package can be used. So let's dive in.
 <section class="article_badges">
     <a href="https://github.com/spatie/laravel-model-states/releases"><img src="https://img.shields.io/github/release/spatie/laravel-model-states.svg?style=flat-square" alt="Latest Version"></a>
     <a href="https://github.com/spatie/laravel-model-states/blob/master/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License"></a>
-    <a href="https://travis-ci.org/spatie/laravel-model-states"><img src="https://img.shields.io/travis/spatie/laravel-model-states/master.svg?style=flat-square" alt="Build Status"></a>
+    <a href="https://github.com/spatie/laravel-model-states/actions?query=workflow%3Arun-tests+branch%3Amaster"><img src="https://img.shields.io/github/workflow/status/spatie/laravel-model-states/run-tests?label=tests" alt="Build Status"></a>
     <a href="https://scrutinizer-ci.com/g/spatie/laravel-model-states"><img src="https://img.shields.io/scrutinizer/g/spatie/laravel-model-states.svg?style=flat-square" alt="Quality Score"></a>
     <a href="https://packagist.org/packages/spatie/laravel-model-states"><img src="https://img.shields.io/packagist/dt/spatie/laravel-model-states.svg?style=flat-square" alt="Total Downloads"></a>
 </section>

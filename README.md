@@ -1,7 +1,7 @@
 # Adding state behaviour to Eloquent models
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/spatie/laravel-model-states/run-tests?label=tests)
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-model-states/run-tests?label=tests)](https://github.com/spatie/laravel-model-states/actions?query=workflow%3Arun-tests+branch%3Amaster)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-model-states.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-model-states)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
 
