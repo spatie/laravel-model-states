@@ -3,17 +3,14 @@ name: deploy-docs
 on:
   push:
     paths:
-        - 'docs/**'
+      - 'docs/**'
 
 jobs:
-    deploy:
-
-        runs-on: ubuntu-latest
-
-        name: Deploy docs
-
-        steps:
-            - name: Netlify deploy
-              uses: wei/curl@v1
-              with:
-                  args: -X POST -d {} ${{ secrets.NETLIFY_DEPLOY_URL }}?trigger_title=laravel-model-states
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy docs
+    steps:
+      - name: Netlify deploy
+        uses: wei/curl@v1
+        with:
+          args: -X POST -d {} ${{ secrets.NETLIFY_DEPLOY_URL }}?trigger_title=laravel-model-states
