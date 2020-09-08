@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/laravel-model-states/run-tests?label=tests)](https://github.com/spatie/laravel-model-states/actions?query=workflow%3Arun-tests+branch%3Amaster)
-[![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-model-states.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-model-states)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
 
 This package adds state support to models. It combines concepts from the [state pattern](https://en.wikipedia.org/wiki/State_pattern) and [state machines](https://www.youtube.com/watch?v=N12L5D78MAA).
