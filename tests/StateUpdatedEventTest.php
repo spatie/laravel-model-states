@@ -1,6 +1,7 @@
 <?php
 
 namespace Spatie\ModelStates\Tests;
+
 namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\Event;
