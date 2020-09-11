@@ -25,8 +25,7 @@ This change means that a lot of boilerplate code can be removed. Also keep in mi
 - `State::make()` has been removed.
 - `State::find()` has been removed.
 - `State::all()` has been removed.
-- `State::equals()` only accepts state objects.
-- `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects.
+- `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects or morph classes.
 - `State::is()` is removed, you should use `State::equals()`.
 - Dropped support for Laravel 5, 6, and 7. The minimal required version is `laravel/framework:^8`
 - Proper support for `finalState` in `StateChanged` event

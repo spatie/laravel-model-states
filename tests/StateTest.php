@@ -56,6 +56,8 @@ class StateTest extends TestCase
         ]);
 
         $this->assertFalse($modelA->state->equals($modelB->state));
+
+        $this->assertTrue($modelA->state->equals(StateA::class));
     }
 
     /** @test */
