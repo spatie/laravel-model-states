@@ -2,7 +2,6 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Illuminate\Queue\Queue;
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\DefaultTransition;
 use Spatie\ModelStates\Events\StateChanged;
