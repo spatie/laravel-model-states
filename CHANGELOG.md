@@ -2,18 +2,9 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
-
-## 1.9.1 - 2020-12-01
-
-- add support for PHP 8.0 ([#141](https://github.com/spatie/laravel-model-states/pull/141))
-
-## 1.9.0 - 2020-08-24
-
-- add support for Laravel 8 ([#101](https://github.com/spatie/laravel-model-states/pull/101))
-
 ## 2.0.0 - ?
 
-The biggest change in v2 is that states now know which fields they belong to. So instead of having to pass in fields like so: 
+The biggest change in v2 is that states now know which fields they belong to. So instead of having to pass in fields like so:
 
 ```php
 $model->canTransitionTo(StateB::class, 'status');
@@ -38,6 +29,14 @@ This change means that a lot of boilerplate code can be removed. Also keep in mi
 - `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects.
 - `State::is()` is removed, you should use `State::equals()`.
 - Dropped support for Laravel 5, 6, and 7. The minimal required version is `laravel/framework:^8`
+
+## 1.9.1 - 2020-12-01
+
+- add support for PHP 8.0 ([#141](https://github.com/spatie/laravel-model-states/pull/141))
+
+## 1.9.0 - 2020-08-24
+
+- add support for Laravel 8 ([#101](https://github.com/spatie/laravel-model-states/pull/101))
 
 ## 1.8.0 - 2020-08-19
 
