@@ -4,6 +4,7 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use JsonSerializable;
 use ReflectionClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
@@ -26,13 +27,13 @@ abstract class State implements Castable, JsonSerializable
         return static::$name ?? static::class;
     }
 
-    public static function getStateMapping(): array
+    public static function getStateMapping(): Collection
     {
         if (! isset(self::$stateMapping[static::class])) {
             self::$stateMapping[static::class] = static::resolveStateMapping();
         }
 
-        return self::$stateMapping[static::class];
+        return collect(self::$stateMapping[static::class]);
     }
 
     public static function resolveStateClass($state): ?string

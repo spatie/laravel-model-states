@@ -2,7 +2,10 @@
 
 namespace Spatie\ModelStates;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 trait HasStates
 {
@@ -41,7 +44,7 @@ trait HasStates
 
         return collect($model->getStateConfigs())
             ->map(function (StateConfig $stateConfig) {
-                return array_keys($stateConfig->baseStateClass::getStateMapping());
+                return $stateConfig->baseStateClass::getStateMapping()->keys();
             });
     }
 
@@ -100,6 +103,10 @@ trait HasStates
 
     public function getStateConfig(string $fieldName): StateConfig
     {
+        if (! isset($this->stateConfigs[$fieldName])) {
+            throw InvalidConfig::fieldNotFound($fieldName, $this);
+        }
+
         return $this->stateConfigs[$fieldName];
     }
 
@@ -109,6 +116,43 @@ trait HasStates
     public function getStateConfigs(): array
     {
         return $this->stateConfigs ?? [];
+    }
+
+    public function scopeWhereState(Builder $builder, string $column, $states): Builder
+    {
+        if (! is_array($states)) {
+            $states = [$states];
+        }
+
+        $field = Arr::last(explode('.', $column));
+
+        return $builder->whereIn($column, $this->getStateNamesForQuery($field, $states));
+    }
+
+    public function scopeWhereNotState(Builder $builder, string $column, $states): Builder
+    {
+        if (! is_array($states)) {
+            $states = [$states];
+        }
+
+        $field = Arr::last(explode('.', $column));
+
+        return $builder->whereNotIn($column, $this->getStateNamesForQuery($field, $states));
+    }
+
+    private function getStateNamesForQuery(string $field, array $states): Collection
+    {
+        $this->initStateConfigs();
+
+        /** @var \Spatie\ModelStates\StateConfig|null $stateConfig */
+        $stateConfig = $this->getStateConfig($field);
+
+        return $stateConfig->baseStateClass::getStateMapping()
+            ->filter(function (string $className, string $morphName) use ($states) {
+                return in_array($className, $states)
+                    || in_array($morphName, $states);
+            })
+            ->keys();
     }
 
     private function initStateConfigs(): void

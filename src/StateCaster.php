@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Support\Collection;
 
 class StateCaster implements CastsAttributes
 {
@@ -56,7 +57,7 @@ class StateCaster implements CastsAttributes
         return $value::getMorphClass();
     }
 
-    private function getStateMapping(): array
+    private function getStateMapping(): Collection
     {
         return $this->baseStateClass::getStateMapping();
     }
