@@ -13,7 +13,7 @@ class TestModelWithTransitionsFromArray extends TestModel
         $this
             ->addState('state', ModelState::class)
             ->allowTransitions([
-                [StateA::class, StateC::class]
+                [StateA::class, StateC::class],
             ]);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Spatie\ModelStates;
 
-use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
