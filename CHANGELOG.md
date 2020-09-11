@@ -20,7 +20,7 @@ This change means that a lot of boilerplate code can be removed. Also keep in mi
 
 - `HasStates::transitionableStates(string $fromClass, string $field)` has been removed.
 - `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
-- `HasStates::getStates()` now returns the morph values instead of the hardcoded class names. You can easily construct a state instance from the morph value using `ConcreteState::make($morphValue, $model)`.
+- `HasStates::getStates()` now returns the morph values instead of the hardcoded class names.
 - Default states are only set on model creations.
 - `State::make()` has been removed.
 - `State::find()` has been removed.
