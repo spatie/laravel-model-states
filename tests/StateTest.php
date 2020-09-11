@@ -73,4 +73,59 @@ class StateTest extends TestCase
         $this->assertFalse($modelB->state->canTransitionTo(StateB::class));
         $this->assertFalse($modelB->state->canTransitionTo(StateC::class));
     }
+
+    /** @test */
+    public function test_get_states()
+    {
+        $states = TestModelWithDefault::getStates();
+
+        $this->assertEquals(
+            [
+                'state' => [
+                    StateA::getMorphClass(),
+                    StateB::getMorphClass(),
+                    StateC::getMorphClass(),
+                    StateD::getMorphClass(),
+                ],
+            ],
+            $states->toArray()
+        );
+    }
+
+    /** @test */
+    public function test_get_states_for()
+    {
+        $states = TestModelWithDefault::getStatesFor('state');
+
+        $this->assertEquals(
+            [
+                StateA::getMorphClass(),
+                StateB::getMorphClass(),
+                StateC::getMorphClass(),
+                StateD::getMorphClass(),
+            ],
+            $states->toArray()
+        );
+    }
+
+    /** @test */
+    public function test_get_default_states()
+    {
+        $states = TestModelWithDefault::getDefaultStates();
+
+        $this->assertEquals(
+            [
+                'state' => StateA::getMorphClass(),
+            ],
+            $states->toArray()
+        );
+    }
+
+    /** @test */
+    public function test_get_default_states_for()
+    {
+        $defaultState = TestModelWithDefault::getDefaultStateFor('state');
+
+        $this->assertEquals(StateA::getMorphClass(), $defaultState);
+    }
 }

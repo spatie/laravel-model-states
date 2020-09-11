@@ -54,7 +54,7 @@ class Paid extends PaymentState
 
 There might be some cases where this abstract class will simply be empty, still it's important to provide it, as type validation will be done using it.
 
-To link the `Payment::$state` field and the `PaymentState` class together, you must implement the `registerStates` method.
+To link the `Payment::$state` field and the `PaymentState` class together, you must implement the `registerStates` method in the `Payment` model.
 
 ```php
 class Payment extends Model

@@ -10,8 +10,10 @@ class StateConfig
 
     public string $fieldName;
 
+    /** @var string|\Spatie\ModelStates\State */
     public string $baseStateClass;
 
+    /** @var string|null|\Spatie\ModelStates\State */
     public ?string $defaultStateClass = null;
 
     /** @var string[] */
