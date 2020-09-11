@@ -76,7 +76,7 @@ abstract class State implements Castable, JsonSerializable
 
         $to = $newState::getMorphClass();
 
-        if (!$this->stateConfig->isTransitionAllowed($from, $to)) {
+        if (! $this->stateConfig->isTransitionAllowed($from, $to)) {
             throw CouldNotPerformTransition::notFound($from, $to, $this->model);
         }
 
