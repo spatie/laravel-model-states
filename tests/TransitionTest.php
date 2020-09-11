@@ -2,6 +2,10 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Illuminate\Queue\Queue;
+use Illuminate\Support\Facades\Event;
+use Spatie\ModelStates\DefaultTransition;
+use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\TransitionNotAllowed;
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
 use Spatie\ModelStates\Tests\Dummy\States\StateA;
@@ -139,5 +143,24 @@ class TransitionTest extends TestCase
         $this->expectException(TransitionNotAllowed::class);
 
         $model->state->transition(new CustomInvalidTransition($model));
+    }
+
+    /** @test */
+    public function event_is_triggered_after_transition()
+    {
+        Event::fake();
+
+        $model = TestModel::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateB::class);
+
+        Event::assertDispatched(StateChanged::class, function (StateChanged $event) use ($model) {
+            return $event->transition instanceof DefaultTransition
+                && $event->initialState instanceof StateA
+                && $event->finalState instanceof StateB
+                && $event->model->is($model);
+        });
     }
 }
