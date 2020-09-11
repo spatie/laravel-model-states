@@ -3,10 +3,14 @@
 namespace Spatie\ModelStates\Tests;
 
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
+use Spatie\ModelStates\State;
 use Spatie\ModelStates\Tests\Dummy\States\StateA;
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
+use Spatie\ModelStates\Tests\Dummy\States\StateC;
 use Spatie\ModelStates\Tests\Dummy\States\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithMultipleFromTransitions;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
 
 class TransitionTest extends TestCase
 {
@@ -36,6 +40,44 @@ class TransitionTest extends TestCase
         $model->refresh();
 
         $this->assertInstanceOf(StateD::class, $model->state);
+    }
+
+    /** @test */
+    public function allowed_transition_configured_with_multiple_from()
+    {
+        $modelA = TestModelWithMultipleFromTransitions::create([
+            'state' => StateA::class,
+        ]);
+
+        $modelA->state->transitionTo(StateC::getMorphClass());
+
+        $modelA->refresh();
+
+        $this->assertInstanceOf(StateC::class, $modelA->state);
+
+        $modelB = TestModelWithMultipleFromTransitions::create([
+            'state' => StateB::class,
+        ]);
+
+        $modelB->state->transitionTo(StateC::getMorphClass());
+
+        $modelB->refresh();
+
+        $this->assertInstanceOf(StateC::class, $modelB->state);
+    }
+
+    /** @test */
+    public function allowed_transition_configured_from_array()
+    {
+        $model = TestModelWithTransitionsFromArray::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateC::class);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateC::class, $model->state);
     }
 
     /** @test */

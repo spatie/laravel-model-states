@@ -75,15 +75,3 @@ Transitions can be used by calling the `transitionTo` method on the state field 
 ```php
 $payment->state->transitionTo(Paid::class);
 ```
-
-If you only have one state field on your model, you can use the `transitionTo` method directly on it:
-
-```php
-$payment->transitionTo(Paid::class);
-```
-
-If there are multiple fields, a `\Spatie\ModelStates\Exceptions\CouldNotResolveTransitionField` exception will be thrown. You can pass the state field name explicitly as a second parameter if you want to: 
-
-```php
-$payment->transitionTo(Paid::class, 'fieldName');
-```
