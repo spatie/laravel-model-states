@@ -2,6 +2,8 @@
 
 namespace Spatie\ModelStates;
 
+use Illuminate\Support\Collection;
+
 trait HasStates
 {
     private array $stateCasts = [];
@@ -29,6 +31,46 @@ trait HasStates
                 $model->{$stateConfig->fieldName} = $stateConfig->defaultStateClass;
             }
         });
+    }
+
+    public static function getStates(): Collection
+    {
+        $model = new static();
+
+        $model->initStateConfigs();
+
+        return collect($model->getStateConfigs())
+            ->map(function (StateConfig $stateConfig) {
+                return array_keys($stateConfig->baseStateClass::getStateMapping());
+            });
+    }
+
+    public static function getStatesFor(string $fieldName): Collection
+    {
+        return collect(static::getStates()[$fieldName] ?? []);
+    }
+
+    public static function getDefaultStates(): Collection
+    {
+        $model = new static();
+
+        $model->initStateConfigs();
+
+        return collect($model->getStateConfigs())
+            ->map(function (StateConfig $stateConfig) {
+                $defaultStateClass = $stateConfig->defaultStateClass;
+
+                if ($defaultStateClass === null) {
+                    return null;
+                }
+
+                return $defaultStateClass::getMorphClass();
+            });
+    }
+
+    public static function getDefaultStateFor(string $fieldName): ?string
+    {
+        return static::getDefaultStates()[$fieldName] ?? null;
     }
 
     public function getCasts(): array
