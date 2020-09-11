@@ -11,9 +11,10 @@ use Spatie\ModelStates\Tests\Dummy\States\StateC;
 use Spatie\ModelStates\Tests\Dummy\States\StateD;
 
 /**
- * @method static self create(array $extra = [])
+ * @method static static create(array $extra = [])
  * @method static self find(int $id)
- * @property ModelState state
+ * @property ModelState|null state
+ * @property string|null message
  */
 class TestModel extends Model
 {

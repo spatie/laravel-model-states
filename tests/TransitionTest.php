@@ -2,15 +2,18 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Spatie\ModelStates\Exceptions\TransitionNotAllowed;
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
-use Spatie\ModelStates\State;
 use Spatie\ModelStates\Tests\Dummy\States\StateA;
 use Spatie\ModelStates\Tests\Dummy\States\StateB;
 use Spatie\ModelStates\Tests\Dummy\States\StateC;
 use Spatie\ModelStates\Tests\Dummy\States\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithMultipleFromTransitions;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
 
 class TransitionTest extends TestCase
 {
@@ -90,5 +93,51 @@ class TransitionTest extends TestCase
         $this->expectException(TransitionNotFound::class);
 
         $model->state->transitionTo(StateA::class);
+    }
+
+    /** @test */
+    public function custom_transition_test()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateA::class,
+        ]);
+
+        $message = 'my message';
+
+        $model->state->transitionTo(StateB::class, $message);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateB::class, $model->state);
+        $this->assertEquals($message, $model->message);
+    }
+
+    /** @test */
+    public function directly_transition()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateA::class,
+        ]);
+
+        $message = 'my message';
+
+        $model->state->transition(new CustomTransition($model, $message));
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateB::class, $model->state);
+        $this->assertEquals($message, $model->message);
+    }
+
+    /** @test */
+    public function test_cannot_transition()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateA::class,
+        ]);
+
+        $this->expectException(TransitionNotAllowed::class);
+
+        $model->state->transition(new CustomInvalidTransition($model));
     }
 }
