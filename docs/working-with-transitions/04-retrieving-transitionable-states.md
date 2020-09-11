@@ -3,7 +3,7 @@ title: Retrieving transitionable states
 weight: 4
 ---
 
-An array of transitionable states can be retrieved with the `transitionableStates()` method on your model.
+An array of transitionable states can be retrieved using the `transitionableStates()` on the state field.
 
 
 ```php
@@ -15,7 +15,7 @@ class Payment extends Model
     {
         $this->addState('state', PaymentState::class)
             ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Paid::class, Refunded::class)
+            ->allowTransition(Paid::class, Refunded::class).
     }
 }
 ```
@@ -24,20 +24,13 @@ class Payment extends Model
 $transitionableStates = $payment->state->transitionableStates();
 ```
 
-This will return an array with all transitionable states for `Pending::class`
+This will return an array with all transitionable states for the current state, for example `Pending`:
 
 ```php
 [
     0 => "paid"
 ]
 ```
-
-## Transitionable states from state
-
-It's also possible to use `transitionableStates()` method directly on a state:
-
-```php
-$payment->state->transitionableStates();
 
 ## Can transition to
 
