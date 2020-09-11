@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Model;
+use Spatie\ModelStates\Tests\Dummy\DummyDependency;
 
 class DefaultTransition extends Transition
 {

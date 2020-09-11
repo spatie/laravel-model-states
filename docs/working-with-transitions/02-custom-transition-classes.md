@@ -13,11 +13,9 @@ use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
-    /** @var Payment */
-    private $payment;
+    private Payment $payment;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(Payment $payment, string $message)
     {
@@ -87,5 +85,3 @@ class CreatedToFailed extends Transition
 ```
 
 If the check in `canTransition()` fails, a `\Spatie\ModelStates\Exceptions\TransitionNotAllowed` will be thrown.
-
-> **Note**: `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.

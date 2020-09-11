@@ -68,7 +68,7 @@ abstract class State implements Castable, JsonSerializable
         $this->stateConfig = $stateConfig;
     }
 
-    public function transitionTo($newState): Model
+    public function transitionTo($newState, ...$transitionArgs): Model
     {
         $newState = $this->resolveStateObject($newState);
 
@@ -76,15 +76,27 @@ abstract class State implements Castable, JsonSerializable
 
         $to = $newState::getMorphClass();
 
-        if (! $this->stateConfig->isTransitionAllowed($from, $to)) {
+        if (!$this->stateConfig->isTransitionAllowed($from, $to)) {
             throw CouldNotPerformTransition::notFound($from, $to, $this->model);
         }
 
-        $transition = new DefaultTransition(
-            $this->model,
-            $this->stateConfig->fieldName,
-            $newState
+        $transition = $this->resolveTransitionClass(
+            $from,
+            $to,
+            $newState,
+            ...$transitionArgs
         );
+
+        return $this->transition($transition);
+    }
+
+    public function transition(Transition $transition): Model
+    {
+        if (method_exists($transition, 'canTransition')) {
+            if (! $transition->canTransition()) {
+                throw CouldNotPerformTransition::notAllowed($this->model, $transition);
+            }
+        }
 
         $model = app()->call([$transition, 'handle']);
 
@@ -143,6 +155,27 @@ abstract class State implements Castable, JsonSerializable
         $stateClassName = $this->stateConfig->baseStateClass::resolveStateClass($state);
 
         return new $stateClassName($this->model, $this->stateConfig);
+    }
+
+    private function resolveTransitionClass(
+        string $from,
+        string $to,
+        State $newState,
+        ...$transitionArgs
+    ): Transition {
+        $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
+
+        if ($transitionClass === null) {
+            $transition = new DefaultTransition(
+                $this->model,
+                $this->stateConfig->fieldName,
+                $newState
+            );
+        } else {
+            $transition = new $transitionClass($this->model, ...$transitionArgs);
+        }
+
+        return $transition;
     }
 
     private static function resolveStateMapping(): array

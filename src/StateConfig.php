@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
@@ -77,6 +78,13 @@ class StateConfig
         $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
 
         return array_key_exists($transitionKey, $this->allowedTransitions);
+    }
+
+    public function resolveTransitionClass(string $fromMorphClass, string $toMorphClass): ?string
+    {
+        $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
+
+        return $this->allowedTransitions[$transitionKey];
     }
 
     public function transitionableStates(string $fromMorphClass): array
