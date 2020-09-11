@@ -133,9 +133,11 @@ abstract class State implements Castable, JsonSerializable
         return static::getMorphClass();
     }
 
-    public function equals(State ...$otherStates): bool
+    public function equals(...$otherStates): bool
     {
         foreach ($otherStates as $otherState) {
+            $otherState = $this->resolveStateObject($otherState);
+
             if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
                 && $this->getValue() === $otherState->getValue()) {
                 return true;
