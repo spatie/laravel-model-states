@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
 use ReflectionClass;
+use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 abstract class State implements Castable, JsonSerializable
@@ -100,6 +101,13 @@ abstract class State implements Castable, JsonSerializable
         }
 
         $model = app()->call([$transition, 'handle']);
+
+        event(new StateChanged(
+            $this,
+            $model->{$this->stateConfig->fieldName},
+            $transition,
+            $this->model,
+        ));
 
         return $model;
     }
