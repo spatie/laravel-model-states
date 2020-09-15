@@ -28,6 +28,7 @@ This change means that a lot of boilerplate code can be removed. Also keep in mi
 - `State::isOneOf()` is removed, `State::equals` now accepts multiple state objects or morph classes.
 - `State::is()` is removed, you should use `State::equals()`.
 - Dropped support for Laravel 5, 6, and 7. The minimal required version is `laravel/framework:^8`
+- Dropped support for PHP 7.2 and 7.3. The minimal required version is `php:^7.4`
 - Proper support for `finalState` in `StateChanged` event
 
 ## 1.9.0 - 2020-08-24
