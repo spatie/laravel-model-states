@@ -139,15 +139,14 @@ trait HasStates
      */
     public function transitionTo($state, string $field = null)
     {
-        $stateConfigs = self::getStateConfig();
+        $stateConfig = self::getStateConfig();
 
-        if ($field === null && count($stateConfigs) > 1) {
+        if ($field === null && count($stateConfig) > 1) {
             throw CouldNotPerformTransition::couldNotResolveTransitionField($this);
         }
 
-        $field = $field ?? reset($stateConfigs)->field;
-        $stateConfig = $stateConfigs[$field];
-        $stateClass = $stateConfig->stateClass::resolveStateClass($state);
+        $field = $field ?? reset($stateConfig)->field;
+        $stateClass = $stateConfig[$field]->stateClass::resolveStateClass($state);
 
         return $this->{$field}->transitionTo($state, $field, new $stateClass($this));
     }
