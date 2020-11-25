@@ -13,7 +13,6 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
-use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;

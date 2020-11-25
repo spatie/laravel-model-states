@@ -4,7 +4,6 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
-use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Exceptions\UnknownState;
 
 class StateCaster implements CastsAttributes
