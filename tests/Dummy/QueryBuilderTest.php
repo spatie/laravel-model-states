@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
-use Spatie\ModelStates\Tests\Dummy\States\StateB;
-use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\TestCase;
 
 class QueryBuilderTest extends TestCase

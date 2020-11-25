@@ -4,7 +4,7 @@ namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
 use PHPUnit\Framework\Assert;
 use Spatie\ModelStates\Tests\Dummy\DummyDependency;
-use Spatie\ModelStates\Tests\Dummy\States\StateB;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Transition;
 
@@ -26,7 +26,7 @@ class CustomTransition extends Transition
         Assert::assertNotNull($dummyDependency);
 
         $this->model->fill([
-            'state' => StateB::class,
+            'state' => StateY::class,
             'message' => $this->message,
         ])->save();
 

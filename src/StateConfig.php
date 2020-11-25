@@ -6,10 +6,6 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
 {
-    public string $modelClass;
-
-    public string $fieldName;
-
     /** @var string|\Spatie\ModelStates\State */
     public string $baseStateClass;
 
@@ -20,12 +16,8 @@ class StateConfig
     public array $allowedTransitions = [];
 
     public function __construct(
-        string $modelClass,
-        string $fieldName,
         string $baseStateClass
     ) {
-        $this->fieldName = $fieldName;
-        $this->modelClass = $modelClass;
         $this->baseStateClass = $baseStateClass;
     }
 
@@ -103,6 +95,12 @@ class StateConfig
         return $transitionableStates;
     }
 
+    /**
+     * @param string|\Spatie\ModelStates\State $from
+     * @param string|\Spatie\ModelStates\State $to
+     *
+     * @return string
+     */
     private function createTransitionKey(string $from, string $to): string
     {
         if (is_subclass_of($from, $this->baseStateClass)) {

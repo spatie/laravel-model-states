@@ -4,6 +4,8 @@ namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Support\Collection;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Exceptions\UnknownState;
 
 class StateCaster implements CastsAttributes
 {
@@ -25,13 +27,12 @@ class StateCaster implements CastsAttributes
 
         $stateClassName = $mapping[$value];
 
-        /** @var \Spatie\ModelStates\StateConfig $stateConfig */
-        $stateConfig = $model->getStateConfig($key);
+        /** @var \Spatie\ModelStates\State $state */
+        $state = new $stateClassName($model);
 
-        return new $stateClassName(
-            $model,
-            $stateConfig
-        );
+        $state->setField($key);
+
+        return $state;
     }
 
     /**
@@ -50,6 +51,15 @@ class StateCaster implements CastsAttributes
 
         if (! is_subclass_of($value, $this->baseStateClass)) {
             $mapping = $this->getStateMapping();
+
+            if (! isset($mapping[$value])) {
+                throw UnknownState::make(
+                    $value,
+                    $this->baseStateClass,
+                    get_class($model),
+                    $key
+                );
+            }
 
             $value = $mapping[$value];
         }

@@ -24,6 +24,8 @@ class DefaultTransition extends Transition
 
     public function handle(): Model
     {
+        $originalState = $this->model->{$this->field} ? clone $this->model->{$this->field} : null;
+
         $this->model->{$this->field} = $this->newState;
 
         $this->model->save();

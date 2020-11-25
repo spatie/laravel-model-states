@@ -3,8 +3,8 @@
 namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\Validator;
-use Spatie\ModelStates\Tests\Dummy\States\ModelState;
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Validation\ValidStateRule;
 
 class ValidationRuleTest extends TestCase

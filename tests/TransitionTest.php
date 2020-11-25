@@ -7,13 +7,15 @@ use Spatie\ModelStates\DefaultTransition;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\TransitionNotAllowed;
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
-use Spatie\ModelStates\Tests\Dummy\States\StateB;
-use Spatie\ModelStates\Tests\Dummy\States\StateC;
-use Spatie\ModelStates\Tests\Dummy\States\StateD;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
-use Spatie\ModelStates\Tests\Dummy\TestModelWithMultipleFromTransitions;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
@@ -51,7 +53,7 @@ class TransitionTest extends TestCase
     /** @test */
     public function allowed_transition_configured_with_multiple_from()
     {
-        $modelA = TestModelWithMultipleFromTransitions::create([
+        $modelA = TestModel::create([
             'state' => StateA::class,
         ]);
 
@@ -61,7 +63,7 @@ class TransitionTest extends TestCase
 
         $this->assertInstanceOf(StateC::class, $modelA->state);
 
-        $modelB = TestModelWithMultipleFromTransitions::create([
+        $modelB = TestModel::create([
             'state' => StateB::class,
         ]);
 
@@ -102,16 +104,16 @@ class TransitionTest extends TestCase
     public function custom_transition_test()
     {
         $model = TestModelWithCustomTransition::create([
-            'state' => StateA::class,
+            'state' => StateX::class,
         ]);
 
         $message = 'my message';
 
-        $model->state->transitionTo(StateB::class, $message);
+        $model->state->transitionTo(StateY::class, $message);
 
         $model->refresh();
 
-        $this->assertInstanceOf(StateB::class, $model->state);
+        $this->assertInstanceOf(StateY::class, $model->state);
         $this->assertEquals($message, $model->message);
     }
 
@@ -119,7 +121,7 @@ class TransitionTest extends TestCase
     public function directly_transition()
     {
         $model = TestModelWithCustomTransition::create([
-            'state' => StateA::class,
+            'state' => StateX::class,
         ]);
 
         $message = 'my message';
@@ -128,7 +130,7 @@ class TransitionTest extends TestCase
 
         $model->refresh();
 
-        $this->assertInstanceOf(StateB::class, $model->state);
+        $this->assertInstanceOf(StateY::class, $model->state);
         $this->assertEquals($message, $model->message);
     }
 
@@ -136,7 +138,7 @@ class TransitionTest extends TestCase
     public function test_cannot_transition()
     {
         $model = TestModelWithCustomTransition::create([
-            'state' => StateA::class,
+            'state' => StateX::class,
         ]);
 
         $this->expectException(TransitionNotAllowed::class);

@@ -10,13 +10,6 @@ use Spatie\ModelStates\Transition;
 
 class InvalidConfig extends Exception
 {
-    public static function unknownState(string $field, Model $model): InvalidConfig
-    {
-        $modelClass = get_class($model);
-
-        return UnknownState::make($field, $modelClass);
-    }
-
     public static function fieldNotFound(string $fieldName, Model $model): InvalidConfig
     {
         $modelClass = get_class($model);

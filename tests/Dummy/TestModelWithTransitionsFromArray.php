@@ -2,9 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy;
 
-use Spatie\ModelStates\Tests\Dummy\States\ModelState;
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
-use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 
 class TestModelWithTransitionsFromArray extends TestModel
 {

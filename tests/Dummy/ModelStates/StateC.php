@@ -1,6 +1,6 @@
 <?php
 
-namespace Spatie\ModelStates\Tests\Dummy\States;
+namespace Spatie\ModelStates\Tests\Dummy\ModelStates;
 
 class StateC extends ModelState
 {

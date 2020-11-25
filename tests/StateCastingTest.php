@@ -3,9 +3,9 @@
 namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\DB;
-use Spatie\ModelStates\Tests\Dummy\States\ModelState;
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
-use Spatie\ModelStates\Tests\Dummy\States\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 
 class StateCastingTest extends TestCase

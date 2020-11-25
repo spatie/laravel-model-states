@@ -12,11 +12,41 @@ use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 
 abstract class State implements Castable, JsonSerializable
 {
-    private static array $stateMapping = [];
-
     private Model $model;
 
     private StateConfig $stateConfig;
+
+    private string $field;
+
+    private static array $stateMapping = [];
+
+    public function __construct(Model $model)
+    {
+        $this->model = $model;
+        $this->stateConfig = static::config();
+    }
+
+    public function setField(string $field): self
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    public static function config(): StateConfig
+    {
+        $reflection = new ReflectionClass(static::class);
+
+        $baseClass = $reflection->name;
+
+        while ($reflection && ! $reflection->isAbstract()) {
+            $reflection = $reflection->getParentClass();
+
+            $baseClass = $reflection->name;
+        }
+
+        return new StateConfig($baseClass);
+    }
 
     public static function castUsing(array $arguments)
     {
@@ -64,12 +94,6 @@ abstract class State implements Castable, JsonSerializable
         return $state;
     }
 
-    public function __construct(Model $model, StateConfig $stateConfig)
-    {
-        $this->model = $model;
-        $this->stateConfig = $stateConfig;
-    }
-
     public function transitionTo($newState, ...$transitionArgs): Model
     {
         $newState = $this->resolveStateObject($newState);
@@ -104,7 +128,7 @@ abstract class State implements Castable, JsonSerializable
 
         event(new StateChanged(
             $this,
-            $model->{$this->stateConfig->fieldName},
+            $model->{$this->field},
             $transition,
             $this->model,
         ));
@@ -114,7 +138,7 @@ abstract class State implements Castable, JsonSerializable
 
     public function transitionableStates(): array
     {
-        return $this->stateConfig->transitionableStates(self::getMorphClass());
+        return $this->stateConfig->transitionableStates(static::getMorphClass());
     }
 
     public function canTransitionTo($newState): bool
@@ -179,7 +203,7 @@ abstract class State implements Castable, JsonSerializable
         if ($transitionClass === null) {
             $transition = new DefaultTransition(
                 $this->model,
-                $this->stateConfig->fieldName,
+                $this->field,
                 $newState
             );
         } else {
@@ -203,13 +227,15 @@ abstract class State implements Castable, JsonSerializable
 
         $resolvedStates = [];
 
+        $stateConfig = static::config();
+
         foreach ($files as $file) {
             ['filename' => $className] = pathinfo($file);
 
             /** @var \Spatie\ModelStates\State|mixed $stateClass */
             $stateClass = $namespace . '\\' . $className;
 
-            if (! is_subclass_of($stateClass, static::class)) {
+            if (! is_subclass_of($stateClass, $stateConfig->baseStateClass)) {
                 continue;
             }
 

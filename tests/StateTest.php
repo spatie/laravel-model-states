@@ -2,11 +2,12 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Tests\Dummy\States\ModelState;
-use Spatie\ModelStates\Tests\Dummy\States\StateA;
-use Spatie\ModelStates\Tests\Dummy\States\StateB;
-use Spatie\ModelStates\Tests\Dummy\States\StateC;
-use Spatie\ModelStates\Tests\Dummy\States\StateD;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
@@ -26,12 +27,13 @@ class StateTest extends TestCase
     /** @test */
     public function transitionable_states()
     {
-        $modelA = TestModelWithDefault::create();
+        $state = new StateA(new TestModel());
 
         $this->assertEquals([
             StateB::getMorphClass(),
             StateC::getMorphClass(),
-        ], $modelA->state->transitionableStates());
+            StateD::getMorphClass(),
+        ], $state->transitionableStates());
 
         $modelB = TestModelWithDefault::create([
             'state' => StateC::class,
@@ -61,19 +63,17 @@ class StateTest extends TestCase
     }
 
     /** @test */
-    public function test_transition_to()
+    public function test_can_transition_to()
     {
-        $modelA = TestModelWithDefault::create();
+        $state = new StateA(new TestModel());
 
-        $this->assertTrue($modelA->state->canTransitionTo(StateB::class));
-        $this->assertTrue($modelA->state->canTransitionTo(StateC::class));
+        $this->assertTrue($state->canTransitionTo(StateB::class));
+        $this->assertTrue($state->canTransitionTo(StateC::class));
 
-        $modelB = TestModelWithDefault::create([
-            'state' => StateB::class,
-        ]);
+        $state = new StateB(new TestModel());
 
-        $this->assertFalse($modelB->state->canTransitionTo(StateB::class));
-        $this->assertFalse($modelB->state->canTransitionTo(StateC::class));
+        $this->assertFalse($state->canTransitionTo(StateB::class));
+        $this->assertFalse($state->canTransitionTo(StateA::class));
     }
 
     /** @test */
