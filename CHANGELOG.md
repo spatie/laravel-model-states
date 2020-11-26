@@ -18,6 +18,7 @@ $model->status->canTransitionTo(StateB::class);
 
 This change means that a lot of boilerplate code can be removed. Also keep in mind that this package wants you to always use state objects, and never their serialized values. That's why many other methods have been removed, in favour of Laravel's built-in model casts.
 
+- States aren't configured on models anymore, but on the state class itself. Refer to [the docs](/docs/working-with-states/01-configuring-states.md) for more info.
 - `HasStates::transitionableStates(string $fromClass, string $field)` has been removed.
 - `State::transitionableStates()` now doesn't need the `$field` parameter anymore.
 - `HasStates::getStates()` now returns the morph values instead of the hardcoded class names.
