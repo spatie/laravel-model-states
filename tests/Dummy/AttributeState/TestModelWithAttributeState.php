@@ -30,5 +30,4 @@ class TestModelWithAttributeState extends Model
     {
         return 'test_models';
     }
-
 }
