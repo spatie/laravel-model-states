@@ -165,4 +165,12 @@ class StateTest extends TestCase
 
         $this->assertTrue($model->state->equals(StateA::class));
     }
+
+    /** @test */
+    public function default_is_set_when_creating_a_new_model()
+    {
+        $model = TestModel::create();
+
+        $this->assertTrue($model->state->equals(StateA::class));
+    }
 }

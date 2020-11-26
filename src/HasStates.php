@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -10,19 +11,19 @@ trait HasStates
 {
     private array $stateCasts = [];
 
+    public static function bootHasStates(): void
+    {
+        self::creating(function (Model $model) {
+            /**
+             * @var \Spatie\ModelStates\HasStates $model
+             */
+            $model->setStateDefaults();
+        });
+    }
+
     public function initializeHasStates(): void
     {
-        foreach ($this->getStateConfigs() as $field => $stateConfig) {
-            if ($this->{$field} !== null) {
-                continue;
-            }
-
-            if ($stateConfig->defaultStateClass === null) {
-                continue;
-            }
-
-            $this->{$field} = $stateConfig->defaultStateClass;
-        }
+        $this->setStateDefaults();
     }
 
     public static function getStates(): Collection
@@ -120,5 +121,20 @@ trait HasStates
                     || in_array($morphName, $states);
             })
             ->keys();
+    }
+
+    private function setStateDefaults(): void
+    {
+        foreach ($this->getStateConfigs() as $field => $stateConfig) {
+            if ($this->{$field} !== null) {
+                continue;
+            }
+
+            if ($stateConfig->defaultStateClass === null) {
+                continue;
+            }
+
+            $this->{$field} = $stateConfig->defaultStateClass;
+        }
     }
 }
