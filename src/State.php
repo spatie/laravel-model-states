@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
 use ReflectionClass;
+use Spatie\ModelStates\Attributes\AttributeLoader;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
@@ -39,7 +40,13 @@ abstract class State implements Castable, JsonSerializable
             $baseClass = $reflection->name;
         }
 
-        return new StateConfig($baseClass);
+        $stateConfig = new StateConfig($baseClass);
+
+        if (version_compare(PHP_VERSION, '8.0', '>=')) {
+            $stateConfig = (new AttributeLoader($baseClass))->load($stateConfig);
+        }
+
+        return $stateConfig;
     }
 
     public static function castUsing(array $arguments)

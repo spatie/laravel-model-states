@@ -28,7 +28,7 @@ class StateConfig
         return $this;
     }
 
-    public function allowTransition($from, string $to, string $transition = null): StateConfig
+    public function allowTransition($from, string $to, ?string $transition = null): StateConfig
     {
         if (is_array($from)) {
             foreach ($from as $fromState) {
