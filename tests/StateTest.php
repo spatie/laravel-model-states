@@ -146,4 +146,15 @@ class StateTest extends TestCase
 
         $this->assertInstanceOf(StateD::class, $stateD);
     }
+
+    /** @test */
+    public function test_all()
+    {
+        $this->assertEquals([
+            StateA::getMorphClass() => StateA::class,
+            StateB::getMorphClass() => StateB::class,
+            StateC::getMorphClass() => StateC::class,
+            StateD::getMorphClass() => StateD::class,
+        ], ModelState::all()->toArray());
+    }
 }
