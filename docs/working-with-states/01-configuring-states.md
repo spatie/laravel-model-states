@@ -83,4 +83,21 @@ abstract class PaymentState extends State
 }
 ```
 
+If you're using PHP 8 or higher, you can also configure your state using attributes:
+
+```php
+use Spatie\ModelStates\Attributes\AllowTransition;
+use Spatie\ModelStates\State;
+
+#[
+    AllowTransition(Pending::class, Paid::class),
+    AllowTransition(Pending::class, Failed::class),
+    DefaultState(Pending::class),
+]
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+}
+```
+
 Next up, we'll take a moment to discuss how state classes are serialized to the database.

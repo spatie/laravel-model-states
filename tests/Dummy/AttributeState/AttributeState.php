@@ -8,6 +8,7 @@ use Spatie\ModelStates\State;
 
 #[
     AllowTransition(AttributeStateA::class, AttributeStateB::class, AttributeStateTransition::class),
+    AllowTransition(AttributeStateB::class, AttributeStateA::class),
     DefaultState(AttributeStateA::class),
 ]
 abstract class AttributeState extends State
