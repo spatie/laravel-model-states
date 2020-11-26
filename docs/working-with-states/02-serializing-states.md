@@ -36,27 +36,7 @@ The state value will still be saved as `paid` in the database.
 
 ## Resolving states from the database
 
-There's one caveat if you're using custom names: you'll need to make sure they can be resolved back from the database. There's two ways to do this:
-
-- Manually provide the available states on an abstract state class
-- Keep the abstract state class and its concrete implementations together in the same directory, which allows them to be resolved automatically.
-
-Here's what the manual mapping looks like:
-
-```php
-abstract class PaymentState extends State
-{
-    public static $states =[
-        Pending::class,
-        Paid::class,
-        Failed::class,
-    ];
-    
-    // …
-}
-```
-
-Note that you only need to provide a manual mapping, if the concrete state classes don't live within the same directory as their abstract state class. The following would work out of the box, without adding an explicit mapping:
+There's one caveat if you're using custom names: you'll need to make sure they can be resolved back from the database. In order to do so, the package requires you to keep the abstract state class and its concrete implementations together in the same directory, which allows them to be resolved automatically.
 
 ```
 States/

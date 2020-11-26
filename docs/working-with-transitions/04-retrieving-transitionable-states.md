@@ -7,15 +7,16 @@ An array of transitionable states can be retrieved using the `transitionableStat
 
 
 ```php
-class Payment extends Model
+
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Paid::class, Refunded::class).
+            ->allowTransition(Paid::class, Refunded::class);
     }
 }
 ```

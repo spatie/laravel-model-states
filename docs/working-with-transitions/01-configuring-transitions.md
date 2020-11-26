@@ -7,16 +7,16 @@ Transitions can be used to transition the state of a model from one to another, 
 
 You can specify which states are allowed to transition from one to another, and if you want to handle side effects or have more complex transitions, you can also provide custom transition classes.
 
-Transitions are configured in the `registerStates` method on your model.
+Transitions are configured in the `config` method on your state classes.
 
 ```php
-class Payment extends Model
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransition(Pending::class, Paid::class)
             ->allowTransition(Pending::class, Failed::class, PendingToFailed::class);
     }
@@ -36,13 +36,13 @@ This line will only work when a valid transition was configured. If the initial 
 A little shorthand `allowTransitions` can be used to allow multiple transitions at once:
 
 ```php
-class Payment extends Model
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransitions([
                 [Pending::class, Paid::class],
                 [Pending::class, Failed::class, PendingToFailed::class],
@@ -56,13 +56,13 @@ class Payment extends Model
 If you've got multiple states that can transition to the same state, you can define all of them in one `allowTransition` call:
 
 ```php
-class Payment extends Model
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class);
     }
 }

@@ -23,20 +23,10 @@ class Invoice extends Model
 {
     use HasStates;
 
-    protected function registerStates(): void
-    {
-        $this
-            ->addState('state', InvoiceState::class)
-            ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Pending::class, Declined::class)
-            ->default(Pending::class);
-
-        $this
-            ->addState('fulfillment', FulfillmentState::class)
-            ->allowTransition(Unfulfilled::class, Complete::class)
-            ->allowTransition(Unfulfilled::class, Partial::class)
-            ->allowTransition(Partial::class, Complete::class);
-    }
+    protected $casts = [
+        'state' => InvoiceState::class,
+        'fulfillment' => FulfillmentState::class,
+    ];
 }
 
 ```

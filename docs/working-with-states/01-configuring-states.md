@@ -7,14 +7,9 @@ This package provides a `HasStates` trait which you can use in whatever model yo
 
 This way you don't have to worry about whether a state is in its textual form or not: you're always working with state objects.
 
-For this reason, it's recommended to add a `@property` docblock on your model class, to make sure you always have IDE autocompletion.
-
 ```php
 use Spatie\ModelStates\HasStates;
 
-/**
- * @property \App\States\PaymentState $state
- */
 class Payment extends Model
 {
     use HasStates;
@@ -54,33 +49,36 @@ class Paid extends PaymentState
 
 There might be some cases where this abstract class will simply be empty, still it's important to provide it, as type validation will be done using it.
 
-To link the `Payment::$state` field and the `PaymentState` class together, you must implement the `registerStates` method in the `Payment` model.
+To link the `Payment::$state` field and the `PaymentState` class together, you should list it as a cast:
 
 ```php
 class Payment extends Model
 {
     // …
 
-    protected function registerStates(): void
-    {
-        $this
-            ->addState('state', PaymentState::class);
-    }
+    protected $casts = [
+        'state' => PaymentState::class,
+    ];
 }
 ```
 
-If you want to, you can add a default state like so:
+States can be configured to have a default value and to register transitions. This is done by implementing the `config` method in your abstract state classes:
 
 ```php
-class Payment extends Model
-{
-    // …
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
 
-    protected function registerStates(): void
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+    
+    public static function config(): StateConfig
     {
-        $this
-            ->addState('state', PaymentState::class)
-            ->default(Pending::class);
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+        ;
     }
 }
 ```
