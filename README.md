@@ -20,20 +20,13 @@ Here's what the `Payment` model would look like:
 ```php
 use Spatie\ModelStates\HasStates;
 
-/**
- * @property \App\States\PaymentState $state
- */
 class Payment extends Model
 {
     use HasStates;
 
-    protected function registerStates(): void
-    {
-        $this
-            ->addState('state', PaymentState::class)
-            ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Pending::class, Failed::class, PendingToFailed::class);
-    }
+    protected $casts = [
+        'state' => PaymentState::class,
+    ];
 }
 ```
 
@@ -41,10 +34,20 @@ This is what the abstract `PaymentState` class would look like:
 
 ```php
 use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
 
 abstract class PaymentState extends State
 {
     abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+        ;
+    }
 }
 ```
 

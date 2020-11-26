@@ -3,7 +3,6 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
@@ -11,24 +10,19 @@ trait HasStates
 {
     private array $stateCasts = [];
 
-    public static function bootHasStates(): void
+    public function initializeHasStates(): void
     {
-        self::creating(function (Model $model) {
-            /**
-             * @var \Spatie\ModelStates\HasStates $model
-             */
-            foreach ($model->getStateConfigs() as $field => $stateConfig) {
-                if ($model->{$field} !== null) {
-                    continue;
-                }
-
-                if ($stateConfig->defaultStateClass === null) {
-                    continue;
-                }
-
-                $model->{$field} = $stateConfig->defaultStateClass;
+        foreach ($this->getStateConfigs() as $field => $stateConfig) {
+            if ($this->{$field} !== null) {
+                continue;
             }
-        });
+
+            if ($stateConfig->defaultStateClass === null) {
+                continue;
+            }
+
+            $this->{$field} = $stateConfig->defaultStateClass;
+        }
     }
 
     public static function getStates(): Collection

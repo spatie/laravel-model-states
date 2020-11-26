@@ -157,4 +157,12 @@ class StateTest extends TestCase
             StateD::getMorphClass() => StateD::class,
         ], ModelState::all()->toArray());
     }
+
+    /** @test */
+    public function default_is_set_when_constructing_a_new_model()
+    {
+        $model = new TestModel();
+
+        $this->assertTrue($model->state->equals(StateA::class));
+    }
 }
