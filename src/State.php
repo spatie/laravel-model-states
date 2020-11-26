@@ -9,6 +9,7 @@ use JsonSerializable;
 use ReflectionClass;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 abstract class State implements Castable, JsonSerializable
 {
@@ -24,13 +25,6 @@ abstract class State implements Castable, JsonSerializable
     {
         $this->model = $model;
         $this->stateConfig = static::config();
-    }
-
-    public function setField(string $field): self
-    {
-        $this->field = $field;
-
-        return $this;
     }
 
     public static function config(): StateConfig
@@ -92,6 +86,24 @@ abstract class State implements Castable, JsonSerializable
         }
 
         return $state;
+    }
+
+    public static function make(string $name, Model $model): State
+    {
+        $stateClass = static::resolveStateClass($name);
+
+        if (! is_subclass_of($stateClass, static::class)) {
+            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
+        }
+
+        return new $stateClass($model);
+    }
+
+    public function setField(string $field): self
+    {
+        $this->field = $field;
+
+        return $this;
     }
 
     public function transitionTo($newState, ...$transitionArgs): Model

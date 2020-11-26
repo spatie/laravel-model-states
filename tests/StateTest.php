@@ -130,4 +130,20 @@ class StateTest extends TestCase
 
         $this->assertEquals(StateA::getMorphClass(), $defaultState);
     }
+
+    /** @test */
+    public function test_make()
+    {
+        $stateA = ModelState::make(StateA::class, new TestModel());
+
+        $this->assertInstanceOf(StateA::class, $stateA);
+
+        $stateC = ModelState::make('C', new TestModel());
+
+        $this->assertInstanceOf(StateC::class, $stateC);
+
+        $stateD = ModelState::make(4, new TestModel());
+
+        $this->assertInstanceOf(StateD::class, $stateD);
+    }
 }
