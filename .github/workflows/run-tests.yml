@@ -9,12 +9,14 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [7.4, 7.3, 7.2]
+        php: [8.0, 7.4, 7.3, 7.2]
         laravel: [5.8.*, 6.*, 7.*, 8.*]
         dependency-version: [prefer-lowest, prefer-stable]
         exclude:
           - php: 7.2
             laravel: 8.*
+          - php: 8.0
+            laravel: 5.8.*
         include:
           - laravel: 8.*
             testbench: 6.*
@@ -47,7 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Execute tests
         run: vendor/bin/phpunit
