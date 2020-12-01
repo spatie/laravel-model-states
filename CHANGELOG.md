@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
+
+## 1.9.1 - 2020-12-01
+
+- add support for PHP 8.0 ([#141](https://github.com/spatie/laravel-model-states/pull/141))
+
 ## 1.9.0 - 2020-08-24
 
 - add support for Laravel 8 ([#101](https://github.com/spatie/laravel-model-states/pull/101))
