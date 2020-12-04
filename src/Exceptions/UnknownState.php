@@ -8,17 +8,19 @@ use Facade\IgnitionContracts\Solution;
 
 class UnknownState extends InvalidConfig implements ProvidesSolution
 {
-    /** @var string */
-    protected $field;
+    protected string $field;
 
-    /** @var string */
-    protected $modelClass;
+    protected string $expectedBaseStateClass;
 
-    public static function make(string $field, string $modelClass): self
-    {
-        return (new static("No state field found for {$modelClass}::{$field}, did you forget to provide a mapping in {$modelClass}::registerStates()?"))
+    public static function make(
+        string $givenStateClass,
+        string $expectedBaseStateClass,
+        string $modelClass,
+        string $field
+    ): self {
+        return (new static("Unknown state `{$givenStateClass}` for `{$modelClass}::{$field}`, did you forget to list it in `{$expectedBaseStateClass}::config()`?"))
             ->setField($field)
-            ->setModelClass($modelClass);
+            ->setExpectedBaseStateClass($expectedBaseStateClass);
     }
 
     public function setField(string $field): self
@@ -28,9 +30,9 @@ class UnknownState extends InvalidConfig implements ProvidesSolution
         return $this;
     }
 
-    public function setModelClass(string $modelClass): self
+    public function setExpectedBaseStateClass(string $expectedBaseStateClass): self
     {
-        $this->modelClass = $modelClass;
+        $this->expectedBaseStateClass = $expectedBaseStateClass;
 
         return $this;
     }
@@ -38,7 +40,7 @@ class UnknownState extends InvalidConfig implements ProvidesSolution
     public function getSolution(): Solution
     {
         return BaseSolution::create('The state field is unknown')
-            ->setSolutionDescription("Add the `{$this->field}` field to the `registerStates` method inside `{$this->modelClass}`")
+            ->setSolutionDescription("Add the `{$this->field}` field to the `config` method inside `{$this->expectedBaseStateClass}`")
             ->setDocumentationLinks([
                 'Configuring states' => 'https://docs.spatie.be/laravel-model-states/v1/working-with-states/01-configuring-states/',
             ]);

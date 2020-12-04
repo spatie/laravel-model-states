@@ -11,27 +11,20 @@ To give you a feel about how this package can be used, let's look at a quick exa
 
 Imagine a model `Payment`, which has three possible states: `Pending`, `Paid` and `Failed`. This package allows you to represent each state as a separate class, handles serialization of states to the database behind the scenes, and allows for easy and controller state transitions.
 
-For the sake of our example, let's say that, depending on the state, a the color of a payment should differ.
+For the sake of our example, let's say that depending on the state the color of a payment should differ.
 
 Here's what the `Payment` model would look like:
 
 ```php
 use Spatie\ModelStates\HasStates;
 
-/**
- * @property \App\States\PaymentState $state
- */
 class Payment extends Model
 {
     use HasStates;
 
-    protected function registerStates(): void
-    {
-        $this
-            ->addState('state', PaymentState::class)
-            ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Pending::class, Failed::class, PendingToFailed::class);
-    }
+    protected $casts = [
+        'state' => PaymentState::class,
+    ];
 }
 ```
 
@@ -39,10 +32,20 @@ This is what the abstract `PaymentState` class would look like:
 
 ```php
 use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
 
 abstract class PaymentState extends State
 {
     abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+        ;
+    }
 }
 ```
 

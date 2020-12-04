@@ -3,27 +3,29 @@ title: Retrieving transitionable states
 weight: 4
 ---
 
-An array of transitionable states can be retrieved with the `transitionableStates()` method on your model.
+An array of transitionable states can be retrieved using the `transitionableStates()` on the state field.
+
 
 ```php
-class Payment extends Model
+
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Paid::class, Refunded::class)
+            ->allowTransition(Paid::class, Refunded::class);
     }
 }
 ```
 
 ```php
-$transitionableStates = $payment->transitionableStates(Pending::class);
+$transitionableStates = $payment->state->transitionableStates();
 ```
 
-This will return an array with all transitionable states for `Pending::class`
+This will return an array with all transitionable states for the current state, for example `Pending`:
 
 ```php
 [
@@ -31,22 +33,10 @@ This will return an array with all transitionable states for `Pending::class`
 ]
 ```
 
-## Transitionable states from state
+## Can transition to
 
-It's also possible to use `transitionableStates()` method directly on a state:
-
-```php
-$payment->state->transitionableStates();
-```
-
-## Multiple state fields on model
-
-If there are multiple fields, a `\Spatie\ModelStates\Exceptions\InvalidConfig` exception will be thrown. You can pass the state field name explicitly as a parameter:
+If you want to know whether a state can be transitioned to another one, you can use the `canTransitionTo` method:
 
 ```php
-// From a model
-$payment->transitionableStates(Pending::class, 'fieldName')
-
-// From a state
-$payment->state->transitionableStates('fieldName');
+$payment->state->canTransitionTo(Paid::class);
 ```

@@ -2,32 +2,23 @@
 
 namespace Spatie\ModelStates;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
 {
-    /** @var string */
-    public $field;
-
     /** @var string|\Spatie\ModelStates\State */
-    public $stateClass;
+    public string $baseStateClass;
+
+    /** @var string|null|\Spatie\ModelStates\State */
+    public ?string $defaultStateClass = null;
 
     /** @var string[] */
-    public $allowedTransitions = [];
+    public array $allowedTransitions = [];
 
-    /** @var string|null */
-    public $defaultStateClass;
-
-    public function __construct(string $field, string $stateClass)
-    {
-        if (! is_subclass_of($stateClass, State::class)) {
-            throw InvalidConfig::doesNotExtendState($stateClass);
-        }
-
-        $this->field = $field;
-
-        $this->stateClass = $stateClass;
+    public function __construct(
+        string $baseStateClass
+    ) {
+        $this->baseStateClass = $baseStateClass;
     }
 
     public function default(string $defaultStateClass): StateConfig
@@ -37,14 +28,7 @@ class StateConfig
         return $this;
     }
 
-    /**
-     * @param string|array $from
-     * @param string $to
-     * @param string|null $transition
-     *
-     * @return \Spatie\ModelStates\StateConfig
-     */
-    public function allowTransition($from, string $to, string $transition = null): StateConfig
+    public function allowTransition($from, string $to, ?string $transition = null): StateConfig
     {
         if (is_array($from)) {
             foreach ($from as $fromState) {
@@ -54,12 +38,12 @@ class StateConfig
             return $this;
         }
 
-        if (! is_subclass_of($from, $this->stateClass)) {
-            throw InvalidConfig::doesNotExtendBaseClass($from, $this->stateClass);
+        if (! is_subclass_of($from, $this->baseStateClass)) {
+            throw InvalidConfig::doesNotExtendBaseClass($from, $this->baseStateClass);
         }
 
-        if (! is_subclass_of($to, $this->stateClass)) {
-            throw InvalidConfig::doesNotExtendBaseClass($to, $this->stateClass);
+        if (! is_subclass_of($to, $this->baseStateClass)) {
+            throw InvalidConfig::doesNotExtendBaseClass($to, $this->baseStateClass);
         }
 
         if ($transition && ! is_subclass_of($transition, Transition::class)) {
@@ -80,48 +64,53 @@ class StateConfig
         return $this;
     }
 
-    public function transitionableStates(string $fromClass): array
+    public function isTransitionAllowed(string $fromMorphClass, string $toMorphClass): bool
+    {
+        $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
+
+        return array_key_exists($transitionKey, $this->allowedTransitions);
+    }
+
+    public function resolveTransitionClass(string $fromMorphClass, string $toMorphClass): ?string
+    {
+        $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
+
+        return $this->allowedTransitions[$transitionKey];
+    }
+
+    public function transitionableStates(string $fromMorphClass): array
     {
         $transitionableStates = [];
 
         foreach ($this->allowedTransitions as $allowedTransition => $value) {
-            [$from, $to] = explode('-', $allowedTransition);
+            [$transitionFromMorphClass, $transitionToMorphClass] = explode('-', $allowedTransition);
 
-            if ($from !== $fromClass) {
+            if ($transitionFromMorphClass !== $fromMorphClass) {
                 continue;
             }
 
-            $transitionableStates[] = $to::getMorphClass();
+            $transitionableStates[] = $transitionToMorphClass;
         }
 
         return $transitionableStates;
     }
 
     /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @param string $from
-     * @param string $to
+     * @param string|\Spatie\ModelStates\State $from
+     * @param string|\Spatie\ModelStates\State $to
      *
-     * @return string|\Spatie\ModelStates\Transition|null
+     * @return string
      */
-    public function resolveTransition(Model $model, string $from, string $to)
-    {
-        $transitionKey = $this->createTransitionKey($from, $to);
-
-        if (! array_key_exists($transitionKey, $this->allowedTransitions)) {
-            return;
-        }
-
-        return $this->allowedTransitions[$transitionKey]
-            ?? new DefaultTransition(
-                $model,
-                $this->field,
-                $this->stateClass::make($to, $model)
-            );
-    }
-
     private function createTransitionKey(string $from, string $to): string
     {
+        if (is_subclass_of($from, $this->baseStateClass)) {
+            $from = $from::getMorphClass();
+        }
+
+        if (is_subclass_of($to, $this->baseStateClass)) {
+            $to = $to::getMorphClass();
+        }
+
         return "{$from}-{$to}";
     }
 }

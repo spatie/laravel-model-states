@@ -3,7 +3,7 @@ title: Custom transition classes
 weight: 2
 ---
 
-If you want your transitions to do more stuff than just changing the state, you can use transition classes.
+If you want your transitions to do more than just changing the state, you can use transition classes.
 
 Imagine transitioning a payment's state from pending to failed, which will also save an error message to the database.
 Here's what such a basic transition class might look like.
@@ -13,11 +13,9 @@ use Spatie\ModelStates\Transition;
 
 class PendingToFailed extends Transition
 {
-    /** @var Payment */
-    private $payment;
+    private Payment $payment;
 
-    /** @var string */
-    private $message;
+    private string $message;
 
     public function __construct(Payment $payment, string $message)
     {
@@ -42,13 +40,13 @@ class PendingToFailed extends Transition
 Now the transition should be configured in the model:
 
 ```php
-class Payment extends Model
+abstract class PaymentState extends State
 {
     // …
 
-    protected function registerStates(): void
+    public static function config(): StateConfig
     {
-        $this->addState('state', PaymentState::class)
+        return parent::config()
             ->allowTransition(Pending::class, Failed::class, PendingToFailed::class);
     }
 }
@@ -87,5 +85,3 @@ class CreatedToFailed extends Transition
 ```
 
 If the check in `canTransition()` fails, a `\Spatie\ModelStates\Exceptions\TransitionNotAllowed` will be thrown.
-
-> **Note**: `transition()` also supports a shorthand: `$payment->state->transition(CreatedToFailed::class, 'message')`.

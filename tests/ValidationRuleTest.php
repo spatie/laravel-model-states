@@ -3,9 +3,8 @@
 namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Support\Facades\Validator;
-use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Validation\ValidStateRule;
 
 class ValidationRuleTest extends TestCase
@@ -13,20 +12,10 @@ class ValidationRuleTest extends TestCase
     /** @test */
     public function test_validation()
     {
-        $rule = new ValidStateRule(PaymentState::class);
+        $rule = new ValidStateRule(ModelState::class);
 
         $this->assertTrue(! Validator::make(
-            ['state' => 'created'],
-            ['state' => $rule]
-        )->fails());
-
-        $this->assertTrue(! Validator::make(
-            ['state' => Created::class],
-            ['state' => $rule]
-        )->fails());
-
-        $this->assertTrue(! Validator::make(
-            ['state' => new Created(new Payment())],
+            ['state' => StateA::getMorphClass()],
             ['state' => $rule]
         )->fails());
 
@@ -39,23 +28,16 @@ class ValidationRuleTest extends TestCase
     /** @test */
     public function nullable_validation()
     {
-        $rule = (new ValidStateRule(PaymentState::class))->nullable();
+        $rule = (new ValidStateRule(ModelState::class))->required();
 
-        $this->assertTrue(! Validator::make(
+        $this->assertTrue(Validator::make(
             ['state' => null],
             ['state' => $rule]
         )->fails());
 
-        $rule = (new ValidStateRule(PaymentState::class))->required();
+        $rule = (new ValidStateRule(ModelState::class))->nullable();
 
-        $this->assertFalse(! Validator::make(
-            ['state' => null],
-            ['state' => $rule]
-        )->fails());
-
-        $rule = (new ValidStateRule(PaymentState::class));
-
-        $this->assertFalse(! Validator::make(
+        $this->assertFalse(Validator::make(
             ['state' => null],
             ['state' => $rule]
         )->fails());

@@ -6,11 +6,9 @@ use Illuminate\Contracts\Validation\Rule;
 
 class ValidStateRule implements Rule
 {
-    /** @var string|\Spatie\ModelStates\State */
-    private $abstractStateClass;
+    private string $baseStateClass;
 
-    /** @var bool */
-    private $nullable;
+    private bool $nullable = false;
 
     public static function make(string $abstractStateClass): ValidStateRule
     {
@@ -19,7 +17,7 @@ class ValidStateRule implements Rule
 
     public function __construct(string $abstractStateClass)
     {
-        $this->abstractStateClass = $abstractStateClass;
+        $this->baseStateClass = $abstractStateClass;
     }
 
     public function nullable(): ValidStateRule
@@ -42,9 +40,9 @@ class ValidStateRule implements Rule
             return true;
         }
 
-        $stateClass = $this->abstractStateClass::resolveStateClass($value);
+        $stateClass = $this->baseStateClass::resolveStateClass($value);
 
-        return is_subclass_of($stateClass, $this->abstractStateClass);
+        return is_subclass_of($stateClass, $this->baseStateClass);
     }
 
     public function message(): string

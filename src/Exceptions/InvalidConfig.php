@@ -10,18 +10,11 @@ use Spatie\ModelStates\Transition;
 
 class InvalidConfig extends Exception
 {
-    public static function unknownState(string $field, Model $model): InvalidConfig
+    public static function fieldNotFound(string $fieldName, Model $model): InvalidConfig
     {
         $modelClass = get_class($model);
 
-        return UnknownState::make($field, $modelClass);
-    }
-
-    public static function fieldNotFound(string $stateClass, Model $model): InvalidConfig
-    {
-        $modelClass = get_class($model);
-
-        return new self("No state field was found for the state {$stateClass} in {$modelClass}, did you forget to provide a mapping in {$modelClass}::registerStates()?");
+        return new self("No field `{$fieldName}` was found in `{$modelClass}`, did you forget to provide a mapping in {$modelClass}::registerStates()?");
     }
 
     public static function fieldDoesNotExtendState(string $field, string $expectedStateClass, string $actualClass): InvalidConfig

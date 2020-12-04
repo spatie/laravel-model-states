@@ -2,88 +2,165 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
-use Spatie\ModelStates\Tests\Dummy\Dependency;
-use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\Transitions\CreatedToPending;
-use Spatie\ModelStates\Tests\Dummy\Transitions\PendingToPaid;
-use Spatie\ModelStates\Tests\Dummy\Transitions\ToFailed;
-use Spatie\ModelStates\Tests\Dummy\Transitions\TransitionWithDependency;
+use Illuminate\Support\Facades\Event;
+use Spatie\ModelStates\DefaultTransition;
+use Spatie\ModelStates\Events\StateChanged;
+use Spatie\ModelStates\Exceptions\TransitionNotAllowed;
+use Spatie\ModelStates\Exceptions\TransitionNotFound;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
+use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
 
 class TransitionTest extends TestCase
 {
     /** @test */
-    public function transitions_can_be_performed()
+    public function allowed_transition()
     {
-        $payment = Payment::create();
-
-        $payment->state->transition(CreatedToPending::class);
-
-        $this->assertInstanceOf(Pending::class, $payment->state);
-    }
-
-    /** @test */
-    public function transitions_can_be_performed_with_extra_parameters()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(ToFailed::class, 'error message');
-
-        $this->assertEquals('error message', $payment->error_message);
-        $this->assertTrue($payment->state->is(Failed::class));
-    }
-
-    /** @test */
-    public function transitions_objects_can_also_be_performed()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(new ToFailed($payment, 'error message'));
-
-        $this->assertEquals('error message', $payment->error_message);
-        $this->assertTrue($payment->state->is(Failed::class));
-    }
-
-    /** @test */
-    public function transitions_with_dependencies_in_handle()
-    {
-        $payment = Payment::create();
-
-        $payment->state->transition(TransitionWithDependency::class);
-
-        $this->assertInstanceOf(Dependency::class, $payment->dependency);
-    }
-
-    /** @test */
-    public function invalid_transitions_cannot_be_performed()
-    {
-        $payment = Payment::create();
-
-        $this->expectException(CouldNotPerformTransition::class);
-
-        $payment->state->transition(PendingToPaid::class);
-    }
-
-    /** @test */
-    public function multiple_from_transitions_can_be_configured_at_once()
-    {
-        $payment = Payment::create([
-            'state' => Pending::class,
+        $model = TestModel::create([
+            'state' => StateA::class,
         ]);
 
-        $payment->state->transitionTo(Failed::class, 'message');
+        $model->state->transitionTo(StateB::class);
 
-        $this->assertTrue($payment->state->is(Failed::class));
+        $model->refresh();
 
-        $payment = Payment::create([
-            'state' => Created::class,
+        $this->assertInstanceOf(StateB::class, $model->state);
+    }
+
+    /** @test */
+    public function allowed_transition_with_morph_mame()
+    {
+        $model = TestModel::create([
+            'state' => StateA::class,
         ]);
 
-        $payment->state->transitionTo(Failed::class, 'message');
+        $model->state->transitionTo(StateD::getMorphClass());
 
-        $this->assertTrue($payment->state->is(Failed::class));
+        $model->refresh();
+
+        $this->assertInstanceOf(StateD::class, $model->state);
+    }
+
+    /** @test */
+    public function allowed_transition_configured_with_multiple_from()
+    {
+        $modelA = TestModel::create([
+            'state' => StateA::class,
+        ]);
+
+        $modelA->state->transitionTo(StateC::getMorphClass());
+
+        $modelA->refresh();
+
+        $this->assertInstanceOf(StateC::class, $modelA->state);
+
+        $modelB = TestModel::create([
+            'state' => StateB::class,
+        ]);
+
+        $modelB->state->transitionTo(StateC::getMorphClass());
+
+        $modelB->refresh();
+
+        $this->assertInstanceOf(StateC::class, $modelB->state);
+    }
+
+    /** @test */
+    public function allowed_transition_configured_from_array()
+    {
+        $model = TestModelWithTransitionsFromArray::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateC::class);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateC::class, $model->state);
+    }
+
+    /** @test */
+    public function disallowed_transition()
+    {
+        $model = TestModel::create([
+            'state' => StateB::class,
+        ]);
+
+        $this->expectException(TransitionNotFound::class);
+
+        $model->state->transitionTo(StateA::class);
+    }
+
+    /** @test */
+    public function custom_transition_test()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateX::class,
+        ]);
+
+        $message = 'my message';
+
+        $model->state->transitionTo(StateY::class, $message);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateY::class, $model->state);
+        $this->assertEquals($message, $model->message);
+    }
+
+    /** @test */
+    public function directly_transition()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateX::class,
+        ]);
+
+        $message = 'my message';
+
+        $model->state->transition(new CustomTransition($model, $message));
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateY::class, $model->state);
+        $this->assertEquals($message, $model->message);
+    }
+
+    /** @test */
+    public function test_cannot_transition()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateX::class,
+        ]);
+
+        $this->expectException(TransitionNotAllowed::class);
+
+        $model->state->transition(new CustomInvalidTransition($model));
+    }
+
+    /** @test */
+    public function event_is_triggered_after_transition()
+    {
+        Event::fake();
+
+        $model = TestModel::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateB::class);
+
+        Event::assertDispatched(StateChanged::class, function (StateChanged $event) use ($model) {
+            return $event->transition instanceof DefaultTransition
+                && $event->initialState instanceof StateA
+                && $event->finalState instanceof StateB
+                && $event->model->is($model);
+        });
     }
 }

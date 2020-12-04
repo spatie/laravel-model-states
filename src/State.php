@@ -2,104 +2,72 @@
 
 namespace Spatie\ModelStates;
 
+use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
 use ReflectionClass;
+use Spatie\ModelStates\Attributes\AttributeLoader;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
-abstract class State implements JsonSerializable
+abstract class State implements Castable, JsonSerializable
 {
-    /**
-     * Static cache for generated state maps.
-     *
-     * @var array
-     *
-     * @see State::resolveStateMapping
-     */
-    protected static $generatedMapping = [];
+    private Model $model;
 
-    /** @var \Illuminate\Database\Eloquent\Model */
-    protected $model;
+    private StateConfig $stateConfig;
+
+    private string $field;
+
+    private static array $stateMapping = [];
 
     public function __construct(Model $model)
     {
         $this->model = $model;
+        $this->stateConfig = static::config();
     }
 
-    /**
-     * Create a state object based on a value (classname or name),
-     * and optionally provide its constructor arguments.
-     *
-     * @param string $name
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
-     * @return \Spatie\ModelStates\State
-     */
-    public static function make(string $name, Model $model): State
+    public static function config(): StateConfig
     {
-        $stateClass = static::resolveStateClass($name);
+        $reflection = new ReflectionClass(static::class);
 
-        if (! is_subclass_of($stateClass, static::class)) {
-            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
+        $baseClass = $reflection->name;
+
+        while ($reflection && ! $reflection->isAbstract()) {
+            $reflection = $reflection->getParentClass();
+
+            $baseClass = $reflection->name;
         }
 
-        return new $stateClass($model);
+        $stateConfig = new StateConfig($baseClass);
+
+        if (version_compare(PHP_VERSION, '8.0', '>=')) {
+            $stateConfig = (new AttributeLoader($baseClass))->load($stateConfig);
+        }
+
+        return $stateConfig;
     }
 
-    /**
-     * Create a state object based on a value (classname or name),
-     * and optionally provide its constructor arguments.
-     *
-     * @param string $name
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
-     * @return \Spatie\ModelStates\State
-     */
-    public static function find(string $name, Model $model): State
+    public static function castUsing(array $arguments)
     {
-        return static::make($name, $model);
+        return new StateCaster(static::class);
     }
 
-    /**
-     * Get all registered state classes.
-     *
-     * @return \Illuminate\Support\Collection|string[]|static[] A list of class names.
-     */
-    public static function all(): Collection
-    {
-        return collect(self::resolveStateMapping());
-    }
-
-    /**
-     * The value that will be saved in the database.
-     *
-     * @return string
-     */
     public static function getMorphClass(): string
     {
-        return static::resolveStateName(static::class);
+        return static::$name ?? static::class;
     }
 
-    /**
-     * The value that will be saved in the database.
-     *
-     * @return string
-     */
-    public function getValue(): string
+    public static function getStateMapping(): Collection
     {
-        return static::getMorphClass();
+        if (! isset(self::$stateMapping[static::class])) {
+            self::$stateMapping[static::class] = static::resolveStateMapping();
+        }
+
+        return collect(self::$stateMapping[static::class]);
     }
 
-    /**
-     * Resolve the state class based on a value, for example a stored value in the database.
-     *
-     * @param string|\Spatie\ModelStates\State $state
-     *
-     * @return string
-     */
     public static function resolveStateClass($state): ?string
     {
         if ($state === null) {
@@ -110,7 +78,7 @@ abstract class State implements JsonSerializable
             return get_class($state);
         }
 
-        foreach (self::resolveStateMapping() as $stateClass) {
+        foreach (static::getStateMapping() as $stateClass) {
             if (! class_exists($stateClass)) {
                 continue;
             }
@@ -127,52 +95,102 @@ abstract class State implements JsonSerializable
         return $state;
     }
 
-    /**
-     * Resolve the name of the state, which is the value that will be saved in the database.
-     *
-     * Possible names are:
-     *
-     *    - The classname, if no explicit name is provided
-     *    - A name provided in the state class as a public static property:
-     *      `public static $name = 'dummy'`
-     *
-     * @param string|\Spatie\ModelStates\State $state
-     *
-     * @return string|null
-     */
-    public static function resolveStateName($state): ?string
+    public static function make(string $name, Model $model): State
     {
-        if ($state === null) {
-            return null;
+        $stateClass = static::resolveStateClass($name);
+
+        if (! is_subclass_of($stateClass, static::class)) {
+            throw InvalidConfig::doesNotExtendBaseClass($name, static::class);
         }
 
-        if ($state instanceof State) {
-            $stateClass = get_class($state);
-        } else {
-            $stateClass = static::resolveStateClass($state);
-        }
-
-        if (class_exists($stateClass) && isset($stateClass::$name)) {
-            return $stateClass::$name;
-        }
-
-        return $stateClass;
+        return new $stateClass($model);
     }
 
     /**
-     * Determine if the current state is one of an arbitrary number of other states.
-     * This can be either a classname or a name.
-     *
-     * @param string|array ...$stateClasses
-     *
-     * @return bool
+     * @return \Illuminate\Support\Collection|string[]|static[] A list of class names.
      */
-    public function isOneOf(...$statesNames): bool
+    public static function all(): Collection
     {
-        $statesNames = collect($statesNames)->flatten()->toArray();
+        return collect(self::resolveStateMapping());
+    }
 
-        foreach ($statesNames as $statesName) {
-            if ($this->equals($statesName)) {
+    public function setField(string $field): self
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    public function transitionTo($newState, ...$transitionArgs): Model
+    {
+        $newState = $this->resolveStateObject($newState);
+
+        $from = static::getMorphClass();
+
+        $to = $newState::getMorphClass();
+
+        if (! $this->stateConfig->isTransitionAllowed($from, $to)) {
+            throw CouldNotPerformTransition::notFound($from, $to, $this->model);
+        }
+
+        $transition = $this->resolveTransitionClass(
+            $from,
+            $to,
+            $newState,
+            ...$transitionArgs
+        );
+
+        return $this->transition($transition);
+    }
+
+    public function transition(Transition $transition): Model
+    {
+        if (method_exists($transition, 'canTransition')) {
+            if (! $transition->canTransition()) {
+                throw CouldNotPerformTransition::notAllowed($this->model, $transition);
+            }
+        }
+
+        $model = app()->call([$transition, 'handle']);
+
+        event(new StateChanged(
+            $this,
+            $model->{$this->field},
+            $transition,
+            $this->model,
+        ));
+
+        return $model;
+    }
+
+    public function transitionableStates(): array
+    {
+        return $this->stateConfig->transitionableStates(static::getMorphClass());
+    }
+
+    public function canTransitionTo($newState): bool
+    {
+        $newState = $this->resolveStateObject($newState);
+
+        $from = static::getMorphClass();
+
+        $to = $newState::getMorphClass();
+
+        return $this->stateConfig->isTransitionAllowed($from, $to);
+    }
+
+    public function getValue(): string
+    {
+        return static::getMorphClass();
+    }
+
+    public function equals(...$otherStates): bool
+    {
+        foreach ($otherStates as $otherState) {
+            $otherState = $this->resolveStateObject($otherState);
+
+            if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
+                && $this->getValue() === $otherState->getValue()) {
                 return true;
             }
         }
@@ -180,130 +198,50 @@ abstract class State implements JsonSerializable
         return false;
     }
 
-    /**
-     * Determine if the current state equals another.
-     * This can be either a classname or a name.
-     *
-     * @param string|\Spatie\ModelStates\State $state
-     *
-     * @return bool
-     */
-    public function equals($state): bool
+    public function jsonSerialize()
     {
-        return self::resolveStateClass($state)
-            === self::resolveStateClass($this);
-    }
-
-    /**
-     * Determine if the current state equals another.
-     * This can be either a classname or a name.
-     *
-     * @param string|\Spatie\ModelStates\State $state
-     *
-     * @return bool
-     */
-    public function is($state): bool
-    {
-        return $this->equals($state);
+        return $this->getValue();
     }
 
     public function __toString(): string
     {
-        return static::getMorphClass();
+        return $this->getValue();
     }
 
-    /**
-     * @param string|\Spatie\ModelStates\Transition $transition
-     * @param mixed ...$args
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function transition($transition, ...$args): Model
+    private function resolveStateObject($state): self
     {
-        if (is_string($transition)) {
-            $transition = new $transition($this->model, ...$args);
+        if (is_object($state) && is_subclass_of($state, $this->stateConfig->baseStateClass)) {
+            return $state;
         }
 
-        if (method_exists($transition, 'canTransition')) {
-            if (! $transition->canTransition()) {
-                throw CouldNotPerformTransition::notAllowed($this->model, $transition);
-            }
-        }
+        $stateClassName = $this->stateConfig->baseStateClass::resolveStateClass($state);
 
-        $mutatedModel = app()->call([$transition, 'handle']);
-
-        /*
-         * There's a bug with the `finalState` variable:
-         *      `$mutatedModel->state`
-         * was used, but this is wrong because we cannot determine the model field within this state class.
-         * Hence `state` is hardcoded, but that's wrong.
-         *
-         * @see https://github.com/spatie/laravel-model-states/issues/49
-         */
-        $finalState = $mutatedModel->state;
-
-        if (! $finalState instanceof State) {
-            $finalState = null;
-        }
-
-        event(new StateChanged($this, $finalState, $transition, $this->model));
-
-        return $mutatedModel;
+        return new $stateClassName($this->model, $this->stateConfig);
     }
 
-    /**
-     * @param string|\Spatie\ModelStates\State $state
-     * @param mixed ...$args
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public function transitionTo($state, ...$args): Model
-    {
-        if (! method_exists($this->model, 'resolveTransitionClass')) {
-            throw InvalidConfig::resolveTransitionNotFound($this->model);
+    private function resolveTransitionClass(
+        string $from,
+        string $to,
+        State $newState,
+        ...$transitionArgs
+    ): Transition {
+        $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
+
+        if ($transitionClass === null) {
+            $transition = new DefaultTransition(
+                $this->model,
+                $this->field,
+                $newState
+            );
+        } else {
+            $transition = new $transitionClass($this->model, ...$transitionArgs);
         }
 
-        $transition = $this->model->resolveTransitionClass(
-            static::resolveStateClass($this),
-            static::resolveStateClass($state)
-        );
-
-        return $this->transition($transition, ...$args);
+        return $transition;
     }
 
-    /**
-     * Get the transitionable states from this state.
-     *
-     * @param string|null $field
-     *
-     * @return array
-     */
-    public function transitionableStates($field = null): array
-    {
-        return $this->model->transitionableStates(get_class($this), $field);
-    }
-
-    /**
-     * This method is used to find all available implementations of a given abstract state class.
-     * Finding all implementations can be done in two ways:.
-     *
-     *    - The developer can define his own mapping directly in abstract state classes
-     *      via the `protected $states = []` property
-     *    - If no specific mapping was provided, the same directory where the abstract state class lives
-     *      is scanned, and all concrete state classes extending the abstract state class will be provided.
-     *
-     * @return array
-     */
     private static function resolveStateMapping(): array
     {
-        if (isset(static::$states)) {
-            return static::$states;
-        }
-
-        if (isset(self::$generatedMapping[static::class])) {
-            return self::$generatedMapping[static::class];
-        }
-
         $reflection = new ReflectionClass(static::class);
 
         ['dirname' => $directory] = pathinfo($reflection->getFileName());
@@ -316,25 +254,21 @@ abstract class State implements JsonSerializable
 
         $resolvedStates = [];
 
+        $stateConfig = static::config();
+
         foreach ($files as $file) {
             ['filename' => $className] = pathinfo($file);
 
-            $stateClass = $namespace.'\\'.$className;
+            /** @var \Spatie\ModelStates\State|mixed $stateClass */
+            $stateClass = $namespace . '\\' . $className;
 
-            if (! is_subclass_of($stateClass, static::class)) {
+            if (! is_subclass_of($stateClass, $stateConfig->baseStateClass)) {
                 continue;
             }
 
-            $resolvedStates[] = $stateClass;
+            $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
         }
 
-        self::$generatedMapping[static::class] = $resolvedStates;
-
-        return self::$generatedMapping[static::class];
-    }
-
-    public function jsonSerialize()
-    {
-        return $this->getValue();
+        return $resolvedStates;
     }
 }

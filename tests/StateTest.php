@@ -2,337 +2,175 @@
 
 namespace Spatie\ModelStates\Tests;
 
-use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\AbstractState;
-use Spatie\ModelStates\Tests\Dummy\AutoDetectStates\StateA;
-use Spatie\ModelStates\Tests\Dummy\IntStates\IntStateA;
-use Spatie\ModelStates\Tests\Dummy\ModelWithIntState;
-use Spatie\ModelStates\Tests\Dummy\Payment;
-use Spatie\ModelStates\Tests\Dummy\PaymentWithDefaultStatePaid;
-use Spatie\ModelStates\Tests\Dummy\States\Canceled;
-use Spatie\ModelStates\Tests\Dummy\States\Created;
-use Spatie\ModelStates\Tests\Dummy\States\Failed;
-use Spatie\ModelStates\Tests\Dummy\States\Paid;
-use Spatie\ModelStates\Tests\Dummy\States\PaidWithoutName;
-use Spatie\ModelStates\Tests\Dummy\States\PaymentState;
-use Spatie\ModelStates\Tests\Dummy\States\Pending;
-use Spatie\ModelStates\Tests\Dummy\WrongState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
 {
     /** @test */
-    public function state_with_name_is_saved_with_its_class_name()
+    public function test_resolve_state_class()
     {
-        $payment = Payment::create([
-            'state' => PaidWithoutName::class,
+        $this->assertEquals(StateA::class, ModelState::resolveStateClass(StateA::class));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::class));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::getMorphClass()));
+        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::$name));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::class));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::getMorphClass()));
+        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::$name));
+    }
+
+    /** @test */
+    public function transitionable_states()
+    {
+        $state = new StateA(new TestModel());
+
+        $this->assertEquals([
+            StateB::getMorphClass(),
+            StateC::getMorphClass(),
+            StateD::getMorphClass(),
+        ], $state->transitionableStates());
+
+        $modelB = TestModelWithDefault::create([
+            'state' => StateC::class,
         ]);
 
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => PaidWithoutName::getMorphClass(),
+        $this->assertEquals([], $modelB->state->transitionableStates());
+    }
+
+    /** @test */
+    public function test_equals()
+    {
+        $modelA = TestModelWithDefault::create();
+
+        $modelB = TestModelWithDefault::create();
+
+        $this->assertTrue($modelA->state->equals($modelB->state));
+
+        $modelA = TestModelWithDefault::create();
+
+        $modelB = TestModelWithDefault::create([
+            'state' => StateC::class,
         ]);
 
-        $this->assertInstanceOf(PaidWithoutName::class, $payment->state);
+        $this->assertFalse($modelA->state->equals($modelB->state));
+
+        $this->assertTrue($modelA->state->equals(StateA::class));
     }
 
     /** @test */
-    public function state_is_properly_serialized()
+    public function test_can_transition_to()
     {
-        $payment = Payment::create();
+        $state = new StateA(new TestModel());
 
-        $this->assertInstanceOf(Created::class, $payment->state);
+        $this->assertTrue($state->canTransitionTo(StateB::class));
+        $this->assertTrue($state->canTransitionTo(StateC::class));
 
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => Created::getMorphClass(),
-        ]);
+        $state = new StateB(new TestModel());
 
-        $payment->state = new Pending($payment);
-
-        $payment->save();
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => Pending::getMorphClass(),
-        ]);
+        $this->assertFalse($state->canTransitionTo(StateB::class));
+        $this->assertFalse($state->canTransitionTo(StateA::class));
     }
 
     /** @test */
-    public function create_with_state()
+    public function test_get_states()
     {
-        $payment = Payment::create([
-            'state' => Paid::class,
-        ]);
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => Paid::getMorphClass(),
-        ]);
-
-        $this->assertInstanceOf(Paid::class, $payment->fresh()->state);
-    }
-
-    /** @test */
-    public function only_states_of_the_correct_type_are_allowed_via_create()
-    {
-        $this->expectException(InvalidConfig::class);
-
-        Payment::create([
-            'state' => WrongState::class,
-        ]);
-    }
-
-    /** @test */
-    public function only_states_of_the_correct_type_are_allowed_via_setter()
-    {
-        $payment = Payment::create();
-
-        $this->expectException(InvalidConfig::class);
-
-        $payment->state = new WrongState($payment);
-
-        $payment->save();
-    }
-
-    /** @test */
-    public function state_from_concrete_class()
-    {
-        $payment = Payment::create();
-
-        $payment->state = new Paid($payment);
-
-        $payment->save();
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => Paid::getMorphClass(),
-        ]);
-    }
-
-    /** @test */
-    public function state_from_class_name()
-    {
-        $payment = Payment::create([
-            'state' => Paid::class,
-        ]);
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => Paid::getMorphClass(),
-        ]);
-    }
-
-    /** @test */
-    public function state_with_morphed_class_name()
-    {
-        $payment = Payment::create([
-            'state' => 'paid',
-        ]);
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => 'paid',
-        ]);
-    }
-
-    /** @test */
-    public function state_with_morphed_class_name_from_class_name()
-    {
-        $payment = Payment::create([
-            'state' => Paid::class,
-        ]);
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => 'paid',
-        ]);
-    }
-
-    /** @test */
-    public function state_with_morphed_class_name_from_concrete_class()
-    {
-        $payment = new Payment();
-
-        $payment->state = new Paid($payment);
-
-        $payment->save();
-
-        $this->assertDatabaseHas('payments', [
-            'id' => $payment->id,
-            'state' => 'paid',
-        ]);
-    }
-
-    /** @test */
-    public function is_one_of()
-    {
-        $payment = new Payment();
-
-        $this->assertTrue($payment->state->isOneOf(
-            Created::class,
-            Paid::class
-        ));
-
-        $this->assertTrue($payment->state->isOneOf(
-            new Created($payment)
-        ));
-
-        $this->assertTrue($payment->state->isOneOf(
-            'created'
-        ));
-
-        $this->assertFalse($payment->state->isOneOf(
-            Paid::class
-        ));
-    }
-
-    /** @test */
-    public function is_one_of_with_array()
-    {
-        $payment = new Payment();
-
-        $this->assertTrue($payment->state->isOneOf([
-            Created::class,
-            Paid::class,
-        ]));
-    }
-
-    /** @test */
-    public function equals()
-    {
-        $createdA = new Created(new Payment());
-        $createdB = new Created(new Payment());
-        $paid = new Paid(new Payment());
-
-        $this->assertTrue($createdA->equals($createdB));
-        $this->assertTrue($createdA->equals(Created::class));
-        $this->assertTrue($createdA->equals('created'));
-
-        $this->assertFalse($createdA->equals($paid));
-    }
-
-    /** @test */
-    public function resolve_state_without_explicit_mapping()
-    {
-        $state = AbstractState::find('a', new Payment());
-
-        $this->assertInstanceOf(StateA::class, $state);
-    }
-
-    /** @test */
-    public function all()
-    {
-        $all = PaymentState::all();
-
-        $this->assertNotNull($all->first(function (string $className) {
-            return $className === Paid::class;
-        }));
-    }
-
-    /** @test */
-    public function default_state_via_create()
-    {
-        $payment = PaymentWithDefaultStatePaid::create();
-
-        $this->assertTrue($payment->state->is(Paid::class));
-    }
-
-    /** @test */
-    public function default_state_via_new()
-    {
-        $payment = new PaymentWithDefaultStatePaid();
-
-        $this->assertTrue($payment->state->is(Paid::class));
-    }
-
-    /** @test */
-    public function to_json_works_properly()
-    {
-        $payment = new Payment();
-
-        $expected = <<<'JSON'
-{"state":"created"}
-JSON;
+        $states = TestModelWithDefault::getStates();
 
         $this->assertEquals(
-            $expected,
-            $payment->toJson()
+            [
+                'state' => [
+                    StateA::getMorphClass(),
+                    StateB::getMorphClass(),
+                    StateC::getMorphClass(),
+                    StateD::getMorphClass(),
+                ],
+            ],
+            $states->toArray()
         );
     }
 
     /** @test */
-    public function states_saved_as_tiny_ints()
+    public function test_get_states_for()
     {
-        ModelWithIntState::migrate();
+        $states = TestModelWithDefault::getStatesFor('state');
 
-        $model = ModelWithIntState::create([
-            'state' => IntStateA::class,
-        ]);
-
-        $this->assertDatabaseHas('model_with_int_state', [
-            'id' => $model->id,
-            'state' => 1,
-        ]);
-
-        $model = ModelWithIntState::find($model->id);
-
-        $this->assertTrue($model->state->is(IntStateA::class));
-    }
-
-    /** @test */
-    public function registered_states_can_be_listed()
-    {
-        $expected_states = collect([
-            Paid::class,
-            Failed::class,
-            Created::class,
-            Pending::class,
-            Canceled::class,
-            PaidWithoutName::class,
-        ]);
-
-        $states = Payment::getStates();
-
-        $this->assertTrue($states->has('state'));
-        $this->assertTrue(
-            $states
-                ->get('state')
-                ->diff($expected_states)
-                ->isEmpty()
+        $this->assertEquals(
+            [
+                StateA::getMorphClass(),
+                StateB::getMorphClass(),
+                StateC::getMorphClass(),
+                StateD::getMorphClass(),
+            ],
+            $states->toArray()
         );
     }
 
     /** @test */
-    public function registered_states_for_specific_column_can_be_listed()
+    public function test_get_default_states()
     {
-        $expected_states = collect([
-            Paid::class,
-            Failed::class,
-            Created::class,
-            Pending::class,
-            Canceled::class,
-            PaidWithoutName::class,
-        ]);
+        $states = TestModelWithDefault::getDefaultStates();
 
-        $states = Payment::getStatesFor('state');
-
-        $this->assertTrue($expected_states->diff($states)->isEmpty());
+        $this->assertEquals(
+            [
+                'state' => StateA::getMorphClass(),
+            ],
+            $states->toArray()
+        );
     }
 
     /** @test */
-    public function defaults_states_can_be_listed()
+    public function test_get_default_states_for()
     {
-        $states = PaymentWithDefaultStatePaid::getDefaultStates();
+        $defaultState = TestModelWithDefault::getDefaultStateFor('state');
 
-        $this->assertTrue($states->has('state'));
-        $this->assertEquals($states->get('state'), Paid::class);
+        $this->assertEquals(StateA::getMorphClass(), $defaultState);
     }
 
     /** @test */
-    public function default_state_for_specific_column_can_be_listed()
+    public function test_make()
     {
-        $state = PaymentWithDefaultStatePaid::getDefaultStateFor('state');
+        $stateA = ModelState::make(StateA::class, new TestModel());
 
-        $this->assertEquals($state, Paid::class);
+        $this->assertInstanceOf(StateA::class, $stateA);
+
+        $stateC = ModelState::make('C', new TestModel());
+
+        $this->assertInstanceOf(StateC::class, $stateC);
+
+        $stateD = ModelState::make(4, new TestModel());
+
+        $this->assertInstanceOf(StateD::class, $stateD);
+    }
+
+    /** @test */
+    public function test_all()
+    {
+        $this->assertEquals([
+            StateA::getMorphClass() => StateA::class,
+            StateB::getMorphClass() => StateB::class,
+            StateC::getMorphClass() => StateC::class,
+            StateD::getMorphClass() => StateD::class,
+        ], ModelState::all()->toArray());
+    }
+
+    /** @test */
+    public function default_is_set_when_constructing_a_new_model()
+    {
+        $model = new TestModel();
+
+        $this->assertTrue($model->state->equals(StateA::class));
+    }
+
+    /** @test */
+    public function default_is_set_when_creating_a_new_model()
+    {
+        $model = TestModel::create();
+
+        $this->assertTrue($model->state->equals(StateA::class));
     }
 }

@@ -23,39 +23,29 @@ class Invoice extends Model
 {
     use HasStates;
 
-    protected function registerStates(): void
-    {
-        $this
-            ->addState('state', InvoiceState::class)
-            ->allowTransition(Pending::class, Paid::class)
-            ->allowTransition(Pending::class, Declined::class)
-            ->default(Pending::class);
-
-        $this
-            ->addState('fulfillment', FulfillmentState::class)
-            ->allowTransition(Unfulfilled::class, Complete::class)
-            ->allowTransition(Unfulfilled::class, Partial::class)
-            ->allowTransition(Partial::class, Complete::class);
-    }
+    protected $casts = [
+        'state' => InvoiceState::class,
+        'fulfillment' => FulfillmentState::class,
+    ];
 }
 
 ```
 
 ## Get Registered States
 
-You can get all the registered states with `Invoice::getStates()`, which returns a collection of state classes, grouped by column:
+You can get all the registered states with `Invoice::getStates()`, which returns a collection of state morph names, grouped by column:
 
 ```php
 [
     "state" => [
-        'App\States\Invoice\Declined',
-        'App\States\Invoice\Paid',
-        'App\States\Invoice\Pending',
+        'declined',
+        'paid',
+        'pending',
     ],
     "fulfillment" => [
-        'App\States\Fulfillment\Complete',
-        'App\States\Fulfillment\Partial',
-        'App\States\Fulfillment\Unfulfilled',
+        'complete',
+        'partial',
+        'unfulfilled',
     ]
 ]
 ```
@@ -64,9 +54,9 @@ You can also get the registered states for a specific column with `Invoice::getS
 
 ```php
 [
-    'App\States\Invoice\Declined',
-    'App\States\Invoice\Paid',
-    'App\States\Invoice\Pending',
+    'declined',
+    'paid',
+    'pending',
 ],
 ```
 

@@ -11,21 +11,13 @@ class StateChanged
 {
     use SerializesModels;
 
-    /** @var \Spatie\ModelStates\State|null */
-    public $initialState;
+    public ?State $initialState;
 
-    /**
-     * @var null
-     * @deprecated
-     * @see https://github.com/spatie/laravel-model-states/issues/49
-     */
-    public $finalState;
+    public ?State $finalState;
 
-    /** @var \Spatie\ModelStates\Transition */
-    public $transition;
+    public Transition $transition;
 
-    /** @var \Illuminate\Database\Eloquent\Model */
-    public $model;
+    public Model $model;
 
     public function __construct(
         ?State $initialState,
