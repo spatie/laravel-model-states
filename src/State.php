@@ -152,6 +152,7 @@ abstract class State implements Castable, JsonSerializable
         }
 
         $model = app()->call([$transition, 'handle']);
+        $model->{$this->field}->setField($this->field);
 
         event(new StateChanged(
             $this,

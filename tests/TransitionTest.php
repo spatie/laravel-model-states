@@ -163,4 +163,19 @@ class TransitionTest extends TestCase
                 && $event->model->is($model);
         });
     }
+
+    /** @test */
+    public function can_transition_twice()
+    {
+        $model = TestModel::create([
+            'state' => StateA::class,
+        ]);
+
+        $model->state->transitionTo(StateB::class);
+        $model->state->transitionTo(StateC::class);
+
+        $model->refresh();
+
+        $this->assertInstanceOf(StateC::class, $model->state);
+    }
 }
