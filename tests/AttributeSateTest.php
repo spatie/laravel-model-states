@@ -12,6 +12,12 @@ class AttributeSateTest extends TestCase
     /** @test */
     public function test_default()
     {
+        if (PHP_VERSION_ID < 80000) {
+            $this->markTestSkipped('Not PHP 8');
+
+            return;
+        }
+
         $model = new TestModelWithAttributeState();
 
         $this->assertTrue($model->state->equals(AttributeStateA::class));
@@ -20,6 +26,12 @@ class AttributeSateTest extends TestCase
     /** @test */
     public function test_allowed_transition()
     {
+        if (PHP_VERSION_ID < 80000) {
+            $this->markTestSkipped('Not PHP 8');
+
+            return;
+        }
+
         $model = new TestModelWithAttributeState();
 
         $model->state->transitionTo(AttributeStateB::class);
