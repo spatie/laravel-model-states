@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
+## 2.0.2 - 2020-12-09
+
+- Add `State::getModel()` and `State::getField()`
+
 ## 2.0.1 - 2020-12-09
 
 - Fix bug on two consecutive transitions (#145)

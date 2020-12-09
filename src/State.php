@@ -106,6 +106,16 @@ abstract class State implements Castable, JsonSerializable
         return new $stateClass($model);
     }
 
+    public function getModel(): Model
+    {
+        return $this->model;
+    }
+
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
     /**
      * @return \Illuminate\Support\Collection|string[]|static[] A list of class names.
      */

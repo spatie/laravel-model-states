@@ -173,4 +173,20 @@ class StateTest extends TestCase
 
         $this->assertTrue($model->state->equals(StateA::class));
     }
+
+    /** @test */
+    public function get_model()
+    {
+        $stateA = ModelState::make(StateA::class, new TestModel());
+
+        $this->assertInstanceOf(TestModel::class, $stateA->getModel());
+    }
+
+    /** @test */
+    public function get_field()
+    {
+        $model = TestModel::create();
+
+        $this->assertEquals('state', $model->state->getField());
+    }
 }
