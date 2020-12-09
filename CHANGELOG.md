@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
+## 2.0.1 - 2020-12-09
+
+- Fix bug on two consecutive transitions (#145)
+
 ## 2.0.0 - 2020-12-04
 
 The biggest change in v2 is that states now know which fields they belong to. So instead of having to pass in fields like so:
