@@ -77,9 +77,8 @@ class CreatedToFailed extends Transition
 
     public function canTransition(): bool
     {
-        return $this->payment->state->is(Created::class);
+        return $this->payment->state->equals(Created::class);
     
-        // return $this->payment->state->isOneOf(Created::class, Pending::class);
     }
 }
 ```
