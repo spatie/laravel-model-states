@@ -9,7 +9,7 @@ use JetBrains\PhpStorm\Immutable;
 class AllowTransition
 {
     public function __construct(
-        #[Immutable] public array|string $from,
+        #[Immutable] public array | string $from,
         #[Immutable] public string $to,
         #[Immutable] public ?string $transition = null
     ) {

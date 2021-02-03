@@ -13,5 +13,4 @@ use Spatie\ModelStates\State;
 ]
 abstract class AttributeState extends State
 {
-
 }
