@@ -239,7 +239,9 @@ abstract class State implements Castable, JsonSerializable
         $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
 
         if ($transitionClass === null) {
-            $transition = new DefaultTransition(
+            $defaultTransition = config('model-states.default_transition', DefaultTransition::class);
+
+            $transition = new $defaultTransition(
                 $this->model,
                 $this->field,
                 $newState

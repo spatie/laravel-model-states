@@ -89,6 +89,24 @@ You can install the package via composer:
 composer require spatie/laravel-model-states
 ```
 
+You can publish the config file with:
+```bash
+php artisan vendor:publish --provider="Spatie\ModelStates\ModelStatesServiceProvider" --tag="laravel-model-states-config"
+```
+
+This is the content of the published config file:
+
+```php
+return [
+
+    /*
+     * The fully qualified class name of the default transition.
+     */
+    'default_transition' => Spatie\ModelStates\DefaultTransition::class,
+
+];
+```
+
 ## Usage
 
 Please refer to the [docs](https://docs.spatie.be/laravel-model-states/v2/01-introduction/) to learn how to use this package.
