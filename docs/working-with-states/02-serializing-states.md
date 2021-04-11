@@ -28,7 +28,7 @@ For example:
 
 ```php
 $payment = Payment::create([
-    'state' => Paid::class,
+    'paid' => Paid::class,
 ]);
 ```
 
