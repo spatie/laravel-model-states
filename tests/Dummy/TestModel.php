@@ -26,6 +26,10 @@ class TestModel extends Model
         'state' => ModelState::class,
     ];
 
+    protected $dispatchesEvents = [
+        'updating' => TestModelUpdatingEvent::class,
+    ];
+
     public function getTable()
     {
         return 'test_models';

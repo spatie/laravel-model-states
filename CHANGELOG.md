@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
+## 2.1.0 - 2021-04-21
+
+- Add default transition config (#159)
+
 ## 2.0.2 - 2020-12-09
 
 - Add `State::getModel()` and `State::getField()`

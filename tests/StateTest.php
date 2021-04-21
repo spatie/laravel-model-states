@@ -2,12 +2,14 @@
 
 namespace Spatie\ModelStates\Tests;
 
+use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
@@ -188,5 +190,20 @@ class StateTest extends TestCase
         $model = TestModel::create();
 
         $this->assertEquals('state', $model->state->getField());
+    }
+
+    /** @test */
+    public function can_override_default_transition()
+    {
+        Event::fake();
+
+        config()->set(
+            'model-states.default_transition',
+            \Spatie\ModelStates\Tests\Dummy\Transitions\CustomDefaultTransition::class
+        );
+
+        TestModel::create()->state->transitionTo(StateB::class);
+
+        Event::assertNotDispatched(TestModelUpdatingEvent::class);
     }
 }
