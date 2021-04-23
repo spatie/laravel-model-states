@@ -91,7 +91,7 @@ composer require spatie/laravel-model-states
 
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="Spatie\ModelStates\ModelStatesServiceProvider" --tag="laravel-model-states-config"
+php artisan vendor:publish --provider="Spatie\ModelStates\ModelStatesServiceProvider" --tag="model-states-config"
 ```
 
 This is the content of the published config file:
