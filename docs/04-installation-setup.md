@@ -14,7 +14,7 @@ composer require spatie/laravel-model-states
 Publishing the config file is optional:
 
 ```bash
-php artisan vendor:publish --provider="Spatie\ModelStates\ModelStatesServiceProvider" --tag="laravel-model-states-config"
+php artisan vendor:publish --provider="Spatie\ModelStates\ModelStatesServiceProvider" --tag="model-states-config"
 ```
 
 This is the default content of the config file:
