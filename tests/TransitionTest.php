@@ -13,6 +13,7 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
@@ -143,6 +144,26 @@ class TransitionTest extends TestCase
         $this->expectException(TransitionNotAllowed::class);
 
         $model->state->transition(new CustomInvalidTransition($model));
+    }
+
+   /** @test */
+    public function test_custom_transition_blocks_can_transition_to()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateX::class,
+        ]);
+
+        $this->assertFalse($model->state->canTransitionTo(StateZ::class));
+    }
+
+   /** @test */
+    public function test_custom_transition_doesnt_block_can_transition_to()
+    {
+        $model = TestModelWithCustomTransition::create([
+            'state' => StateX::class,
+        ]);
+
+        $this->assertTrue($model->state->canTransitionTo(StateY::class));
     }
 
     /** @test */

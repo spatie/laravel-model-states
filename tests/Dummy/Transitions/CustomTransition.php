@@ -14,11 +14,13 @@ class CustomTransition extends Transition
 
     private string $message;
 
-    public function __construct(TestModelWithCustomTransition $model, string $message)
+    public function __construct(TestModelWithCustomTransition $model, ...$transitionArgs)
     {
         $this->model = $model;
 
-        $this->message = $message;
+        if (array_key_exists(0, $transitionArgs)) {
+            $this->message = $transitionArgs[0];
+        }
     }
 
     public function handle(DummyDependency $dummyDependency): TestModelWithCustomTransition

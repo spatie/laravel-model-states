@@ -11,6 +11,7 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
+use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
 
 class StateTest extends TestCase
 {
@@ -68,11 +69,13 @@ class StateTest extends TestCase
     public function test_can_transition_to()
     {
         $state = new StateA(new TestModel());
+        $state->setField('state');
 
         $this->assertTrue($state->canTransitionTo(StateB::class));
         $this->assertTrue($state->canTransitionTo(StateC::class));
 
         $state = new StateB(new TestModel());
+        $state->setField('state');
 
         $this->assertFalse($state->canTransitionTo(StateB::class));
         $this->assertFalse($state->canTransitionTo(StateA::class));
