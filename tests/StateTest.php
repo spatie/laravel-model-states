@@ -11,7 +11,6 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
-use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
 
 class StateTest extends TestCase
 {

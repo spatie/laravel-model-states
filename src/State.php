@@ -201,6 +201,7 @@ abstract class State implements Castable, JsonSerializable
         if (method_exists($transition, 'canTransition')) {
             return $transition->canTransition();
         }
+
         return true;
     }
 

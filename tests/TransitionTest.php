@@ -146,7 +146,7 @@ class TransitionTest extends TestCase
         $model->state->transition(new CustomInvalidTransition($model));
     }
 
-   /** @test */
+    /** @test */
     public function test_custom_transition_blocks_can_transition_to()
     {
         $model = TestModelWithCustomTransition::create([
@@ -156,7 +156,7 @@ class TransitionTest extends TestCase
         $this->assertFalse($model->state->canTransitionTo(StateZ::class));
     }
 
-   /** @test */
+    /** @test */
     public function test_custom_transition_doesnt_block_can_transition_to()
     {
         $model = TestModelWithCustomTransition::create([
