@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
+## 2.1.1 - 2021-09-01
+
+- Support for custom transition classes' `canTransition` in `State::canTransitionTo` (#185)
+
 ## 2.1.0 - 2021-04-21
 
 - Add default transition config (#159)
