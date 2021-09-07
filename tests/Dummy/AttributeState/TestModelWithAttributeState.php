@@ -18,9 +18,8 @@ use Spatie\ModelStates\HasStates;
  */
 class TestModelWithAttributeState extends Model
 {
-    protected $guarded = [];
-
     use HasStates;
+    protected $guarded = [];
 
     protected $casts = [
         'state' => AttributeState::class,

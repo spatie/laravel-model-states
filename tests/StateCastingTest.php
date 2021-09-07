@@ -88,7 +88,7 @@ class StateCastingTest extends TestCase
     /** @test */
     public function default_state_is_set_when_none_provided()
     {
-        $model = (new class extends TestModel {
+        $model = (new class() extends TestModel {
             public function registerStates(): void
             {
                 $this
