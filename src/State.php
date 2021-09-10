@@ -250,7 +250,7 @@ abstract class State implements Castable, JsonSerializable
     private function resolveTransitionClass(
         string $from,
         string $to,
-        State  $newState,
+        State $newState,
         ...$transitionArgs
     ): Transition {
         $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
