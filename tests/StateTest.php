@@ -32,13 +32,13 @@ class StateTest extends TestCase
     /** @test */
     public function transitionable_states()
     {
-        $state = new StateA(new TestModel());
+        $modelA = TestModel::make(['state'=>StateA::class]);
 
         $this->assertEquals([
             StateB::getMorphClass(),
             StateC::getMorphClass(),
             StateD::getMorphClass(),
-        ], $state->transitionableStates());
+        ], $modelA->state->transitionableStates());
 
         $modelB = TestModelWithDefault::create([
             'state' => StateC::class,
@@ -50,7 +50,7 @@ class StateTest extends TestCase
     /** @test */
     public function transitionable_states_with_custom_transition()
     {
-        $model = new TestModelWithCustomTransition(['state' => StateX::class]);
+        $model = TestModelWithCustomTransition::create(['state' => StateX::class]);
         $this->assertSame([StateY::class], $model->state->transitionableStates());
     }
 
