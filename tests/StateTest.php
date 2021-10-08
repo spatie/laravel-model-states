@@ -8,8 +8,11 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
 class StateTest extends TestCase
@@ -29,19 +32,26 @@ class StateTest extends TestCase
     /** @test */
     public function transitionable_states()
     {
-        $state = new StateA(new TestModel());
+        $modelA = TestModel::make(['state'=>StateA::class]);
 
         $this->assertEquals([
             StateB::getMorphClass(),
             StateC::getMorphClass(),
             StateD::getMorphClass(),
-        ], $state->transitionableStates());
+        ], $modelA->state->transitionableStates());
 
         $modelB = TestModelWithDefault::create([
             'state' => StateC::class,
         ]);
 
         $this->assertEquals([], $modelB->state->transitionableStates());
+    }
+
+    /** @test */
+    public function transitionable_states_with_custom_transition()
+    {
+        $model = TestModelWithCustomTransition::create(['state' => StateX::class]);
+        $this->assertSame([StateY::class], $model->state->transitionableStates());
     }
 
     /** @test */
