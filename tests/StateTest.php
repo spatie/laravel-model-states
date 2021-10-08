@@ -32,7 +32,7 @@ class StateTest extends TestCase
     /** @test */
     public function transitionable_states()
     {
-        $modelA = TestModel::make(['state'=>StateA::class]);
+        $modelA = TestModel::make(['state' => StateA::class]);
 
         $this->assertEquals([
             StateB::getMorphClass(),

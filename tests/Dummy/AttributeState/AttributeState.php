@@ -3,7 +3,6 @@
 namespace Spatie\ModelStates\Tests\Dummy\AttributeState;
 
 use Spatie\ModelStates\Attributes\AllowTransition;
-use Spatie\ModelStates\Attributes\DefaultState;
 use Spatie\ModelStates\State;
 
 #[
