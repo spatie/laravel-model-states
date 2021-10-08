@@ -2,7 +2,8 @@
 
 All notable changes to `laravel-model-states` will be documented in this file
 
-## Unreleased
+## 2.1.2 - 2021-10-08
+
 - Support for custom transition classes in `transitionableStates` method
 
 ## 2.1.1 - 2021-09-01
