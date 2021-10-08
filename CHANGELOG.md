@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `laravel-model-states` will be documented in this file
+All notable changes to `laravel-model-states` will be documented in this file (#188)
 
 ## 2.1.2 - 2021-10-08
 
