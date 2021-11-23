@@ -9,17 +9,12 @@ jobs:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [7.4, 8.0]
+        php: [8.1, 8.0, 7.4]
         laravel: [8.*]
         dependency-version: [prefer-lowest, prefer-stable]
-        exclude:
-          - php: 7.2
-            laravel: 8.*
-          - php: 8.0
-            laravel: 5.8.*
         include:
           - laravel: 8.*
-            testbench: 6.*
+            testbench: ^6.23
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
