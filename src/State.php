@@ -226,6 +226,7 @@ abstract class State implements Castable, JsonSerializable
         return false;
     }
 
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->getValue();
