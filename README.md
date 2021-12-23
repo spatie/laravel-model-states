@@ -109,7 +109,7 @@ return [
 
 ## Usage
 
-Please refer to the [docs](https://docs.spatie.be/laravel-model-states/v2/01-introduction/) to learn how to use this package.
+Please refer to the [docs](https://spatie.be/docs/laravel-model-states/v2/01-introduction/) to learn how to use this package.
 
 ## Testing
 
