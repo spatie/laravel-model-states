@@ -85,7 +85,7 @@ abstract class State implements Castable, JsonSerializable
 
             // Loose comparison is needed here in order to support non-string values,
             // Laravel casts their database value automatically to strings if we didn't specify the fields in `$casts`.
-            $name = isset($stateClass::$name) ? (string) $stateClass::$name : null;
+            $name = $stateClass::getMorphClass();
 
             if ($name == $state) {
                 return $stateClass;
