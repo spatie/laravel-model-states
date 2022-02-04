@@ -8,6 +8,7 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateE;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
@@ -27,6 +28,8 @@ class StateTest extends TestCase
         $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::class));
         $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::getMorphClass()));
         $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::$name));
+        $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::class));
+        $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::getMorphClass()));
     }
 
     /** @test */
@@ -102,6 +105,7 @@ class StateTest extends TestCase
                     StateB::getMorphClass(),
                     StateC::getMorphClass(),
                     StateD::getMorphClass(),
+                    StateE::getMorphClass(),
                 ],
             ],
             $states->toArray()
@@ -119,6 +123,7 @@ class StateTest extends TestCase
                 StateB::getMorphClass(),
                 StateC::getMorphClass(),
                 StateD::getMorphClass(),
+                StateE::getMorphClass(),
             ],
             $states->toArray()
         );
@@ -169,6 +174,7 @@ class StateTest extends TestCase
             StateB::getMorphClass() => StateB::class,
             StateC::getMorphClass() => StateC::class,
             StateD::getMorphClass() => StateD::class,
+            StateE::getMorphClass() => StateE::class,
         ], ModelState::all()->toArray());
     }
 

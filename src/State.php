@@ -59,6 +59,11 @@ abstract class State implements Castable, JsonSerializable
         return static::$name ?? static::class;
     }
 
+    public static function getName(): ?string
+    {
+        return static::$name ?? null;
+    }
+
     public static function getStateMapping(): Collection
     {
         if (! isset(self::$stateMapping[static::class])) {
@@ -85,7 +90,7 @@ abstract class State implements Castable, JsonSerializable
 
             // Loose comparison is needed here in order to support non-string values,
             // Laravel casts their database value automatically to strings if we didn't specify the fields in `$casts`.
-            $name = isset($stateClass::$name) ? (string) $stateClass::$name : null;
+            $name = $stateClass::getName();
 
             if ($name == $state) {
                 return $stateClass;
