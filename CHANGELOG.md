@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.2.0 - 2022-03-03
+
+- Better internal use of `getMorphClass` (#198)
+
 ## 2.1.2 - 2021-10-08
 
 - Support for custom transition classes in `transitionableStates` method
