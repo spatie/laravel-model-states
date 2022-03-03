@@ -4,6 +4,18 @@ All notable changes to `laravel-model-states` will be documented in this file (#
 
 ## 2.2.0 - 2022-03-03
 
+## What's Changed
+
+- Use getMorphClass method when resolving state class. by @kayrunm in https://github.com/spatie/laravel-model-states/pull/198
+
+## New Contributors
+
+- @kayrunm made their first contribution in https://github.com/spatie/laravel-model-states/pull/198
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.1.4...2.2.0
+
+## 2.2.0 - 2022-03-03
+
 - Better internal use of `getMorphClass` (#198)
 
 ## 2.1.2 - 2021-10-08
@@ -32,14 +44,14 @@ The biggest change in v2 is that states now know which fields they belong to. So
 
 ```php
 $model->canTransitionTo(StateB::class, 'status');
-```
 
+```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
-```
 
+```
 This change means that a lot of boilerplate code can be removed. Also keep in mind that this package wants you to always use state objects, and never their serialized values. That's why many other methods have been removed, in favour of Laravel's built-in model casts.
 
 - States aren't configured on models anymore, but on the state class itself. Refer to [the docs](/docs/working-with-states/01-configuring-states.md) for more info.
