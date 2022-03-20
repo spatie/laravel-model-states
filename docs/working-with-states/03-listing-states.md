@@ -11,7 +11,7 @@ namespace App;
 use App\States\Invoice\Paid;
 use App\States\Invoice\Pending;
 use App\States\Invoice\Declined;
-use App\States\HasStates;
+use Spatie\ModelStates\HasStates;
 use App\States\Fulfillment\Partial;
 use App\States\Fulfillment\Complete;
 use App\States\Invoice\InvoiceState;
