@@ -85,6 +85,28 @@ trait HasStates
 
         return $builder->whereNotIn($column, $this->getStateNamesForQuery($field, $states));
     }
+    
+    public function scopeOrWhereState(Builder $builder, string $column, $states): Builder
+    {
+        if (! is_array($states)) {
+            $states = [$states];
+        }
+
+        $field = Arr::last(explode('.', $column));
+
+        return $builder->orWhereIn($column, $this->getStateNamesForQuery($field, $states));
+    }
+
+    public function scopeOrWhereNotState(Builder $builder, string $column, $states): Builder
+    {
+        if (! is_array($states)) {
+            $states = [$states];
+        }
+
+        $field = Arr::last(explode('.', $column));
+
+        return $builder->orWhereNotIn($column, $this->getStateNamesForQuery($field, $states));
+    }
 
     /**
      * @return array|\Spatie\ModelStates\StateConfig[]
