@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 trait HasStates
 {
@@ -66,24 +67,38 @@ trait HasStates
 
     public function scopeWhereState(Builder $builder, string $column, $states): Builder
     {
-        if (! is_array($states)) {
-            $states = [$states];
-        }
+        $states = Arr::wrap($states);
 
-        $field = Arr::last(explode('.', $column));
+        $field = Str::afterLast($column, '.');
 
         return $builder->whereIn($column, $this->getStateNamesForQuery($field, $states));
     }
 
     public function scopeWhereNotState(Builder $builder, string $column, $states): Builder
     {
-        if (! is_array($states)) {
-            $states = [$states];
-        }
+        $states = Arr::wrap($states);
 
-        $field = Arr::last(explode('.', $column));
+        $field = Str::afterLast($column, '.');
 
         return $builder->whereNotIn($column, $this->getStateNamesForQuery($field, $states));
+    }
+
+    public function scopeOrWhereState(Builder $builder, string $column, $states): Builder
+    {
+        $states = Arr::wrap($states);
+
+        $field = Str::afterLast($column, '.');
+
+        return $builder->orWhereIn($column, $this->getStateNamesForQuery($field, $states));
+    }
+
+    public function scopeOrWhereNotState(Builder $builder, string $column, $states): Builder
+    {
+        $states = Arr::wrap($states);
+
+        $field = Str::afterLast($column, '.');
+
+        return $builder->orWhereNotIn($column, $this->getStateNamesForQuery($field, $states));
     }
 
     /**
