@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.3.0 - 2022-04-21
+
+## What's Changed
+
+- Update 03-listing-stated.md // Wrong namespace in the docs by @SahinU88 in https://github.com/spatie/laravel-model-states/pull/200
+- Add orWhereState and orWhereNotState by @masterix21 in https://github.com/spatie/laravel-model-states/pull/201
+
+## New Contributors
+
+- @SahinU88 made their first contribution in https://github.com/spatie/laravel-model-states/pull/200
+- @masterix21 made their first contribution in https://github.com/spatie/laravel-model-states/pull/201
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.2.0...2.3.0
+
 ## 2.2.0 - 2022-03-03
 
 ## What's Changed
@@ -45,11 +59,13 @@ The biggest change in v2 is that states now know which fields they belong to. So
 ```php
 $model->canTransitionTo(StateB::class, 'status');
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 ```
 This change means that a lot of boilerplate code can be removed. Also keep in mind that this package wants you to always use state objects, and never their serialized values. That's why many other methods have been removed, in favour of Laravel's built-in model casts.
