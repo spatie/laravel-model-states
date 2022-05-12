@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 
 class StateCastingTest extends TestCase
@@ -25,6 +27,20 @@ class StateCastingTest extends TestCase
     }
 
     /** @test */
+    public function custom_registered_state_without_alias_is_serialized_on_create()
+    {
+        $model = TestModel::create([
+            'state' => StateF::class,
+        ]);
+
+        $this->assertInstanceOf(StateF::class, $model->state);
+
+        $this->assertDatabaseHas($model->getTable(), [
+            'state' => StateF::getMorphClass(),
+        ]);
+    }
+
+    /** @test */
     public function state_with_alias_is_serialized_on_create_when_using_class_name()
     {
         $model = TestModel::create([
@@ -39,6 +55,20 @@ class StateCastingTest extends TestCase
     }
 
     /** @test */
+    public function custom_registered_state_with_alias_is_serialized_on_create_when_using_class_name()
+    {
+        $model = TestModel::create([
+            'state' => StateG::class,
+        ]);
+
+        $this->assertInstanceOf(StateG::class, $model->state);
+
+        $this->assertDatabaseHas($model->getTable(), [
+            'state' => StateG::getMorphClass(),
+        ]);
+    }
+
+    /** @test */
     public function state_with_alias_is_serialized_on_create_when_using_alias()
     {
         $model = TestModel::create([
@@ -49,6 +79,20 @@ class StateCastingTest extends TestCase
 
         $this->assertDatabaseHas($model->getTable(), [
             'state' => StateC::getMorphClass(),
+        ]);
+    }
+
+    /** @test */
+    public function custom_registered_state_with_alias_is_serialized_on_create_when_using_alias()
+    {
+        $model = TestModel::create([
+            'state' => StateG::getMorphClass(),
+        ]);
+
+        $this->assertInstanceOf(StateG::class, $model->state);
+
+        $this->assertDatabaseHas($model->getTable(), [
+            'state' => StateG::getMorphClass(),
         ]);
     }
 

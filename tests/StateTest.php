@@ -9,6 +9,9 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateD;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateE;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateH;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
@@ -30,6 +33,11 @@ class StateTest extends TestCase
         $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::$name));
         $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::class));
         $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::getMorphClass()));
+        $this->assertEquals(StateF::class, ModelState::resolveStateClass(StateF::getMorphClass()));
+        $this->assertEquals(StateG::class, ModelState::resolveStateClass(StateG::getMorphClass()));
+        $this->assertEquals(StateG::class, ModelState::resolveStateClass(StateG::getMorphClass()));
+        $this->assertEquals(StateH::class, ModelState::resolveStateClass(StateH::getMorphClass()));
+        $this->assertEquals(StateH::class, ModelState::resolveStateClass(StateH::getMorphClass()));
     }
 
     /** @test */
@@ -41,6 +49,7 @@ class StateTest extends TestCase
             StateB::getMorphClass(),
             StateC::getMorphClass(),
             StateD::getMorphClass(),
+            StateF::getMorphClass(),
         ], $modelA->state->transitionableStates());
 
         $modelB = TestModelWithDefault::create([
@@ -85,6 +94,7 @@ class StateTest extends TestCase
 
         $this->assertTrue($state->canTransitionTo(StateB::class));
         $this->assertTrue($state->canTransitionTo(StateC::class));
+        $this->assertTrue($state->canTransitionTo(StateF::class));
 
         $state = new StateB(new TestModel());
         $state->setField('state');
@@ -106,6 +116,9 @@ class StateTest extends TestCase
                     StateC::getMorphClass(),
                     StateD::getMorphClass(),
                     StateE::getMorphClass(),
+                    StateF::getMorphClass(),
+                    StateG::getMorphClass(),
+                    StateH::getMorphClass(),
                 ],
             ],
             $states->toArray()
@@ -124,6 +137,9 @@ class StateTest extends TestCase
                 StateC::getMorphClass(),
                 StateD::getMorphClass(),
                 StateE::getMorphClass(),
+                StateF::getMorphClass(),
+                StateG::getMorphClass(),
+                StateH::getMorphClass(),
             ],
             $states->toArray()
         );
@@ -175,6 +191,9 @@ class StateTest extends TestCase
             StateC::getMorphClass() => StateC::class,
             StateD::getMorphClass() => StateD::class,
             StateE::getMorphClass() => StateE::class,
+            StateF::getMorphClass() => StateF::class,
+            StateG::getMorphClass() => StateG::class,
+            StateH::getMorphClass() => StateH::class,
         ], ModelState::all()->toArray());
     }
 

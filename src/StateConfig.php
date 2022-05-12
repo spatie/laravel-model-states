@@ -15,6 +15,9 @@ class StateConfig
     /** @var string[] */
     public array $allowedTransitions = [];
 
+    /** @var string[] */
+    public array $registeredStates = [];
+
     public function __construct(
         string $baseStateClass
     ) {
@@ -93,6 +96,25 @@ class StateConfig
         }
 
         return $transitionableStates;
+    }
+
+    public function registerState($stateClass): StateConfig
+    {
+        if (is_array($stateClass)) {
+            foreach ($stateClass as $state) {
+                $this->registerState($state);
+            }
+
+            return $this;
+        }
+
+        if (!is_subclass_of($stateClass, $this->baseStateClass)) {
+            throw InvalidConfig::doesNotExtendBaseClass($stateClass, $this->baseStateClass);
+        }
+
+        $this->registeredStates[] = $stateClass;
+
+        return $this;
     }
 
     /**
