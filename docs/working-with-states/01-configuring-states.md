@@ -100,4 +100,32 @@ abstract class PaymentState extends State
 }
 ```
 
+## Manually registering states
+If you want to place your concrete state implementations in a different directory, you may do so and register them manually:
+
+```php
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
+
+use Your\Concrete\State\Class\Cancelled; // this may be wherever you want
+use Your\Concrete\State\Class\ExampleOne;
+use Your\Concrete\State\Class\ExampleTwo;
+
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+            ->registerState(Cancelled::class)
+            ->registerState([ExampleOne::class, ExampleTwo::class])
+        ;
+    }
+}
+```
+
 Next up, we'll take a moment to discuss how state classes are serialized to the database.
