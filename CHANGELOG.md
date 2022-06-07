@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.0 - 2022-06-07
+
+### What's Changed
+
+- Manually register concrete state classes by @javoscript in https://github.com/spatie/laravel-model-states/pull/203
+
+### New Contributors
+
+- @javoscript made their first contribution in https://github.com/spatie/laravel-model-states/pull/203
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.3.0...2.4.0
+
 ## 2.3.0 - 2022-04-21
 
 ## What's Changed
@@ -60,11 +72,13 @@ The biggest change in v2 is that states now know which fields they belong to. So
 $model->canTransitionTo(StateB::class, 'status');
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 ```
