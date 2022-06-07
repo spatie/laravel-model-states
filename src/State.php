@@ -300,6 +300,10 @@ abstract class State implements Castable, JsonSerializable
             $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
         }
 
+        foreach ($stateConfig->registeredStates as $stateClass) {
+            $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
+        }
+
         return $resolvedStates;
     }
 }
