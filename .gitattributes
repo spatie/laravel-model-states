@@ -7,3 +7,5 @@
 .scrutinizer.yml export-ignore
 CHANGELOG.md export-ignore
 phpunit.xml.dist export-ignore
+.php-cs-fixer.dist.php export-ignore
+UPGRADING.md export-ignore
