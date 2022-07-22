@@ -63,6 +63,10 @@ class StateCaster implements CastsAttributes
             $value = $mapping[$value];
         }
 
+        if ($value instanceof $this->baseStateClass) {
+            $value->setField($key);
+        }
+
         return $value::getMorphClass();
     }
 
