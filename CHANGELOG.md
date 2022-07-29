@@ -2,6 +2,20 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.1 - 2022-07-29
+
+### What's Changed
+
+- Update .gitattributes by @angeljqv in https://github.com/spatie/laravel-model-states/pull/205
+- Ensures field is always set when changing states by @ChangingTerry in https://github.com/spatie/laravel-model-states/pull/207
+
+### New Contributors
+
+- @angeljqv made their first contribution in https://github.com/spatie/laravel-model-states/pull/205
+- @ChangingTerry made their first contribution in https://github.com/spatie/laravel-model-states/pull/207
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.0...2.4.1
+
 ## 2.4.0 - 2022-06-07
 
 ### What's Changed
@@ -73,11 +87,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
