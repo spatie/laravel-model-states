@@ -5,6 +5,7 @@ namespace Spatie\ModelStates\Tests;
 use Illuminate\Support\Facades\DB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
+use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
@@ -146,5 +147,19 @@ class StateCastingTest extends TestCase
         $this->assertDatabaseHas($model->getTable(), [
             'state' => StateA::getMorphClass(),
         ]);
+    }
+
+    /** @test */
+    public function field_is_always_populated_when_set()
+    {
+        $model = new TestModel();
+
+        $this->assertInstanceOf(StateA::class, $model->state);
+
+        $model->state = new StateB($model);
+
+        $this->assertInstanceOf(StateB::class, $model->state);
+
+        $this->assertEquals('state', $model->state->getField());
     }
 }
