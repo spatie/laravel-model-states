@@ -3,11 +3,15 @@
 namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 
 class CouldNotPerformTransition extends Exception
 {
-    public static function notAllowed(Model $model, $transitionClass): CouldNotPerformTransition
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  Transition  $transitionClass
+     * @return  CouldNotPerformTransition
+     */
+    public static function notAllowed($model, $transitionClass): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 
@@ -16,14 +20,24 @@ class CouldNotPerformTransition extends Exception
         return TransitionNotAllowed::make($modelClass, $transitionClass);
     }
 
-    public static function notFound(string $from, string $to, Model $model): CouldNotPerformTransition
+    /**
+     * @param  string  $from
+     * @param  string  $to
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return  CouldNotPerformTransition
+     */
+    public static function notFound(string $from, string $to, $model): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 
         return TransitionNotFound::make($from, $to, $modelClass);
     }
 
-    public static function couldNotResolveTransitionField(Model $model): CouldNotPerformTransition
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return  CouldNotPerformTransition
+     */
+    public static function couldNotResolveTransitionField($model): CouldNotPerformTransition
     {
         $modelClass = get_class($model);
 

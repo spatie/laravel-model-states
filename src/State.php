@@ -3,7 +3,6 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\Castable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
 use ReflectionClass;
@@ -14,7 +13,7 @@ use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 abstract class State implements Castable, JsonSerializable
 {
-    private Model $model;
+    private $model;
 
     private StateConfig $stateConfig;
 
@@ -22,7 +21,10 @@ abstract class State implements Castable, JsonSerializable
 
     private static array $stateMapping = [];
 
-    public function __construct(Model $model)
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     */
+    public function __construct($model)
     {
         $this->model = $model;
         $this->stateConfig = static::config();
@@ -95,7 +97,12 @@ abstract class State implements Castable, JsonSerializable
         return $state;
     }
 
-    public static function make(string $name, Model $model): State
+    /**
+     * @param  string  $name
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return  State
+     */
+    public static function make(string $name, $model): State
     {
         $stateClass = static::resolveStateClass($name);
 
@@ -106,7 +113,10 @@ abstract class State implements Castable, JsonSerializable
         return new $stateClass($model);
     }
 
-    public function getModel(): Model
+    /**
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public function getModel()
     {
         return $this->model;
     }
@@ -131,7 +141,12 @@ abstract class State implements Castable, JsonSerializable
         return $this;
     }
 
-    public function transitionTo($newState, ...$transitionArgs): Model
+    /**
+     * @param  string|State  $newState
+     * @param  mixed  ...$transitionArgs
+     * @return  \Illuminate\Database\Eloquent\Model
+     */
+    public function transitionTo($newState, ...$transitionArgs)
     {
         $newState = $this->resolveStateObject($newState);
 
@@ -153,7 +168,11 @@ abstract class State implements Castable, JsonSerializable
         return $this->transition($transition);
     }
 
-    public function transition(Transition $transition): Model
+    /**
+     * @param  Transition  $transition
+     * @return  \Illuminate\Database\Eloquent\Model
+     */
+    public function transition(Transition $transition)
     {
         if (method_exists($transition, 'canTransition')) {
             if (! $transition->canTransition()) {

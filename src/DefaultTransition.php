@@ -2,18 +2,21 @@
 
 namespace Spatie\ModelStates;
 
-use Illuminate\Database\Eloquent\Model;
-
 class DefaultTransition extends Transition
 {
-    protected Model $model;
+    protected $model;
 
     protected string $field;
 
     protected State $newState;
 
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  string  $field
+     * @param  State  $newState
+     */
     public function __construct(
-        Model $model,
+        $model,
         string $field,
         State $newState
     ) {
@@ -22,7 +25,10 @@ class DefaultTransition extends Transition
         $this->newState = $newState;
     }
 
-    public function handle(): Model
+    /**
+     * @return  \Illuminate\Database\Eloquent\Model
+     */
+    public function handle()
     {
         $originalState = $this->model->{$this->field} ? clone $this->model->{$this->field} : null;
 

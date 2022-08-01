@@ -3,7 +3,6 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -14,7 +13,7 @@ trait HasStates
 
     public static function bootHasStates(): void
     {
-        self::creating(function (Model $model) {
+        self::creating(function ($model) {
             /**
              * @var \Spatie\ModelStates\HasStates $model
              */
