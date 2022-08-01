@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.2 - 2022-08-01
+
+### What's Changed
+
+- Removed Model type enforcement and replaced with PHPDoc by @luckcolors in https://github.com/spatie/laravel-model-states/pull/208
+
+### New Contributors
+
+- @luckcolors made their first contribution in https://github.com/spatie/laravel-model-states/pull/208
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.1...2.4.2
+
 ## 2.4.1 - 2022-07-29
 
 ### What's Changed
@@ -88,11 +100,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
