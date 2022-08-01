@@ -2,7 +2,6 @@
 
 namespace Spatie\ModelStates\Events;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Queue\SerializesModels;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\Transition;
@@ -17,13 +16,19 @@ class StateChanged
 
     public Transition $transition;
 
-    public Model $model;
+    public $model;
 
+    /**
+     * @param  string|State|null  $initialState
+     * @param  string|State|null  $finalState
+     * @param  Transition  $finalState
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     */
     public function __construct(
         ?State $initialState,
         ?State $finalState,
         Transition $transition,
-        Model $model
+        $model
     ) {
         $this->initialState = $initialState;
         $this->finalState = $finalState;

@@ -3,14 +3,18 @@
 namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\HasStates;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\Transition;
 
 class InvalidConfig extends Exception
 {
-    public static function fieldNotFound(string $fieldName, Model $model): InvalidConfig
+    /**
+     * @param  string  $fieldName
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return  InvalidConfig
+     */
+    public static function fieldNotFound(string $fieldName, $model): InvalidConfig
     {
         $modelClass = get_class($model);
 
@@ -37,7 +41,11 @@ class InvalidConfig extends Exception
         return ClassDoesNotExtendBaseClass::make($class, $baseClass);
     }
 
-    public static function resolveTransitionNotFound(Model $model): InvalidConfig
+    /**
+     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @return  InvalidConfig
+     */
+    public static function resolveTransitionNotFound($model): InvalidConfig
     {
         $modelClass = get_class($model);
 

@@ -2,12 +2,14 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\Transitions;
 
-use Illuminate\Database\Eloquent\Model;
 use Spatie\ModelStates\DefaultTransition;
 
 class CustomDefaultTransition extends DefaultTransition
 {
-    public function handle(): Model
+    /**
+     * @return  \Illuminate\Database\Eloquent\Model
+     */
+    public function handle()
     {
         $originalState = $this->model->{$this->field} ? clone $this->model->{$this->field} : null;
 
