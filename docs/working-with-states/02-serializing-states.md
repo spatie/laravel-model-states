@@ -11,7 +11,7 @@ $payment = Payment::create();
 
 If you've setup the default state to be `Pending`, this `state` field in the database will contain the class name of this state, eg. `\App\States\Payment\Pending`.
 
-Chances are you don't want to work directly with a state's class name all the time. This is why you may add a static `$name` property on each state class, which will be used to serialize the state instead.
+Chances are you don't want to work directly with a state's class name all the time. This is why you may add a static `$name` property on each state class, which will be used to serialize the state instead. Do not use a hyphen(-) as this will conflict with internal naming conventions.
 
 ```php
 class Paid extends PaymentState
