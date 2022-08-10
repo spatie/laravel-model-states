@@ -7,7 +7,7 @@ use Spatie\ModelStates\Tests\Dummy\AttributeState\AttributeStateB;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\AttributeStateTransition;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\TestModelWithAttributeState;
 
-class AttributeSateTest extends TestCase
+class AttributeStateTest extends TestCase
 {
     /** @test */
     public function test_default()

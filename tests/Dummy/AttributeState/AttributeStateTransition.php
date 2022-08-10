@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates\Tests\Dummy\AttributeState;
 
 use Spatie\ModelStates\Transition;
+use Spatie\ModelStates\TransitionContext;
 
 class AttributeStateTransition extends Transition
 {
@@ -10,11 +11,15 @@ class AttributeStateTransition extends Transition
 
     private TestModelWithAttributeState $model;
 
-    public function __construct(TestModelWithAttributeState $model)
+    public function __construct(TestModelWithAttributeState|TransitionContext $model)
     {
         self::$transitioned = false;
 
-        $this->model = $model;
+        if ($model instanceof TransitionContext) {
+            $this->model = $model->model;
+        } else {
+            $this->model = $model;
+        }
     }
 
     public function handle(): TestModelWithAttributeState

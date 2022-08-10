@@ -11,18 +11,14 @@ class DefaultTransition extends Transition
     protected State $newState;
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  TransitionContext  $model
      * @param  string  $field
      * @param  State  $newState
      */
-    public function __construct(
-        $model,
-        string $field,
-        State $newState
-    ) {
-        $this->model = $model;
-        $this->field = $field;
-        $this->newState = $newState;
+    public function __construct($transitionContext, ...$transitionArgs) {
+        $this->model = $transitionContext->model;
+        $this->field = $transitionContext->field;
+        $this->newState = $transitionContext->newState;
     }
 
     /**
