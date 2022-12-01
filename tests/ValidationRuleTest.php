@@ -1,45 +1,36 @@
 <?php
 
-namespace Spatie\ModelStates\Tests;
-
 use Illuminate\Support\Facades\Validator;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Validation\ValidStateRule;
 
-class ValidationRuleTest extends TestCase
-{
-    /** @test */
-    public function test_validation()
-    {
-        $rule = new ValidStateRule(ModelState::class);
+it('test validation', function () {
+    $rule = new ValidStateRule(ModelState::class);
 
-        $this->assertTrue(! Validator::make(
-            ['state' => StateA::getMorphClass()],
-            ['state' => $rule]
-        )->fails());
+    expect(! Validator::make(
+        ['state' => StateA::getMorphClass()],
+        ['state' => $rule]
+    )->fails())->toBeTrue();
 
-        $this->assertFalse(! Validator::make(
-            ['state' => 'wrong'],
-            ['state' => $rule]
-        )->fails());
-    }
+    expect(! Validator::make(
+        ['state' => 'wrong'],
+        ['state' => $rule]
+    )->fails())->toBeFalse();
+});
 
-    /** @test */
-    public function nullable_validation()
-    {
-        $rule = (new ValidStateRule(ModelState::class))->required();
+it('nullable validation', function () {
+    $rule = (new ValidStateRule(ModelState::class))->required();
 
-        $this->assertTrue(Validator::make(
-            ['state' => null],
-            ['state' => $rule]
-        )->fails());
+    expect(Validator::make(
+        ['state' => null],
+        ['state' => $rule]
+    )->fails())->toBeTrue();
 
-        $rule = (new ValidStateRule(ModelState::class))->nullable();
+    $rule = (new ValidStateRule(ModelState::class))->nullable();
 
-        $this->assertFalse(Validator::make(
-            ['state' => null],
-            ['state' => $rule]
-        )->fails());
-    }
-}
+    expect(Validator::make(
+        ['state' => null],
+        ['state' => $rule]
+    )->fails())->toBeFalse();
+});

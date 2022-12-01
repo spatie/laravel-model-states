@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ModelStates\Tests;
-
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\DefaultTransition;
 use Spatie\ModelStates\Events\StateChanged;
@@ -20,183 +18,156 @@ use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomTransition;
 
-class TransitionTest extends TestCase
-{
-    /** @test */
-    public function allowed_transition()
-    {
-        $model = TestModel::create([
-            'state' => StateA::class,
-        ]);
+it('allowed transition', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $model->state->transitionTo(StateB::class);
+    $model->state->transitionTo(StateB::class);
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateB::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateB::class);
+});
 
-    /** @test */
-    public function allowed_transition_with_morph_mame()
-    {
-        $model = TestModel::create([
-            'state' => StateA::class,
-        ]);
+it('allowed transition with morph mame', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $model->state->transitionTo(StateD::getMorphClass());
+    $model->state->transitionTo(StateD::getMorphClass());
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateD::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateD::class);
+});
 
-    /** @test */
-    public function allowed_transition_configured_with_multiple_from()
-    {
-        $modelA = TestModel::create([
-            'state' => StateA::class,
-        ]);
+it('allowed transition configured with multiple from', function () {
+    $modelA = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $modelA->state->transitionTo(StateC::getMorphClass());
+    $modelA->state->transitionTo(StateC::getMorphClass());
 
-        $modelA->refresh();
+    $modelA->refresh();
 
-        $this->assertInstanceOf(StateC::class, $modelA->state);
+    expect($modelA->state)->toBeInstanceOf(StateC::class);
 
-        $modelB = TestModel::create([
-            'state' => StateB::class,
-        ]);
+    $modelB = TestModel::create([
+        'state' => StateB::class,
+    ]);
 
-        $modelB->state->transitionTo(StateC::getMorphClass());
+    $modelB->state->transitionTo(StateC::getMorphClass());
 
-        $modelB->refresh();
+    $modelB->refresh();
 
-        $this->assertInstanceOf(StateC::class, $modelB->state);
-    }
+    expect($modelB->state)->toBeInstanceOf(StateC::class);
+});
 
-    /** @test */
-    public function allowed_transition_configured_from_array()
-    {
-        $model = TestModelWithTransitionsFromArray::create([
-            'state' => StateA::class,
-        ]);
+it('allowed transition configured from array', function () {
+    $model = TestModelWithTransitionsFromArray::create([
+        'state' => StateA::class,
+    ]);
 
-        $model->state->transitionTo(StateC::class);
+    $model->state->transitionTo(StateC::class);
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateC::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateC::class);
+});
 
-    /** @test */
-    public function disallowed_transition()
-    {
-        $model = TestModel::create([
-            'state' => StateB::class,
-        ]);
+it('disallowed transition', function () {
+    $model = TestModel::create([
+        'state' => StateB::class,
+    ]);
 
-        $this->expectException(TransitionNotFound::class);
+    $this->expectException(TransitionNotFound::class);
 
-        $model->state->transitionTo(StateA::class);
-    }
+    $model->state->transitionTo(StateA::class);
+});
 
-    /** @test */
-    public function custom_transition_test()
-    {
-        $model = TestModelWithCustomTransition::create([
-            'state' => StateX::class,
-        ]);
+it('custom transition test', function () {
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateX::class,
+    ]);
 
-        $message = 'my message';
+    $message = 'my message';
 
-        $model->state->transitionTo(StateY::class, $message);
+    $model->state->transitionTo(StateY::class, $message);
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateY::class, $model->state);
-        $this->assertEquals($message, $model->message);
-    }
+    expect($model->state)->toBeInstanceOf(StateY::class);
+    expect($model->message)->toEqual($message);
+});
 
-    /** @test */
-    public function directly_transition()
-    {
-        $model = TestModelWithCustomTransition::create([
-            'state' => StateX::class,
-        ]);
+it('directly transition', function () {
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateX::class,
+    ]);
 
-        $message = 'my message';
+    $message = 'my message';
 
-        $model->state->transition(new CustomTransition($model, $message));
+    $model->state->transition(new CustomTransition($model, $message));
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateY::class, $model->state);
-        $this->assertEquals($message, $model->message);
-    }
+    expect($model->state)->toBeInstanceOf(StateY::class);
+    expect($model->message)->toEqual($message);
+});
 
-    /** @test */
-    public function test_cannot_transition()
-    {
-        $model = TestModelWithCustomTransition::create([
-            'state' => StateX::class,
-        ]);
+it('test cannot transition', function () {
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateX::class,
+    ]);
 
-        $this->expectException(TransitionNotAllowed::class);
+    $this->expectException(TransitionNotAllowed::class);
 
-        $model->state->transition(new CustomInvalidTransition($model));
-    }
+    $model->state->transition(new CustomInvalidTransition($model));
+});
 
-    /** @test */
-    public function test_custom_transition_blocks_can_transition_to()
-    {
-        $model = TestModelWithCustomTransition::create([
-            'state' => StateX::class,
-        ]);
+it('test custom transition blocks can transition to', function () {
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateX::class,
+    ]);
 
-        $this->assertFalse($model->state->canTransitionTo(StateZ::class));
-    }
+    expect($model->state->canTransitionTo(StateZ::class))->toBeFalse();
+});
 
-    /** @test */
-    public function test_custom_transition_doesnt_block_can_transition_to()
-    {
-        $model = TestModelWithCustomTransition::create([
-            'state' => StateX::class,
-        ]);
+it('test custom transition doesnt block can transition to', function () {
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateX::class,
+    ]);
 
-        $this->assertTrue($model->state->canTransitionTo(StateY::class));
-    }
+    expect($model->state->canTransitionTo(StateY::class))->toBeTrue();
+});
 
-    /** @test */
-    public function event_is_triggered_after_transition()
-    {
-        Event::fake();
+it('event is triggered after transition', function () {
+    Event::fake();
 
-        $model = TestModel::create([
-            'state' => StateA::class,
-        ]);
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $model->state->transitionTo(StateB::class);
+    $model->state->transitionTo(StateB::class);
 
-        Event::assertDispatched(StateChanged::class, function (StateChanged $event) use ($model) {
-            return $event->transition instanceof DefaultTransition
-                && $event->initialState instanceof StateA
-                && $event->finalState instanceof StateB
-                && $event->model->is($model);
-        });
-    }
+    Event::assertDispatched(StateChanged::class, function (StateChanged $event) use ($model) {
+        return $event->transition instanceof DefaultTransition
+        && $event->initialState instanceof StateA
+        && $event->finalState instanceof StateB
+        && $event->model->is($model);
+    });
+});
 
-    /** @test */
-    public function can_transition_twice()
-    {
-        $model = TestModel::create([
-            'state' => StateA::class,
-        ]);
+it('can transition twice', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $model->state->transitionTo(StateB::class);
-        $model->state->transitionTo(StateC::class);
+    $model->state->transitionTo(StateB::class);
+    $model->state->transitionTo(StateC::class);
 
-        $model->refresh();
+    $model->refresh();
 
-        $this->assertInstanceOf(StateC::class, $model->state);
-    }
-}
+    expect($model->state)->toBeInstanceOf(StateC::class);
+});

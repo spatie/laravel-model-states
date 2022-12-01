@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ModelStates\Tests;
-
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
@@ -19,119 +17,86 @@ use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 
-class StateTest extends TestCase
-{
-    /** @test */
-    public function test_resolve_state_class()
-    {
-        $this->assertEquals(StateA::class, ModelState::resolveStateClass(StateA::class));
-        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::class));
-        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::getMorphClass()));
-        $this->assertEquals(StateC::class, ModelState::resolveStateClass(StateC::$name));
-        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::class));
-        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::getMorphClass()));
-        $this->assertEquals(StateD::class, ModelState::resolveStateClass(StateD::$name));
-        $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::class));
-        $this->assertEquals(StateE::class, ModelState::resolveStateClass(StateE::getMorphClass()));
-        $this->assertEquals(StateF::class, ModelState::resolveStateClass(StateF::getMorphClass()));
-        $this->assertEquals(StateG::class, ModelState::resolveStateClass(StateG::getMorphClass()));
-        $this->assertEquals(StateG::class, ModelState::resolveStateClass(StateG::getMorphClass()));
-        $this->assertEquals(StateH::class, ModelState::resolveStateClass(StateH::getMorphClass()));
-        $this->assertEquals(StateH::class, ModelState::resolveStateClass(StateH::getMorphClass()));
-    }
+it('resolve state class', function () {
+    expect(ModelState::resolveStateClass(StateA::class))->toEqual(StateA::class);
+    expect(ModelState::resolveStateClass(StateC::class))->toEqual(StateC::class);
+    expect(ModelState::resolveStateClass(StateC::getMorphClass()))->toEqual(StateC::class);
+    expect(ModelState::resolveStateClass(StateC::$name))->toEqual(StateC::class);
+    expect(ModelState::resolveStateClass(StateD::class))->toEqual(StateD::class);
+    expect(ModelState::resolveStateClass(StateD::getMorphClass()))->toEqual(StateD::class);
+    expect(ModelState::resolveStateClass(StateD::$name))->toEqual(StateD::class);
+    expect(ModelState::resolveStateClass(StateE::class))->toEqual(StateE::class);
+    expect(ModelState::resolveStateClass(StateE::getMorphClass()))->toEqual(StateE::class);
+    expect(ModelState::resolveStateClass(StateF::getMorphClass()))->toEqual(StateF::class);
+    expect(ModelState::resolveStateClass(StateG::getMorphClass()))->toEqual(StateG::class);
+    expect(ModelState::resolveStateClass(StateG::getMorphClass()))->toEqual(StateG::class);
+    expect(ModelState::resolveStateClass(StateH::getMorphClass()))->toEqual(StateH::class);
+    expect(ModelState::resolveStateClass(StateH::getMorphClass()))->toEqual(StateH::class);
+});
 
-    /** @test */
-    public function transitionable_states()
-    {
-        $modelA = TestModel::make(['state' => StateA::class]);
+it('transitionable states', function () {
+    $modelA = TestModel::make(['state' => StateA::class]);
 
-        $this->assertEquals([
+    expect(
+        [
             StateB::getMorphClass(),
             StateC::getMorphClass(),
             StateD::getMorphClass(),
             StateF::getMorphClass(),
-        ], $modelA->state->transitionableStates());
+        ]
+    )->toEqual($modelA->state->transitionableStates());
 
-        $modelB = TestModelWithDefault::create([
-            'state' => StateC::class,
-        ]);
+    $modelB = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
 
-        $this->assertEquals([], $modelB->state->transitionableStates());
-    }
+    expect($modelB->state->transitionableStates())->toEqual([]);
+});
 
-    /** @test */
-    public function transitionable_states_with_custom_transition()
-    {
-        $model = TestModelWithCustomTransition::create(['state' => StateX::class]);
-        $this->assertSame([StateY::class], $model->state->transitionableStates());
-    }
+it('transitionable states with custom transition', function () {
+    $model = TestModelWithCustomTransition::create(['state' => StateX::class]);
+    expect($model->state->transitionableStates())->toBe([StateY::class]);
+});
 
-    /** @test */
-    public function test_equals()
-    {
-        $modelA = TestModelWithDefault::create();
+it('equals', function () {
+    $modelA = TestModelWithDefault::create();
 
-        $modelB = TestModelWithDefault::create();
+    $modelB = TestModelWithDefault::create();
 
-        $this->assertTrue($modelA->state->equals($modelB->state));
+    expect($modelA->state->equals($modelB->state))->toBeTrue();
 
-        $modelA = TestModelWithDefault::create();
+    $modelA = TestModelWithDefault::create();
 
-        $modelB = TestModelWithDefault::create([
-            'state' => StateC::class,
-        ]);
+    $modelB = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
 
-        $this->assertFalse($modelA->state->equals($modelB->state));
+    expect($modelA->state->equals($modelB->state))->toBeFalse();
 
-        $this->assertTrue($modelA->state->equals(StateA::class));
-    }
+    expect($modelA->state->equals(StateA::class))->toBeTrue();
+});
 
-    /** @test */
-    public function test_can_transition_to()
-    {
-        $state = new StateA(new TestModel());
-        $state->setField('state');
+it('can transition to', function () {
+    $state = new StateA(new TestModel());
+    $state->setField('state');
 
-        $this->assertTrue($state->canTransitionTo(StateB::class));
-        $this->assertTrue($state->canTransitionTo(StateC::class));
-        $this->assertTrue($state->canTransitionTo(StateF::class));
+    expect($state->canTransitionTo(StateB::class))->toBeTrue();
+    expect($state->canTransitionTo(StateC::class))->toBeTrue();
+    expect($state->canTransitionTo(StateF::class))->toBeTrue();
 
-        $state = new StateB(new TestModel());
-        $state->setField('state');
+    $state = new StateB(new TestModel());
+    $state->setField('state');
 
-        $this->assertFalse($state->canTransitionTo(StateB::class));
-        $this->assertFalse($state->canTransitionTo(StateA::class));
-    }
+    expect($state->canTransitionTo(StateB::class))->toBeFalse();
+    expect($state->canTransitionTo(StateA::class))->toBeFalse();
+});
 
-    /** @test */
-    public function test_get_states()
-    {
-        $states = TestModelWithDefault::getStates();
+it('get states', function () {
+    $states = TestModelWithDefault::getStates();
 
-        $this->assertEquals(
-            [
-                'state' => [
-                    StateA::getMorphClass(),
-                    StateB::getMorphClass(),
-                    StateC::getMorphClass(),
-                    StateD::getMorphClass(),
-                    StateE::getMorphClass(),
-                    StateF::getMorphClass(),
-                    StateG::getMorphClass(),
-                    StateH::getMorphClass(),
-                ],
-            ],
-            $states->toArray()
-        );
-    }
-
-    /** @test */
-    public function test_get_states_for()
-    {
-        $states = TestModelWithDefault::getStatesFor('state');
-
-        $this->assertEquals(
-            [
+    expect(
+        [
+            'state' => [
                 StateA::getMorphClass(),
                 StateB::getMorphClass(),
                 StateC::getMorphClass(),
@@ -141,51 +106,60 @@ class StateTest extends TestCase
                 StateG::getMorphClass(),
                 StateH::getMorphClass(),
             ],
-            $states->toArray()
-        );
-    }
+        ],
+    )->toEqual($states->toArray());
+});
 
-    /** @test */
-    public function test_get_default_states()
-    {
-        $states = TestModelWithDefault::getDefaultStates();
+it('get states for', function () {
+    $states = TestModelWithDefault::getStatesFor('state');
 
-        $this->assertEquals(
-            [
-                'state' => StateA::getMorphClass(),
-            ],
-            $states->toArray()
-        );
-    }
+    expect(
+        [
+            StateA::getMorphClass(),
+            StateB::getMorphClass(),
+            StateC::getMorphClass(),
+            StateD::getMorphClass(),
+            StateE::getMorphClass(),
+            StateF::getMorphClass(),
+            StateG::getMorphClass(),
+            StateH::getMorphClass(),
+        ],
+    )->toEqual($states->toArray());
+});
 
-    /** @test */
-    public function test_get_default_states_for()
-    {
-        $defaultState = TestModelWithDefault::getDefaultStateFor('state');
+it('get default states', function () {
+    $states = TestModelWithDefault::getDefaultStates();
 
-        $this->assertEquals(StateA::getMorphClass(), $defaultState);
-    }
+    expect(
+        [
+            'state' => StateA::getMorphClass(),
+        ],
+    )->toEqual($states->toArray());
+});
 
-    /** @test */
-    public function test_make()
-    {
-        $stateA = ModelState::make(StateA::class, new TestModel());
+it('get default states for', function () {
+    $defaultState = TestModelWithDefault::getDefaultStateFor('state');
 
-        $this->assertInstanceOf(StateA::class, $stateA);
+    expect($defaultState)->toEqual(StateA::getMorphClass());
+});
 
-        $stateC = ModelState::make('C', new TestModel());
+it('make', function () {
+    $stateA = ModelState::make(StateA::class, new TestModel());
 
-        $this->assertInstanceOf(StateC::class, $stateC);
+    expect($stateA)->toBeInstanceOf(StateA::class);
 
-        $stateD = ModelState::make(4, new TestModel());
+    $stateC = ModelState::make('C', new TestModel());
 
-        $this->assertInstanceOf(StateD::class, $stateD);
-    }
+    expect($stateC)->toBeInstanceOf(StateC::class);
 
-    /** @test */
-    public function test_all()
-    {
-        $this->assertEquals([
+    $stateD = ModelState::make(4, new TestModel());
+
+    expect($stateD)->toBeInstanceOf(StateD::class);
+});
+
+it('all', function () {
+    expect(
+        [
             StateA::getMorphClass() => StateA::class,
             StateB::getMorphClass() => StateB::class,
             StateC::getMorphClass() => StateC::class,
@@ -194,53 +168,43 @@ class StateTest extends TestCase
             StateF::getMorphClass() => StateF::class,
             StateG::getMorphClass() => StateG::class,
             StateH::getMorphClass() => StateH::class,
-        ], ModelState::all()->toArray());
-    }
+        ]
+    )->toEqual(ModelState::all()->toArray());
+});
 
-    /** @test */
-    public function default_is_set_when_constructing_a_new_model()
-    {
-        $model = new TestModel();
+it('default is set when constructing a new model', function () {
+    $model = new TestModel();
 
-        $this->assertTrue($model->state->equals(StateA::class));
-    }
+    expect($model->state->equals(StateA::class))->toBeTrue();
+});
 
-    /** @test */
-    public function default_is_set_when_creating_a_new_model()
-    {
-        $model = TestModel::create();
+it('default is set when creating a new model', function () {
+    $model = TestModel::create();
 
-        $this->assertTrue($model->state->equals(StateA::class));
-    }
+    expect($model->state->equals(StateA::class))->toBeTrue();
+});
 
-    /** @test */
-    public function get_model()
-    {
-        $stateA = ModelState::make(StateA::class, new TestModel());
+it('get model', function () {
+    $stateA = ModelState::make(StateA::class, new TestModel());
 
-        $this->assertInstanceOf(TestModel::class, $stateA->getModel());
-    }
+    expect($stateA->getModel())->toBeInstanceOf(TestModel::class);
+});
 
-    /** @test */
-    public function get_field()
-    {
-        $model = TestModel::create();
+it('get field', function () {
+    $model = TestModel::create();
 
-        $this->assertEquals('state', $model->state->getField());
-    }
+    expect($model->state->getField())->toEqual('state');
+});
 
-    /** @test */
-    public function can_override_default_transition()
-    {
-        Event::fake();
+it('can override default transition', function () {
+    Event::fake();
 
-        config()->set(
-            'model-states.default_transition',
-            \Spatie\ModelStates\Tests\Dummy\Transitions\CustomDefaultTransition::class
-        );
+    config()->set(
+        'model-states.default_transition',
+        \Spatie\ModelStates\Tests\Dummy\Transitions\CustomDefaultTransition::class
+    );
 
-        TestModel::create()->state->transitionTo(StateB::class);
+    TestModel::create()->state->transitionTo(StateB::class);
 
-        Event::assertNotDispatched(TestModelUpdatingEvent::class);
-    }
-}
+    Event::assertNotDispatched(TestModelUpdatingEvent::class);
+});

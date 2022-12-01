@@ -26,6 +26,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^6.23 | ^7.0 | ^8.0",
+        "pestphp/pest": "^1.22",
         "phpunit/phpunit": "^9.4",
         "symfony/var-dumper": "^5.3 | ^6.0"
     },
@@ -40,11 +41,14 @@
         }
     },
     "scripts": {
-        "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

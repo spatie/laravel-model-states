@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ModelStates\Tests;
-
 use Illuminate\Support\Facades\DB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
@@ -11,155 +9,130 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 
-class StateCastingTest extends TestCase
-{
-    /** @test */
-    public function state_without_alias_is_serialized_on_create()
-    {
-        $model = TestModel::create([
-            'state' => StateA::class,
-        ]);
+it('state without alias is serialized on create', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
 
-        $this->assertInstanceOf(StateA::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateA::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateA::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateA::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function custom_registered_state_without_alias_is_serialized_on_create()
-    {
-        $model = TestModel::create([
-            'state' => StateF::class,
-        ]);
+it('custom registered state without alias is serialized on create', function () {
+    $model = TestModel::create([
+        'state' => StateF::class,
+    ]);
 
-        $this->assertInstanceOf(StateF::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateF::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateF::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateF::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function state_with_alias_is_serialized_on_create_when_using_class_name()
-    {
-        $model = TestModel::create([
-            'state' => StateC::class,
-        ]);
+it('state with alias is serialized on create when using class name', function () {
+    $model = TestModel::create([
+        'state' => StateC::class,
+    ]);
 
-        $this->assertInstanceOf(StateC::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateC::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateC::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateC::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function custom_registered_state_with_alias_is_serialized_on_create_when_using_class_name()
-    {
-        $model = TestModel::create([
-            'state' => StateG::class,
-        ]);
+it('custom registered state with alias is serialized on create when using class name', function () {
+    $model = TestModel::create([
+        'state' => StateG::class,
+    ]);
 
-        $this->assertInstanceOf(StateG::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateG::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateG::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateG::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function state_with_alias_is_serialized_on_create_when_using_alias()
-    {
-        $model = TestModel::create([
-            'state' => StateC::getMorphClass(),
-        ]);
+it('state with alias is serialized on create when using alias', function () {
+    $model = TestModel::create([
+        'state' => StateC::getMorphClass(),
+    ]);
 
-        $this->assertInstanceOf(StateC::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateC::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateC::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateC::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function custom_registered_state_with_alias_is_serialized_on_create_when_using_alias()
-    {
-        $model = TestModel::create([
-            'state' => StateG::getMorphClass(),
-        ]);
+it('custom registered state with alias is serialized on create when using alias', function () {
+    $model = TestModel::create([
+        'state' => StateG::getMorphClass(),
+    ]);
 
-        $this->assertInstanceOf(StateG::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateG::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateG::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateG::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function state_is_immediately_unserialized_on_property_set()
-    {
-        $model = new TestModel();
+it('state is immediately unserialized on property set', function () {
+    $model = new TestModel();
 
-        $model->state = StateA::class;
+    $model->state = StateA::class;
 
-        $this->assertInstanceOf(StateA::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateA::class);
+});
 
-    /** @test */
-    public function state_is_immediately_unserialized_on_model_construction()
-    {
-        $model = new TestModel([
-            'state' => StateA::class,
-        ]);
+it('state is immediately unserialized on model construction', function () {
+    $model = new TestModel([
+        'state' => StateA::class,
+    ]);
 
-        $this->assertInstanceOf(StateA::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateA::class);
+});
 
-    /** @test */
-    public function state_is_unserialized_on_fetch()
-    {
-        DB::table((new TestModel())->getTable())->insert([
-            'id' => 1,
-            'state' => StateA::getMorphClass(),
-        ]);
+it('state is unserialized on fetch', function () {
+    DB::table((new TestModel())->getTable())->insert([
+        'id' => 1,
+        'state' => StateA::getMorphClass(),
+    ]);
 
-        $model = TestModel::find(1);
+    $model = TestModel::find(1);
 
-        $this->assertInstanceOf(StateA::class, $model->state);
-    }
+    expect($model->state)->toBeInstanceOf(StateA::class);
+});
 
-    /** @test */
-    public function default_state_is_set_when_none_provided()
-    {
-        $model = (new class() extends TestModel {
-            public function registerStates(): void
-            {
-                $this
-                    ->addState('state', ModelState::class)
-                    ->default(StateA::class);
-            }
-        })->create();
+it('default state is set when none provided', function () {
+    $model = (new class() extends TestModel {
+        public function registerStates(): void
+        {
+        $this
+            ->addState('state', ModelState::class)
+            ->default(StateA::class);
+        }
+    })->create();
 
-        $this->assertInstanceOf(StateA::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateA::class);
 
-        $this->assertDatabaseHas($model->getTable(), [
-            'state' => StateA::getMorphClass(),
-        ]);
-    }
+    $this->assertDatabaseHas($model->getTable(), [
+        'state' => StateA::getMorphClass(),
+    ]);
+});
 
-    /** @test */
-    public function field_is_always_populated_when_set()
-    {
-        $model = new TestModel();
+it('field is always populated when set', function () {
+    $model = new TestModel();
 
-        $this->assertInstanceOf(StateA::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateA::class);
 
-        $model->state = new StateB($model);
+    $model->state = new StateB($model);
 
-        $this->assertInstanceOf(StateB::class, $model->state);
+    expect($model->state)->toBeInstanceOf(StateB::class);
 
-        $this->assertEquals('state', $model->state->getField());
-    }
-}
+    expect($model->state->getField())->toEqual('state');
+});
