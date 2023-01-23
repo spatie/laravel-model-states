@@ -2,6 +2,25 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.3 - 2023-01-23
+
+### What's Changed
+
+- Recommend not to use hypens in the name by @barclaymichael in https://github.com/spatie/laravel-model-states/pull/210
+- Add Dependabot Automation by @patinthehat in https://github.com/spatie/laravel-model-states/pull/218
+- Bump actions/checkout from 2 to 3 by @dependabot in https://github.com/spatie/laravel-model-states/pull/219
+- Bump actions/cache from 2 to 3 by @dependabot in https://github.com/spatie/laravel-model-states/pull/220
+- Add PHP 8.2 Support by @patinthehat in https://github.com/spatie/laravel-model-states/pull/221
+- Update deps for laravel 10 by @hailam in https://github.com/spatie/laravel-model-states/pull/223
+
+### New Contributors
+
+- @barclaymichael made their first contribution in https://github.com/spatie/laravel-model-states/pull/210
+- @dependabot made their first contribution in https://github.com/spatie/laravel-model-states/pull/219
+- @hailam made their first contribution in https://github.com/spatie/laravel-model-states/pull/223
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.2...2.4.3
+
 ## 2.4.2 - 2022-08-01
 
 ### What's Changed
@@ -101,11 +120,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
