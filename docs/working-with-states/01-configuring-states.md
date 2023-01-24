@@ -83,23 +83,6 @@ abstract class PaymentState extends State
 }
 ```
 
-If you're using PHP 8 or higher, you can also configure your state using attributes:
-
-```php
-use Spatie\ModelStates\Attributes\AllowTransition;
-use Spatie\ModelStates\State;
-
-#[
-    AllowTransition(Pending::class, Paid::class),
-    AllowTransition(Pending::class, Failed::class),
-    DefaultState(Pending::class),
-]
-abstract class PaymentState extends State
-{
-    abstract public function color(): string;
-}
-```
-
 ## Manually registering states
 If you want to place your concrete state implementations in a different directory, you may do so and register them manually:
 
@@ -125,6 +108,27 @@ abstract class PaymentState extends State
             ->registerState([ExampleOne::class, ExampleTwo::class])
         ;
     }
+}
+```
+
+## Configuring states using attributes
+
+If you're using PHP 8 or higher, you can also configure your state using attributes:
+
+```php
+use Spatie\ModelStates\Attributes\AllowTransition;
+use Spatie\ModelStates\Attributes\RegisterState;use Spatie\ModelStates\State;use const Grpc\STATUS_CANCELLED;
+
+#[
+    AllowTransition(Pending::class, Paid::class),
+    AllowTransition(Pending::class, Failed::class),
+    DefaultState(Pending::class),
+    RegisterState(Cancelled::class),
+    RegisterState([ExampleOne::class, ExampleTwo::class]),
+]
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
 }
 ```
 

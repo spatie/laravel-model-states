@@ -35,7 +35,17 @@ class AttributeLoader
 
             $stateConfig->default($defaultStateAttribute->defaultStateClass);
         }
-
-        return $stateConfig;
+	
+	    $registerStateAttributes = $this->reflectionClass->getAttributes(RegisterState::class);
+		
+		foreach($registerStateAttributes as $attribute) {
+			/** @var \Spatie\ModelStates\Attributes\RegisterState $registerStateAttribute */
+			$registerStateAttribute = $attribute->newInstance();
+			
+			$stateConfig->registerState($registerStateAttribute->stateClass);
+		}
+	
+	
+	    return $stateConfig;
     }
 }
