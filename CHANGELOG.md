@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.4 - 2023-01-24
+
+### What's Changed
+
+- Add missing `RegisterState` Attribute by @ralphjsmit in https://github.com/spatie/laravel-model-states/pull/224
+
+### New Contributors
+
+- @ralphjsmit made their first contribution in https://github.com/spatie/laravel-model-states/pull/224
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.3...2.4.4
+
 ## 2.4.3 - 2023-01-23
 
 ### What's Changed
@@ -121,11 +133,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
