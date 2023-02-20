@@ -17,40 +17,35 @@ class QueryBuilderTest extends TestCase
             'state' => StateC::class,
         ]);
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereState('state', StateC::class)
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereState('state', StateC::getMorphClass())
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereState('state', [StateA::class, StateC::class])
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereState('state', StateA::class)
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereState('state', [StateA::class, StateB::class])
                 ->where('id', $model->id)
@@ -65,40 +60,35 @@ class QueryBuilderTest extends TestCase
             'state' => StateC::class,
         ]);
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereNotState('state', StateC::class)
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereNotState('state', StateC::getMorphClass())
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereNotState('state', [StateA::class, StateC::class])
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereNotState('state', StateA::class)
                 ->where('id', $model->id)
                 ->count()
         );
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereNotState('state', [StateA::class, StateB::class])
                 ->where('id', $model->id)
@@ -112,8 +102,7 @@ class QueryBuilderTest extends TestCase
         $modelOne = TestModel::create([ 'state' => StateB::class ]);
         $modelTwo = TestModel::create([ 'state' => StateC::class ]);
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereState('state', StateA::class)
                 ->orWhereState('state', StateC::class)
@@ -121,8 +110,7 @@ class QueryBuilderTest extends TestCase
                 ->count()
         );
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereState('state', StateA::class)
                 ->orWhereState('state', StateC::class)
@@ -130,8 +118,7 @@ class QueryBuilderTest extends TestCase
                 ->count()
         );
 
-        $this->assertEquals(
-            2,
+        expect(2)->toEqual(
             TestModel::query()
                 ->whereState('state', StateB::class)
                 ->orWhereState('state', StateC::class)
@@ -145,8 +132,7 @@ class QueryBuilderTest extends TestCase
         $modelOne = TestModel::create([ 'state' => StateB::class ]);
         $modelTwo = TestModel::create([ 'state' => StateC::class ]);
 
-        $this->assertEquals(
-            1,
+        expect(1)->toEqual(
             TestModel::query()
                 ->whereState('state', StateA::class)
                 ->orWhereNotState('state', StateC::class)
@@ -154,8 +140,7 @@ class QueryBuilderTest extends TestCase
                 ->count()
         );
 
-        $this->assertEquals(
-            0,
+        expect(0)->toEqual(
             TestModel::query()
                 ->whereState('state', StateA::class)
                 ->orWhereNotState('state', StateC::class)
@@ -163,8 +148,7 @@ class QueryBuilderTest extends TestCase
                 ->count()
         );
 
-        $this->assertEquals(
-            2,
+        expect(2)->toEqual(
             TestModel::query()
                 ->whereNotState('state', StateD::class)
                 ->orWhereNotState('state', StateA::class)

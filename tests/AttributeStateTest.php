@@ -1,7 +1,5 @@
 <?php
 
-namespace Spatie\ModelStates\Tests;
-
 use Spatie\ModelStates\Tests\Dummy\AttributeState\AnotherDirectory\AttributeStateC;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\AnotherDirectory\AttributeStateD;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\AnotherDirectory\AttributeStateE;
@@ -10,57 +8,39 @@ use Spatie\ModelStates\Tests\Dummy\AttributeState\AttributeStateB;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\AttributeStateTransition;
 use Spatie\ModelStates\Tests\Dummy\AttributeState\TestModelWithAttributeState;
 
-class AttributeStateTest extends TestCase
-{
-    /** @test */
-    public function test_default()
-    {
-        if (PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Not PHP 8');
+it('test default', function () {
+    $model = new TestModelWithAttributeState();
 
-            return;
-        }
+    expect($model->state->equals(AttributeStateA::class))->toBeTrue();
+})->skip(PHP_VERSION_ID < 80000, 'Not PHP 8');
 
-        $model = new TestModelWithAttributeState();
+it('test allowed transition', function () {
+    $model = new TestModelWithAttributeState();
 
-        $this->assertTrue($model->state->equals(AttributeStateA::class));
-    }
+    $model->state->transitionTo(AttributeStateB::class);
 
-    /** @test */
-    public function test_allowed_transition()
-    {
-        if (PHP_VERSION_ID < 80000) {
-            $this->markTestSkipped('Not PHP 8');
+    expect($model->state->equals(AttributeStateB::class))->toBeTrue();
+    expect(AttributeStateTransition::$transitioned)->toBeTrue();
+})->skip(PHP_VERSION_ID < 80000, 'Not PHP 8');
 
-            return;
-        }
+it('should allow transition', function () {
+    $model = new TestModelWithAttributeState();
 
-        $model = new TestModelWithAttributeState();
+    $model->state->transitionTo(AttributeStateB::class);
 
-        $model->state->transitionTo(AttributeStateB::class);
+    expect($model->state->equals(AttributeStateB::class))->toBeTrue();
+    expect(AttributeStateTransition::$transitioned)->toBeTrue();
+})->skip(PHP_VERSION_ID < 80000, 'Not PHP 8');
 
-        $this->assertTrue($model->state->equals(AttributeStateB::class));
-        $this->assertTrue(AttributeStateTransition::$transitioned);
-    }
-	
-	/** @test */
-	public function test_registered_states()
-	{
-		if (PHP_VERSION_ID < 80000) {
-			$this->markTestSkipped('Not PHP 8');
-			
-			return;
-		}
-		
-		$model = new TestModelWithAttributeState();
-		
-		$this->assertSame([AttributeStateC::class, AttributeStateD::class, AttributeStateE::class], AttributeStateA::config()->registeredStates);
-		$this->assertSame([AttributeStateC::class, AttributeStateD::class, AttributeStateE::class], AttributeStateC::config()->registeredStates);
-		
-		$this->assertTrue($model->state->equals(AttributeStateA::class));
-		
-		$model->state->transitionTo(AttributeStateC::class);
-		
-		$this->assertTrue($model->state->equals(AttributeStateC::class));
-	}
-}
+it('should register states', function () {
+    $model = new TestModelWithAttributeState();
+
+    expect(AttributeStateA::config()->registeredStates)->toEqual([AttributeStateC::class, AttributeStateD::class, AttributeStateE::class]);
+    expect(AttributeStateC::config()->registeredStates)->toEqual([AttributeStateC::class, AttributeStateD::class, AttributeStateE::class]);
+
+    expect($model->state->equals(AttributeStateA::class))->toBeTrue();
+
+    $model->state->transitionTo(AttributeStateC::class);
+
+    expect($model->state->equals(AttributeStateC::class))->toBeTrue();
+})->skip(PHP_VERSION_ID < 80000, 'Not PHP 8');
