@@ -298,8 +298,6 @@ abstract class State implements Castable, JsonSerializable
 
         $files = scandir($directory);
 
-        unset($files[0], $files[1]);
-
         $namespace = $reflection->getNamespaceName();
 
         $resolvedStates = [];
@@ -307,6 +305,10 @@ abstract class State implements Castable, JsonSerializable
         $stateConfig = static::config();
 
         foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
             ['filename' => $className] = pathinfo($file);
 
             /** @var \Spatie\ModelStates\State|mixed $stateClass */
