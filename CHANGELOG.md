@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.4.6 - 2023-04-17
+
+### What's Changed
+
+- Don't assume scandir() always returns current and parent directory first by @sebastiandedeyne in https://github.com/spatie/laravel-model-states/pull/228
+
+### New Contributors
+
+- @sebastiandedeyne made their first contribution in https://github.com/spatie/laravel-model-states/pull/228
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.5...2.4.6
+
 ## 2.4.5 - 2023-02-20
 
 ### What's Changed
@@ -147,11 +159,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
