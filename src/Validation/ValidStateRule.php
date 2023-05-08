@@ -47,6 +47,6 @@ class ValidStateRule implements Rule
 
     public function message(): string
     {
-        return 'This value is invalid';
+        return trans('model-states::validation.invalid');
     }
 }

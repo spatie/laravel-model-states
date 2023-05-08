@@ -11,6 +11,7 @@ class ModelStatesServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-model-states')
+            ->hasTranslations()
             ->hasConfigFile();
     }
 }
