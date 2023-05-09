@@ -55,11 +55,11 @@ class ValidStateTransitionRule implements Rule
     {
         if ($this->model->{$this->column} && ($transitionable = $this->model->{$this->column}->transitionableStates())) {
 
-            return trans('model-states::transition_not_allowed_with_allowed', [
+            return trans('model-states::validation.transition_not_allowed_with_allowed', [
                 'transitions' => implode(', ', $transitionable),
             ]);
         } else {
-            return trans('model-states::transition_not_allowed');
+            return trans('model-states::validation.transition_not_allowed');
         }
     }
 }
