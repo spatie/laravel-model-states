@@ -111,6 +111,8 @@ abstract class PaymentState extends State
 }
 ```
 
+In case you want to register all your states manually, you can disable the automatic registration of states by calling `skipAutoRegisterStates()`!
+
 ## Configuring states using attributes
 
 If you're using PHP 8 or higher, you can also configure your state using attributes:
