@@ -114,6 +114,7 @@ it('get states', function () {
 it('get states without auto-registration', function () {
     $states = TestModelWithoutAutoRegistration::getStates();
 
+    // Expectation is for StateD NOT to be registered as it is in the folder but never loaded
     expect(
         [
             'state' => [
