@@ -18,6 +18,8 @@ class StateConfig
     /** @var string[] */
     public array $registeredStates = [];
 
+    public bool $autoRegisterStates = true;
+
     public function __construct(
         string $baseStateClass
     ) {
@@ -115,6 +117,18 @@ class StateConfig
         $this->registeredStates[] = $stateClass;
 
         return $this;
+    }
+
+    public function autoRegisterStates(bool $autoRegisterStates = true): StateConfig
+    {
+        $this->autoRegisterStates = $autoRegisterStates;
+
+        return $this;
+    }
+
+    public function skipAutoRegisterStates(): StateConfig
+    {
+        return $this->autoRegisterStates(false);
     }
 
     /**

@@ -16,6 +16,7 @@ use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithoutAutoRegistration;
 
 it('resolve state class', function () {
     expect(ModelState::resolveStateClass(StateA::class))->toEqual(StateA::class);
@@ -105,6 +106,20 @@ it('get states', function () {
                 StateF::getMorphClass(),
                 StateG::getMorphClass(),
                 StateH::getMorphClass(),
+            ],
+        ],
+    )->toEqual($states->toArray());
+});
+
+it('get states without auto-registration', function () {
+    $states = TestModelWithoutAutoRegistration::getStates();
+
+    expect(
+        [
+            'state' => [
+                \Spatie\ModelStates\Tests\Dummy\ModelStatesWithoutAutoRegister\AnotherDirectory\StateF::getMorphClass(),
+                \Spatie\ModelStates\Tests\Dummy\ModelStatesWithoutAutoRegister\StateA::getMorphClass(),
+                \Spatie\ModelStates\Tests\Dummy\ModelStatesWithoutAutoRegister\StateB::getMorphClass(),
             ],
         ],
     )->toEqual($states->toArray());

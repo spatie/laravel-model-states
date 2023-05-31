@@ -293,9 +293,11 @@ abstract class State implements Castable, JsonSerializable
     private static function resolveStateMapping(): array
     {
         $resolvedStates = [];
-        
-        if (empty($stateConfig->registeredStates)){
-        
+
+        $stateConfig = static::config();
+
+        if ($stateConfig->autoRegisterStates) {
+
             $reflection = new ReflectionClass(static::class);
 
             ['dirname' => $directory] = pathinfo($reflection->getFileName());
@@ -306,7 +308,6 @@ abstract class State implements Castable, JsonSerializable
 
 
 
-            $stateConfig = static::config();
 
             foreach ($files as $file) {
                 if ($file === '.' || $file === '..') {

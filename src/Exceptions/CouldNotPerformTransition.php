@@ -3,6 +3,7 @@
 namespace Spatie\ModelStates\Exceptions;
 
 use Exception;
+use Spatie\ModelStates\Transition;
 
 class CouldNotPerformTransition extends Exception
 {
