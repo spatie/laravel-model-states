@@ -292,33 +292,38 @@ abstract class State implements Castable, JsonSerializable
 
     private static function resolveStateMapping(): array
     {
-        $reflection = new ReflectionClass(static::class);
-
-        ['dirname' => $directory] = pathinfo($reflection->getFileName());
-
-        $files = scandir($directory);
-
-        $namespace = $reflection->getNamespaceName();
-
         $resolvedStates = [];
+        
+        if (empty($stateConfig->registeredStates)){
+        
+            $reflection = new ReflectionClass(static::class);
 
-        $stateConfig = static::config();
+            ['dirname' => $directory] = pathinfo($reflection->getFileName());
 
-        foreach ($files as $file) {
-            if ($file === '.' || $file === '..') {
-                continue;
+            $files = scandir($directory);
+
+            $namespace = $reflection->getNamespaceName();
+
+
+
+            $stateConfig = static::config();
+
+            foreach ($files as $file) {
+                if ($file === '.' || $file === '..') {
+                    continue;
+                }
+
+                ['filename' => $className] = pathinfo($file);
+
+                /** @var \Spatie\ModelStates\State|mixed $stateClass */
+                $stateClass = $namespace . '\\' . $className;
+
+                if (! is_subclass_of($stateClass, $stateConfig->baseStateClass)) {
+                    continue;
+                }
+
+                $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
             }
-
-            ['filename' => $className] = pathinfo($file);
-
-            /** @var \Spatie\ModelStates\State|mixed $stateClass */
-            $stateClass = $namespace . '\\' . $className;
-
-            if (! is_subclass_of($stateClass, $stateConfig->baseStateClass)) {
-                continue;
-            }
-
-            $resolvedStates[$stateClass::getMorphClass()] = $stateClass;
         }
 
         foreach ($stateConfig->registeredStates as $stateClass) {
