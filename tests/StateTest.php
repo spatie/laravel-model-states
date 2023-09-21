@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Event;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
@@ -14,6 +16,7 @@ use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitions;
+use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitionsWithNoRegisteredStates;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
@@ -229,4 +232,11 @@ it('should allow all transitions', function () {
         ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
         ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
 
+});
+
+it('should throw exception when allowing all transitions when there are no registered states', function () {
+    $this->expectException(InvalidConfig::class);
+    $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates::class);
+
+    TestModelAllowAllTransitionsWithNoRegisteredStates::create();
 });

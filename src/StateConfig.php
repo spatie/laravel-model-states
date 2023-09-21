@@ -117,8 +117,15 @@ class StateConfig
         return $this;
     }
 
+    /**
+     * @throws InvalidConfig
+     */
     public function allowAllTransitions(): StateConfig
     {
+        if (empty($this->registeredStates)) {
+            throw new InvalidConfig('No states registered for ' . $this->baseStateClass);
+        }
+
         $this->allowTransitions(collect($this->registeredStates)->crossJoin($this->registeredStates)->toArray());
 
         return $this;
