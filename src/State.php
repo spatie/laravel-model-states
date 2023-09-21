@@ -8,6 +8,7 @@ use JsonSerializable;
 use ReflectionClass;
 use Spatie\ModelStates\Attributes\AttributeLoader;
 use Spatie\ModelStates\Events\StateChanged;
+use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
@@ -169,8 +170,9 @@ abstract class State implements Castable, JsonSerializable
     }
 
     /**
-     * @param  Transition  $transition
+     * @param Transition $transition
      * @return  \Illuminate\Database\Eloquent\Model
+     * @throws ClassDoesNotExtendBaseClass
      */
     public function transition(Transition $transition)
     {
@@ -183,7 +185,13 @@ abstract class State implements Castable, JsonSerializable
         $model = app()->call([$transition, 'handle']);
         $model->{$this->field}->setField($this->field);
 
-        event(new StateChanged(
+        $stateChangedEvent = $this->stateConfig->stateChangedEvent;
+
+        if ($stateChangedEvent !== StateChanged::class && get_parent_class($stateChangedEvent) !== StateChanged::class) {
+            throw ClassDoesNotExtendBaseClass::make($stateChangedEvent, StateChanged::class);
+        }
+
+        event(new $stateChangedEvent(
             $this,
             $model->{$this->field},
             $transition,
