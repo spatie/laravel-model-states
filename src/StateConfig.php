@@ -117,6 +117,13 @@ class StateConfig
         return $this;
     }
 
+    public function allowAllTransitions(): StateConfig
+    {
+        $this->allowTransitions(collect($this->registeredStates)->crossJoin($this->registeredStates)->toArray());
+
+        return $this;
+    }
+
     /**
      * @param string|\Spatie\ModelStates\State $from
      * @param string|\Spatie\ModelStates\State $to

@@ -13,6 +13,7 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateH;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitions;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
@@ -207,4 +208,25 @@ it('can override default transition', function () {
     TestModel::create()->state->transitionTo(StateB::class);
 
     Event::assertNotDispatched(TestModelUpdatingEvent::class);
+});
+
+it('should allow all transitions', function () {
+    $model = TestModelAllowAllTransitions::create();
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
+    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class);
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
+    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class);
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
 });
