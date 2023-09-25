@@ -111,6 +111,27 @@ abstract class PaymentState extends State
 }
 ```
 
+### Registering custom StateChanged event
+By default, when a state is changed, the `StateChanged` event is fired. If you want to use a custom event, you can register it in the `config` method:
+
+```php
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
+
+use Your\Concrete\State\Event\CustomStateChanged;
+
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->stateChangedEvent(CustomStateChanged::class)
+        ;
+    }
+}
+```
 ## Configuring states using attributes
 
 If you're using PHP 8 or higher, you can also configure your state using attributes:

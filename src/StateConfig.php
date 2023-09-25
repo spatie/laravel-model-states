@@ -2,6 +2,7 @@
 
 namespace Spatie\ModelStates;
 
+use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
 class StateConfig
@@ -17,6 +18,8 @@ class StateConfig
 
     /** @var string[] */
     public array $registeredStates = [];
+
+    public string $stateChangedEvent = StateChanged::class;
 
     public function __construct(
         string $baseStateClass
@@ -113,6 +116,13 @@ class StateConfig
         }
 
         $this->registeredStates[] = $stateClass;
+
+        return $this;
+    }
+
+    public function stateChangedEvent(string $event): StateConfig
+    {
+        $this->stateChangedEvent = $event;
 
         return $this;
     }

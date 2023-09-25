@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates;
+use Spatie\ModelStates\Events\StateChanged;
+use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
+use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomEventModelStateB;
+use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomInvalidEventModelStateB;
+use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomInvalidStateChangedEvent;
+use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomStateChangedEvent;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\ModelState;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
@@ -17,6 +23,8 @@ use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitions;
 use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitionsWithNoRegisteredStates;
+use Spatie\ModelStates\Tests\Dummy\TestModelCustomEvent;
+use Spatie\ModelStates\Tests\Dummy\TestModelCustomInvalidEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
@@ -211,6 +219,37 @@ it('can override default transition', function () {
     TestModel::create()->state->transitionTo(StateB::class);
 
     Event::assertNotDispatched(TestModelUpdatingEvent::class);
+});
+
+it('can emit a custom state changed event', function () {
+    Event::fake();
+
+    $model = TestModelCustomEvent::create();
+
+    $model->state->transitionTo(CustomEventModelStateB::class);
+
+    Event::assertDispatched(CustomStateChangedEvent::class);
+});
+
+it('emits the standard state changed event', function () {
+    Event::fake();
+
+    $model = TestModel::create();
+
+    $model->state->transitionTo(StateB::class);
+
+    Event::assertDispatched(StateChanged::class);
+});
+
+it('should throw exception when custom state changed event does not extend StateChanged', function () {
+    Event::fake();
+
+    $model = TestModelCustomInvalidEvent::create();
+
+    $this->expectException(ClassDoesNotExtendBaseClass::class);
+    $this->expectExceptionMessage('Class ' . CustomInvalidStateChangedEvent::class . ' does not extend the `' . StateChanged::class . '` base class.');
+
+    $model->state->transitionTo(CustomInvalidEventModelStateB::class);
 });
 
 it('should allow all transitions', function () {
