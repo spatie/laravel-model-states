@@ -2,6 +2,19 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.5.0 - 2023-09-25
+
+### What's Changed
+
+- Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/laravel-model-states/pull/236
+- Feature/Allow to set custom StateChanged event by @fmeccanici in https://github.com/spatie/laravel-model-states/pull/237
+
+### New Contributors
+
+- @fmeccanici made their first contribution in https://github.com/spatie/laravel-model-states/pull/237
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.4.6...2.5.0
+
 ## 2.4.6 - 2023-04-17
 
 ### What's Changed
@@ -160,11 +173,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
