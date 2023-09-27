@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Event;
+use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
 use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomEventModelStateB;
@@ -19,6 +21,8 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateH;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitions;
+use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitionsWithNoRegisteredStates;
 use Spatie\ModelStates\Tests\Dummy\TestModelCustomEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelCustomInvalidEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
@@ -246,4 +250,32 @@ it('should throw exception when custom state changed event does not extend State
     $this->expectExceptionMessage('Class ' . CustomInvalidStateChangedEvent::class . ' does not extend the `' . StateChanged::class . '` base class.');
 
     $model->state->transitionTo(CustomInvalidEventModelStateB::class);
+});
+
+it('should allow all transitions', function () {
+    $model = TestModelAllowAllTransitions::create();
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
+    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class);
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
+    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class);
+
+    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
+        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+
+});
+
+it('should throw exception when allowing all transitions when there are no registered states', function () {
+    $this->expectException(InvalidConfig::class);
+    $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates::class);
+
+    TestModelAllowAllTransitionsWithNoRegisteredStates::create();
 });

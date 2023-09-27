@@ -23,7 +23,22 @@ abstract class PaymentState extends State
 }
 ```
 
-In this example we're using both a simple transition, and a custom one. Transitions can be used like so:
+In this example we're using both a simple transition, and a custom one. You can also allow all transitions if your states are already properly registered:
+
+```php
+abstract class PaymentState extends State
+{
+    // …
+
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->allowAllTransitions();
+    }
+}
+```
+
+Transitions can then be used like so:
 
 ```php
 $payment->state->transitionTo(Paid::class);
