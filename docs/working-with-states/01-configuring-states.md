@@ -138,7 +138,8 @@ If you're using PHP 8 or higher, you can also configure your state using attribu
 
 ```php
 use Spatie\ModelStates\Attributes\AllowTransition;
-use Spatie\ModelStates\Attributes\RegisterState;use Spatie\ModelStates\State;use const Grpc\STATUS_CANCELLED;
+use Spatie\ModelStates\Attributes\RegisterState;
+use Spatie\ModelStates\State;
 
 #[
     AllowTransition(Pending::class, Paid::class),
