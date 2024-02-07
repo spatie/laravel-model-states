@@ -2,6 +2,21 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.6.1 - 2024-02-07
+
+### What's Changed
+
+* Typo in 01-configuring-states.md by @MarceauKa in https://github.com/spatie/laravel-model-states/pull/241
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/laravel-model-states/pull/240
+* Bump actions/cache from 3 to 4 by @dependabot in https://github.com/spatie/laravel-model-states/pull/245
+* Generics PHPDoc annotations for State class by @lorenzolosa in https://github.com/spatie/laravel-model-states/pull/247
+
+### New Contributors
+
+* @MarceauKa made their first contribution in https://github.com/spatie/laravel-model-states/pull/241
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.6.0...2.6.1
+
 ## 2.6.0 - 2023-09-27
 
 ### What's Changed
@@ -183,11 +198,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
