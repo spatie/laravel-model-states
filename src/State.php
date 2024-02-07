@@ -12,6 +12,9 @@ use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
 
+/**
+ * @template TModel of \Illuminate\Database\Eloquent\Model
+ */
 abstract class State implements Castable, JsonSerializable
 {
     private $model;
@@ -23,7 +26,7 @@ abstract class State implements Castable, JsonSerializable
     private static array $stateMapping = [];
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  TModel  $model
      */
     public function __construct($model)
     {
@@ -100,7 +103,7 @@ abstract class State implements Castable, JsonSerializable
 
     /**
      * @param  string  $name
-     * @param  \Illuminate\Database\Eloquent\Model  $model
+     * @param  TModel  $model
      * @return  State
      */
     public static function make(string $name, $model): State
@@ -115,7 +118,7 @@ abstract class State implements Castable, JsonSerializable
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Model
+     * @return TModel
      */
     public function getModel()
     {
@@ -145,7 +148,7 @@ abstract class State implements Castable, JsonSerializable
     /**
      * @param  string|State  $newState
      * @param  mixed  ...$transitionArgs
-     * @return  \Illuminate\Database\Eloquent\Model
+     * @return  TModel
      */
     public function transitionTo($newState, ...$transitionArgs)
     {
@@ -171,7 +174,7 @@ abstract class State implements Castable, JsonSerializable
 
     /**
      * @param Transition $transition
-     * @return  \Illuminate\Database\Eloquent\Model
+     * @return  TModel
      * @throws ClassDoesNotExtendBaseClass
      */
     public function transition(Transition $transition)
