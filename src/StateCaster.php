@@ -3,10 +3,11 @@
 namespace Spatie\ModelStates;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Contracts\Database\Eloquent\SerializesCastableAttributes;
 use Illuminate\Support\Collection;
 use Spatie\ModelStates\Exceptions\UnknownState;
 
-class StateCaster implements CastsAttributes
+class StateCaster implements CastsAttributes, SerializesCastableAttributes
 {
     /** @var string|\Spatie\ModelStates\State */
     private string $baseStateClass;
@@ -68,6 +69,19 @@ class StateCaster implements CastsAttributes
         }
 
         return $value::getMorphClass();
+    }
+
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param string $key
+     * @param mixed $value
+     * @param array $attributes
+     *
+     * @return mixed
+     */
+    public function serialize($model, string $key, $value, array $attributes)
+    {
+        return $value instanceof State ? $value->getValue() : $value;
     }
 
     private function getStateMapping(): Collection

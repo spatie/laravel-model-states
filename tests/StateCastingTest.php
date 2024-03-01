@@ -136,3 +136,9 @@ it('field is always populated when set', function () {
 
     expect($model->state->getField())->toEqual('state');
 });
+
+it('serializes to a value', function() {
+    $model = new TestModel();
+
+    expect($model->toArray()['state'])->toBe(StateA::class);
+});
