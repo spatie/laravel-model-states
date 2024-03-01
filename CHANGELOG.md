@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.7.0 - 2024-03-01
+
+### What's Changed
+
+* Implement SerializesCastableAttributes in StateCaster by @piotrjoniec in https://github.com/spatie/laravel-model-states/pull/251
+
+### New Contributors
+
+* @piotrjoniec made their first contribution in https://github.com/spatie/laravel-model-states/pull/251
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.6.2...2.7.0
+
 ## 2.6.2 - 2024-02-15
 
 ### What's Changed
@@ -212,11 +224,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
