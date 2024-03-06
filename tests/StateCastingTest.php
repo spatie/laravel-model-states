@@ -137,8 +137,16 @@ it('field is always populated when set', function () {
     expect($model->state->getField())->toEqual('state');
 });
 
-it('serializes to a value', function() {
+it('serializes to a value when calling toArray', function() {
     $model = new TestModel();
 
     expect($model->toArray()['state'])->toBe(StateA::class);
+});
+
+it('respects jsonSerialize in state classes', function() {
+    $model = new TestModel([
+        'state' => StateB::class,
+    ]);
+
+    expect($model->toJson())->toBe('{"state":{"name":"StateB"}}');
 });

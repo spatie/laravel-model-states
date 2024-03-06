@@ -81,7 +81,7 @@ class StateCaster implements CastsAttributes, SerializesCastableAttributes
      */
     public function serialize($model, string $key, $value, array $attributes)
     {
-        return $value instanceof State ? $value->getValue() : $value;
+        return $value instanceof State ? $value->jsonSerialize() : $value;
     }
 
     private function getStateMapping(): Collection
