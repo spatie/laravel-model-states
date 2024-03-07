@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.7.1 - 2024-03-07
+
+### What's Changed
+
+* Use jsonSerialize in StateCaster by @piotrjoniec in https://github.com/spatie/laravel-model-states/pull/252
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.7.0...2.7.1
+
 ## 2.7.0 - 2024-03-01
 
 ### What's Changed
@@ -225,11 +233,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
