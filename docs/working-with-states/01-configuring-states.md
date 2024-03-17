@@ -31,6 +31,9 @@ Each state field should be represented by a class, which itself extends an abstr
 ```php
 use Spatie\ModelStates\State;
 
+/**
+ * @extends State<\App\Models\Payment>
+ */
 abstract class PaymentState extends State
 {
     abstract public function color(): string;
