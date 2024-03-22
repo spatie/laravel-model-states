@@ -8,7 +8,7 @@ class CouldNotPerformTransition extends Exception
 {
     /**
      * @param  \Illuminate\Database\Eloquent\Model  $model
-     * @param  Transition  $transitionClass
+     * @param  \Spatie\ModelStates\Transition  $transitionClass
      * @return  CouldNotPerformTransition
      */
     public static function notAllowed($model, $transitionClass): CouldNotPerformTransition
