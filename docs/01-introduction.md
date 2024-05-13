@@ -61,7 +61,7 @@ class Paid extends PaymentState
 }
 ```
 
-And here's how it it used:
+And here's how it's used:
 
 ```php
 $payment = Payment::find(1);
