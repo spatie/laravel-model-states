@@ -13,7 +13,7 @@ class StateConfig
     /** @var string|null|\Spatie\ModelStates\State */
     public ?string $defaultStateClass = null;
 
-    /** @var string[] */
+    /** @var array<string, null|class-string<\Spatie\ModelStates\Transition>> */
     public array $allowedTransitions = [];
 
     /** @var string[] */
