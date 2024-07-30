@@ -8,16 +8,16 @@ Say you have setup the invoice model as follows:
 ```php
 namespace App;
 
+use App\States\Invoice\InvoiceState;
+use App\States\Invoice\Declined;
 use App\States\Invoice\Paid;
 use App\States\Invoice\Pending;
-use App\States\Invoice\Declined;
-use Spatie\ModelStates\HasStates;
-use App\States\Fulfillment\Partial;
+use App\States\Fulfillment\FulfillmentState;
 use App\States\Fulfillment\Complete;
-use App\States\Invoice\InvoiceState;
+use App\States\Fulfillment\Partial;
 use App\States\Fulfillment\Unfulfilled;
 use Illuminate\Database\Eloquent\Model;
-use App\States\Fulfillment\FulfillmentState;
+use Spatie\ModelStates\HasStates;
 
 class Invoice extends Model
 {
