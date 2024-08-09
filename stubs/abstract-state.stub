@@ -1,0 +1,10 @@
+<?php
+
+namespace DummyNamespace;
+
+use Spatie\ModelStates\State;
+
+abstract class DummyClass extends State
+{
+    //
+}
