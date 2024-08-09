@@ -6,6 +6,7 @@ use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 use Spatie\ModelStates\Commands\MakeAbstractStateCommand;
 use Spatie\ModelStates\Commands\MakeStateCommand;
+use Spatie\ModelStates\Commands\MakeTransitionCommand;
 
 class ModelStatesServiceProvider extends PackageServiceProvider
 {
@@ -16,6 +17,7 @@ class ModelStatesServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 MakeAbstractStateCommand::class,
                 MakeStateCommand::class,
+                MakeTransitionCommand::class,
             ])
             ->hasConfigFile();
     }

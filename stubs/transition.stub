@@ -1,0 +1,28 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Models\DummyParent;
+use Spatie\ModelStates\Transition;
+
+class DummyClass extends Transition
+{
+    public function __construct
+    (
+        private readonly DummyParent $model,
+    ) {
+        //
+    }
+
+    public function handle(): DummyParent
+    {
+        //
+
+        return $this->model;
+    }
+
+    public function canTransition(): bool
+    {
+        //
+    }
+}
