@@ -1,13 +1,15 @@
 <?php
 
 it('can generate abstract states', function () {
-    $statesPath = $this->app->basePath('app/Models/States');
+    $file = $this->app->basePath('app/Models/States') . '/AbstractState.php';
 
     $this->artisan('make:abstract-state AbstractState')->assertExitCode(0);
 
-    expect($statesPath . '/AbstractState.php')
+    expect($file)
         ->toBeFile()
         ->toContainAsFile('class AbstractState extends State');
+
+    unlink($file);
 });
 
 it('can generate states', function () {
