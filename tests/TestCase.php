@@ -4,6 +4,7 @@ namespace Spatie\ModelStates\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\ModelStates\ModelStatesServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
@@ -12,6 +13,13 @@ abstract class TestCase extends Orchestra
         parent::setUp();
 
         $this->setUpDatabase();
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            ModelStatesServiceProvider::class,
+        ];
     }
 
     protected function getEnvironmentSetUp($app)
