@@ -16,6 +16,13 @@ uses(TestCase::class)->in('.');
 |--------------------------------------------------------------------------
 */
 
+expect()->extend('toContainAsFile', function ($needle) {
+    expect(file_get_contents($this->value))
+        ->toContain($needle);
+
+    return $this;
+});
+
 /*
 |--------------------------------------------------------------------------
 | Functions
