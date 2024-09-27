@@ -2,6 +2,26 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.7.2 - 2024-09-27
+
+### What's Changed
+
+* [docs] Fix documentation badges by @maartenpaauw in https://github.com/spatie/laravel-model-states/pull/254
+* [docs] Add generic docblock to code snippet by @maartenpaauw in https://github.com/spatie/laravel-model-states/pull/253
+* Fix missing namespace in phpdoc by @conorjmurphy in https://github.com/spatie/laravel-model-states/pull/255
+* Update 01-introduction.md by @StreetYo in https://github.com/spatie/laravel-model-states/pull/257
+* docs: update 03-listing-states.md improve use statements by @mmachatschek in https://github.com/spatie/laravel-model-states/pull/261
+* fix(config): var annotation for `$allowedTransitions` by @maartenpaauw in https://github.com/spatie/laravel-model-states/pull/259
+
+### New Contributors
+
+* @maartenpaauw made their first contribution in https://github.com/spatie/laravel-model-states/pull/254
+* @conorjmurphy made their first contribution in https://github.com/spatie/laravel-model-states/pull/255
+* @StreetYo made their first contribution in https://github.com/spatie/laravel-model-states/pull/257
+* @mmachatschek made their first contribution in https://github.com/spatie/laravel-model-states/pull/261
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.7.1...2.7.2
+
 ## 2.7.1 - 2024-03-07
 
 ### What's Changed
@@ -234,11 +254,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
