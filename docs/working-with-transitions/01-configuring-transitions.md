@@ -23,7 +23,7 @@ abstract class PaymentState extends State
 }
 ```
 
-In this example we're using both a simple transition, and a custom one. You can also allow all transitions if your states are already properly registered:
+In this example we're using both a simple transition, and a custom one. You can also allow all transitions for all registered states. Concrete states extending the abstract state class that are located in the same directory as the abstract state class will be automatically registered:
 
 ```php
 abstract class PaymentState extends State

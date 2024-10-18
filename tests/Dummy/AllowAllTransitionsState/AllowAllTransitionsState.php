@@ -11,9 +11,6 @@ abstract class AllowAllTransitionsState extends State
     {
         return parent::config()
             ->default(StateA::class)
-            ->registerState(StateA::class)
-            ->registerState(StateB::class)
-            ->registerState(StateC::class)
             ->allowAllTransitions();
     }
 }

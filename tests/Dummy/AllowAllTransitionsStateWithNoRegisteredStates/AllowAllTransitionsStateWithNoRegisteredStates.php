@@ -4,13 +4,14 @@ namespace Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegistere
 
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA;
 
 abstract class AllowAllTransitionsStateWithNoRegisteredStates extends State
 {
     public static function config(): StateConfig
     {
         return parent::config()
-            ->default(StateAWithNoRegisteredStates::class)
+            ->default(StateA::class)
             ->allowAllTransitions();
     }
 }
