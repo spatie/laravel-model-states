@@ -1,10 +1,12 @@
 <?php
 
+use Spatie\ModelStates\Tests\Dummy\IgnoreSameStateModelState\IgnoreSameStateModelAttributeStateA;
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\DefaultTransition;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\TransitionNotAllowed;
 use Spatie\ModelStates\Exceptions\TransitionNotFound;
+use Spatie\ModelStates\Tests\Dummy\IgnoreSameStateModelState\IgnoreSameStateModelStateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateA;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
@@ -13,6 +15,8 @@ use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelIgnoresSameState;
+use Spatie\ModelStates\Tests\Dummy\TestModelIgnoresSameStateByAttribute;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
@@ -170,4 +174,28 @@ it('can transition twice', function () {
     $model->refresh();
 
     expect($model->state)->toBeInstanceOf(StateC::class);
+});
+
+it('ignore transition to same state', function(){
+    $model = TestModelIgnoresSameState::create([
+        'state' => IgnoreSameStateModelStateA::class
+    ]);
+
+    expect($model->state->canTransitionTo(IgnoreSameStateModelStateA::class))->toBeTrue();
+
+    $model->state->transitionTo(IgnoreSameStateModelStateA::class);
+
+    expect($model->state)->toBeInstanceOf(IgnoreSameStateModelStateA::class);
+});
+
+it('ignore transition to same state using Attribute', function(){
+    $model = TestModelIgnoresSameStateByAttribute::create([
+        'state' => IgnoreSameStateModelAttributeStateA::class
+    ]);
+
+    expect($model->state->canTransitionTo(IgnoreSameStateModelAttributeStateA::class))->toBeTrue();
+
+    $model->state->transitionTo(IgnoreSameStateModelAttributeStateA::class);
+
+    expect($model->state)->toBeInstanceOf(IgnoreSameStateModelAttributeStateA::class);
 });
