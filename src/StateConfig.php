@@ -95,13 +95,13 @@ class StateConfig
 
     public function resolveTransitionClass(string $fromMorphClass, string $toMorphClass): ?string
     {
-        if($this->shouldIgnoreSameState && $fromMorphClass === $toMorphClass) {
-            return null;
-        }
-
         $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
 
-        return $this->allowedTransitions[$transitionKey];
+        if(array_key_exists($transitionKey, $this->allowedTransitions)) {
+            return $this->allowedTransitions[$transitionKey];
+        }
+
+        return null;
     }
 
     public function transitionableStates(string $fromMorphClass): array
