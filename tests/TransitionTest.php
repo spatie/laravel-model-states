@@ -181,6 +181,8 @@ it('ignore transition to same state', function(){
         'state' => IgnoreSameStateModelStateA::class
     ]);
 
+    expect($model->state->canTransitionTo(IgnoreSameStateModelStateA::class))->toBeTrue();
+
     $model->state->transitionTo(IgnoreSameStateModelStateA::class);
 
     expect($model->state)->toBeInstanceOf(IgnoreSameStateModelStateA::class);
@@ -190,6 +192,8 @@ it('ignore transition to same state using Attribute', function(){
     $model = TestModelIgnoresSameStateByAttribute::create([
         'state' => IgnoreSameStateModelAttributeStateA::class
     ]);
+
+    expect($model->state->canTransitionTo(IgnoreSameStateModelAttributeStateA::class))->toBeTrue();
 
     $model->state->transitionTo(IgnoreSameStateModelAttributeStateA::class);
 
