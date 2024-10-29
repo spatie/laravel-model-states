@@ -292,7 +292,8 @@ abstract class State implements Castable, JsonSerializable
             $transition = new $defaultTransition(
                 $this->model,
                 $this->field,
-                $newState
+                $newState,
+                ...$transitionArgs
             );
         } else {
             $transition = new $transitionClass($this->model, ...$transitionArgs);
