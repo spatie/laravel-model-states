@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Event;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
-use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates;
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
 use Spatie\ModelStates\Tests\Dummy\CustomEventModelState\CustomEventModelStateB;
@@ -22,12 +22,14 @@ use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateX;
 use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateY;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitions;
+use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitionsWithExplicitlyRegisteredStates;
 use Spatie\ModelStates\Tests\Dummy\TestModelAllowAllTransitionsWithNoRegisteredStates;
 use Spatie\ModelStates\Tests\Dummy\TestModelCustomEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelCustomInvalidEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState;
 
 it('resolve state class', function () {
     expect(ModelState::resolveStateClass(StateA::class))->toEqual(StateA::class);
@@ -255,27 +257,52 @@ it('should throw exception when custom state changed event does not extend State
 it('should allow all transitions', function () {
     $model = TestModelAllowAllTransitions::create();
 
-    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsState\StateA::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateB::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateC::class)->toBeTrue();
 
-    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class);
+    $model->state->transitionTo(AllowAllTransitionsState\StateB::class);
 
-    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsState\StateA::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateB::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateC::class)->toBeTrue();
 
-    $model->state->transitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class);
+    $model->state->transitionTo(AllowAllTransitionsState\StateC::class);
 
-    expect($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateA::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateB::class))->toBeTrue()
-        ->and($model->state->canTransitionTo(\Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState\StateC::class))->toBeTrue();
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsState\StateA::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateB::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsState\StateC::class)->toBeTrue();
+});
 
+it('should allow all transitions for explicitly registered states', function () {
+    $model = TestModelAllowAllTransitionsWithExplicitlyRegisteredStates::create();
+
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateAWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateBWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateCWithNoRegisteredStates::class)->toBeTrue();
+
+    $model->state->transitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateBWithNoRegisteredStates::class);
+
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateAWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateBWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateCWithNoRegisteredStates::class)->toBeTrue();
+
+    $model->state->transitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateCWithNoRegisteredStates::class);
+
+    expect($model->state)
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateAWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateBWithNoRegisteredStates::class)->toBeTrue()
+        ->canTransitionTo(AllowAllTransitionsStateWithNoRegisteredStates\StateCWithNoRegisteredStates::class)->toBeTrue();
 });
 
 it('should throw exception when allowing all transitions when there are no registered states', function () {
     $this->expectException(InvalidConfig::class);
-    $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates::class);
+    $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates::class);
 
     TestModelAllowAllTransitionsWithNoRegisteredStates::create();
 });

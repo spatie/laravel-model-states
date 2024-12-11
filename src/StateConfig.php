@@ -2,8 +2,10 @@
 
 namespace Spatie\ModelStates;
 
+use ReflectionClass;
 use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Spatie\StructureDiscoverer\Discover;
 
 class StateConfig
 {
@@ -132,6 +134,8 @@ class StateConfig
      */
     public function allowAllTransitions(): StateConfig
     {
+        $this->registerBaseStateClassDirectoryStates();
+
         if (empty($this->registeredStates)) {
             throw new InvalidConfig('No states registered for ' . $this->baseStateClass);
         }
@@ -139,6 +143,20 @@ class StateConfig
         $this->allowTransitions(collect($this->registeredStates)->crossJoin($this->registeredStates)->toArray());
 
         return $this;
+    }
+
+    private function registerBaseStateClassDirectoryStates(): void
+    {
+        $reflector = new ReflectionClass($this->baseStateClass);
+        $filename = $reflector->getFileName();
+        $baseStateClassDirectory = dirname($filename);
+
+        $stateClasses = Discover::in($baseStateClassDirectory)
+                            ->classes()
+                            ->extending($this->baseStateClass)
+                            ->get();
+
+        $this->registerState($stateClasses);
     }
 
     /**

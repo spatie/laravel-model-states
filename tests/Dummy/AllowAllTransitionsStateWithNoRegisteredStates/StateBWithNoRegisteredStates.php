@@ -2,7 +2,9 @@
 
 namespace Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithNoRegisteredStates;
 
-class StateBWithNoRegisteredStates extends AllowAllTransitionsStateWithNoRegisteredStates
+use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsStateWithExplicitlyRegisteredStates\AllowAllTransitionsStateWithExplicitlyRegisteredStates;
+
+class StateBWithNoRegisteredStates extends AllowAllTransitionsStateWithExplicitlyRegisteredStates
 {
 
 }
