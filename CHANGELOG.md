@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.8.0 - 2024-12-11
+
+### What's Changed
+
+* Make using allowAllTransitions() less cumbersome by @jonjakoblich in https://github.com/spatie/laravel-model-states/pull/265
+
+### New Contributors
+
+* @jonjakoblich made their first contribution in https://github.com/spatie/laravel-model-states/pull/265
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.7.2...2.8.0
+
 ## 2.7.2 - 2024-09-27
 
 ### What's Changed
@@ -255,11 +267,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
