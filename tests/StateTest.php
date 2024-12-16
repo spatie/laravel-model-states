@@ -223,6 +223,24 @@ it('can override default transition', function () {
     Event::assertNotDispatched(TestModelUpdatingEvent::class);
 });
 
+it('can use attributes with custom default transition', function () {
+    Event::fake();
+    $customDefaultTransitionClass = \Spatie\ModelStates\Tests\Dummy\Transitions\CustomDefaultTransitionWithAttributes::class;
+
+    config()->set('model-states.default_transition', $customDefaultTransitionClass);
+
+    TestModel::create()->state->transitionTo(StateB::class, true);
+
+    Event::assertDispatched(
+        StateChanged::class,
+        function (StateChanged $event) use ($customDefaultTransitionClass) {
+            $transition = $event->transition;
+            return $transition instanceof $customDefaultTransitionClass
+                && $transition->silent === true;
+        }
+    );
+});
+
 it('can emit a custom state changed event', function () {
     Event::fake();
 
