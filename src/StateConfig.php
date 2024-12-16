@@ -21,6 +21,9 @@ class StateConfig
     /** @var string[] */
     public array $registeredStates = [];
 
+    /** @var bool */
+    public bool $shouldIgnoreSameState = false;
+
     public string $stateChangedEvent = StateChanged::class;
 
     public function __construct(
@@ -32,6 +35,13 @@ class StateConfig
     public function default(string $defaultStateClass): StateConfig
     {
         $this->defaultStateClass = $defaultStateClass;
+
+        return $this;
+    }
+
+    public function ignoreSameState(): StateConfig
+    {
+        $this->shouldIgnoreSameState = true;
 
         return $this;
     }
@@ -74,6 +84,10 @@ class StateConfig
 
     public function isTransitionAllowed(string $fromMorphClass, string $toMorphClass): bool
     {
+        if($this->shouldIgnoreSameState && $fromMorphClass === $toMorphClass){
+            return true;
+        }
+
         $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
 
         return array_key_exists($transitionKey, $this->allowedTransitions);
@@ -83,7 +97,11 @@ class StateConfig
     {
         $transitionKey = $this->createTransitionKey($fromMorphClass, $toMorphClass);
 
-        return $this->allowedTransitions[$transitionKey];
+        if(array_key_exists($transitionKey, $this->allowedTransitions)) {
+            return $this->allowedTransitions[$transitionKey];
+        }
+
+        return null;
     }
 
     public function transitionableStates(string $fromMorphClass): array

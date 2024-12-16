@@ -44,7 +44,37 @@ Transitions can then be used like so:
 $payment->state->transitionTo(Paid::class);
 ```
 
-This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionNotFound` will be thrown instead of changing the state. 
+This line will only work when a valid transition was configured. If the initial state of `$payment` already was `Paid`, a `\Spatie\ModelStates\Exceptions\TransitionNotFound` will be thrown instead of changing the state.
+
+## Ignoring same state transitions
+
+In some cases you may want to handle transition to same state without manually setting `allowTransition`, you can call `ignoreSameState`
+
+Please note that the `StateChanged` event will fire anyway.
+
+```php
+abstract class PaymentState extends State
+{
+    // …
+
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->ignoreSameState()
+            ->allowTransition([Created::class, Pending::class], Failed::class, ToFailed::class);
+    }
+}
+```
+
+It also works with `IgnoreSameState` Attribute
+
+```php
+#[IgnoreSameState]
+abstract class PaymentState extends State
+{
+    //...
+}
+```
 
 ## Allow multiple transitions at once
 

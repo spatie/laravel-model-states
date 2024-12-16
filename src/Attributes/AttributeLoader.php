@@ -35,6 +35,12 @@ class AttributeLoader
 
             $stateConfig->default($defaultStateAttribute->defaultStateClass);
         }
+
+        if ($this->reflectionClass->getAttributes(IgnoreSameState::class)[0] ?? null) {
+            /** @var \Spatie\ModelStates\Attributes\IgnoreSameState $transitionAttribute */
+
+            $stateConfig->ignoreSameState();
+        }
 	
 	    $registerStateAttributes = $this->reflectionClass->getAttributes(RegisterState::class);
 		
