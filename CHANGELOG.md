@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.9.0 - 2024-12-16
+
+### What's Changed
+
+* Feature: Added ...transitionArgs to default transition constructor call to allow arguments use for custom default transition by @IlliaVeremiev in https://github.com/spatie/laravel-model-states/pull/269
+
+### New Contributors
+
+* @IlliaVeremiev made their first contribution in https://github.com/spatie/laravel-model-states/pull/269
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.8.0...2.9.0
+
 ## 2.8.0 - 2024-12-11
 
 ### What's Changed
@@ -268,11 +280,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
