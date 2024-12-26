@@ -92,12 +92,12 @@ it('disallowed transition', function () {
 
 it('fails transition to same state when not allowed', function () {
     $model = TestModel::create([
-        'state' => IgnoreSameStateModelStateA::class,
+        'state' => StateA::class,
     ]);
 
     $this->expectException(TransitionNotFound::class);
 
-    $model->state->transitionTo(IgnoreSameStateModelStateA::class);
+    $model->state->transitionTo(StateA::class);
 });
 
 it('custom transition test', function () {
