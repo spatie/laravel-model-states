@@ -90,6 +90,16 @@ it('disallowed transition', function () {
     $model->state->transitionTo(StateA::class);
 });
 
+it('fails transition to same state when not allowed', function () {
+    $model = TestModel::create([
+        'state' => IgnoreSameStateModelStateA::class,
+    ]);
+
+    $this->expectException(TransitionNotFound::class);
+
+    $model->state->transitionTo(IgnoreSameStateModelStateA::class);
+});
+
 it('custom transition test', function () {
     $model = TestModelWithCustomTransition::create([
         'state' => StateX::class,
@@ -157,9 +167,9 @@ it('event is triggered after transition', function () {
 
     Event::assertDispatched(StateChanged::class, function (StateChanged $event) use ($model) {
         return $event->transition instanceof DefaultTransition
-        && $event->initialState instanceof StateA
-        && $event->finalState instanceof StateB
-        && $event->model->is($model);
+            && $event->initialState instanceof StateA
+            && $event->finalState instanceof StateB
+            && $event->model->is($model);
     });
 });
 
@@ -176,7 +186,7 @@ it('can transition twice', function () {
     expect($model->state)->toBeInstanceOf(StateC::class);
 });
 
-it('ignore transition to same state', function(){
+it('ignore transition to same state', function () {
     $model = TestModelIgnoresSameState::create([
         'state' => IgnoreSameStateModelStateA::class
     ]);
@@ -188,7 +198,7 @@ it('ignore transition to same state', function(){
     expect($model->state)->toBeInstanceOf(IgnoreSameStateModelStateA::class);
 });
 
-it('ignore transition to same state using Attribute', function(){
+it('ignore transition to same state using Attribute', function () {
     $model = TestModelIgnoresSameStateByAttribute::create([
         'state' => IgnoreSameStateModelAttributeStateA::class
     ]);
