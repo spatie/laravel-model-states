@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.10.0 - 2024-12-30
+
+### What's Changed
+
+* Added test to ensure same-state transition fails when not allowed by @zayedadel in https://github.com/spatie/laravel-model-states/pull/270
+
+### New Contributors
+
+* @zayedadel made their first contribution in https://github.com/spatie/laravel-model-states/pull/270
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.9.0...2.10.0
+
 ## 2.9.0 - 2024-12-16
 
 ### What's Changed
@@ -281,11 +293,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
