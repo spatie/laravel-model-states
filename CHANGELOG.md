@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.10.1 - 2025-02-14
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.10.0...2.10.1
+
 ## 2.10.0 - 2024-12-30
 
 ### What's Changed
@@ -294,11 +298,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
