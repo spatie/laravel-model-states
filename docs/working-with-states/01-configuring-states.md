@@ -19,8 +19,6 @@ class Payment extends Model implements HasStatesContract
 }
 ```
 
-
-
 A model can have as many state fields as you want, and you're allowed to call them whatever you want. Just make sure every state has a corresponding database string field.
 
 ```php
