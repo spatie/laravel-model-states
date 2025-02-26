@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.11.0 - 2025-02-26
+
+### What's Changed
+
+* Contract / Interface for Models that use `HasStates` trait. by @aSeriousDeveloper in https://github.com/spatie/laravel-model-states/pull/274
+
+### New Contributors
+
+* @aSeriousDeveloper made their first contribution in https://github.com/spatie/laravel-model-states/pull/274
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.10.1...2.11.0
+
 ## 2.10.1 - 2025-02-14
 
 **Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.10.0...2.10.1
@@ -299,11 +311,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
