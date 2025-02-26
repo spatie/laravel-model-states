@@ -3,15 +3,12 @@ title: Configuring states
 weight: 1
 ---
 
-This package provides a `HasStates` trait which you can use in whatever model you want state support in. Within your codebase, each state is represented by a class, and will be serialised to the database by this package behind the scenes. For improved type-hinting, the package also provides a `HasStatesContract` interface.
-
-This way you don't have to worry about whether a state is in its textual form or not: you're always working with state objects.
+This package provides a `HasStates` trait which you can use in whatever model you want state support in. Within your codebase, each state is represented by a class, and will be serialised to the database by this package behind the scenes.
 
 ```php
 use Spatie\ModelStates\HasStates;
-use Spatie\ModelStates\HasStatesContract;
 
-class Payment extends Model implements HasStatesContract
+class Payment extends Model
 {
     use HasStates;
 
@@ -159,3 +156,21 @@ abstract class PaymentState extends State
 ```
 
 Next up, we'll take a moment to discuss how state classes are serialized to the database.
+
+## Improved typehinting
+
+Optionally, for improved type-hinting, the package also provides a `HasStatesContract` interface.
+
+This way you don't have to worry about whether a state is in its textual form or not: you're always working with state objects.
+
+```php
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\HasStatesContract;
+
+class Payment extends Model implements HasStatesContract
+{
+    use HasStates;
+
+    // …
+}
+```
