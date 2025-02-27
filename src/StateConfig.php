@@ -9,10 +9,10 @@ use Spatie\StructureDiscoverer\Discover;
 
 class StateConfig
 {
-    /** @var string|\Spatie\ModelStates\State */
+    /** @var class-string<\Spatie\ModelStates\State<\Illuminate\Database\Eloquent\Model>> */
     public string $baseStateClass;
 
-    /** @var string|null|\Spatie\ModelStates\State */
+    /** @var class-string<\Spatie\ModelStates\State<\Illuminate\Database\Eloquent\Model>>|null */
     public ?string $defaultStateClass = null;
 
     /** @var array<string, null|class-string<\Spatie\ModelStates\Transition>> */
