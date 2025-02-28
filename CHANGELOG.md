@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.11.1 - 2025-02-28
+
+### What's Changed
+
+* fix(config): var annotation for `$baseStateClass` and `$defaultStateClass` by @maartenpaauw in https://github.com/spatie/laravel-model-states/pull/275
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.0...2.11.1
+
 ## 2.11.0 - 2025-02-26
 
 ### What's Changed
@@ -312,11 +320,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
