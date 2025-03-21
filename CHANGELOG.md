@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.11.2 - 2025-03-21
+
+### What's Changed
+
+* use laravel [validationRule] interface instead of [Rule] deprecated interface by @aabadawy in https://github.com/spatie/laravel-model-states/pull/276
+
+### New Contributors
+
+* @aabadawy made their first contribution in https://github.com/spatie/laravel-model-states/pull/276
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.1...2.11.2
+
 ## 2.11.1 - 2025-02-28
 
 ### What's Changed
@@ -321,11 +333,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
