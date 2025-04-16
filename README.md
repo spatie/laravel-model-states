@@ -1,9 +1,19 @@
-# Adding state behaviour to Eloquent models
+<div align="left">
+    <a href="https://spatie.be/open-source?utm_source=github&utm_medium=banner&utm_campaign=laravel-model-states">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://spatie.be/packages/header/laravel-model-states/html/dark.webp">
+        <img alt="Logo for laravel-model-states" src=" https://spatie.be/packages/header/laravel-model-states/html/light.webp" height="190">
+      </picture>
+    </a>
+
+<h1>Adding state behaviour to Eloquent models</h1>
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
 [![Run tests](https://github.com/spatie/laravel-model-states/actions/workflows/run-tests.yml/badge.svg)](https://github.com/spatie/laravel-model-states/actions/workflows/run-tests.yml)
 [![Check & fix styling](https://github.com/spatie/laravel-model-states/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/spatie/laravel-model-states/actions/workflows/php-cs-fixer.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-model-states.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-model-states)
+    
+</div>
 
 This package adds state support to models. It combines concepts from the [state pattern](https://en.wikipedia.org/wiki/State_pattern) and [state machines](https://www.youtube.com/watch?v=N12L5D78MAA).
 
