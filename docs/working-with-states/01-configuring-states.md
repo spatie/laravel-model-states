@@ -114,6 +114,36 @@ abstract class PaymentState extends State
 }
 ```
 
+## Registering states from custom directories
+
+If you want to register all state classes from one or more directories, you can use the `registerStatesFromDirectory` method. This is useful if you organize your state classes in multiple folders and want to avoid registering each one manually.
+
+```php
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
+
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+            ->registerStatesFromDirectory(app_path('States/Payment'))
+            ->registerStatesFromDirectory(
+                __DIR__ . '/States',
+                __DIR__ . '/MoreStates',
+                // add as many directories as you need
+            );
+    }
+}
+```
+
+This will automatically discover and register all state classes in the given directory that extend your base state class.
+
 ### Registering custom StateChanged event
 By default, when a state is changed, the `StateChanged` event is fired. If you want to use a custom event, you can register it in the `config` method:
 
