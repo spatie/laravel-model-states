@@ -41,7 +41,7 @@ it('can transition between states registered from custom directories', function 
 it('get default states for', function () {
     $defaultState = TestModelWithCustomDirectories::getDefaultStateFor('state');
 
-    expect($defaultState)->toEqual(StateA::getMorphClass());
+    expect($defaultState)->toEqual(DefaultState::getMorphClass());
 });
 
 it('throws if a directory does not exist', function () {
