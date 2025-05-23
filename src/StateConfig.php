@@ -178,6 +178,24 @@ class StateConfig
     }
 
     /**
+     * Register all state classes from one or more custom directories.
+     *
+     * @param string ...$directories
+     * @return $this
+     */
+    public function registerStatesFromDirectory(string ...$directories): StateConfig
+    {
+        $stateClasses = Discover::in(...$directories)
+            ->classes()
+            ->extending($this->baseStateClass)
+            ->get();
+
+        $this->registerState($stateClasses);
+
+        return $this;
+    }
+
+    /**
      * @param string|\Spatie\ModelStates\State $from
      * @param string|\Spatie\ModelStates\State $to
      *
