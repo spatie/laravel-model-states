@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.11.3 - 2025-05-23
+
+### What's Changed
+
+* Add support for registering states from  multiple custom  directories. by @A909M in https://github.com/spatie/laravel-model-states/pull/282
+
+### New Contributors
+
+* @A909M made their first contribution in https://github.com/spatie/laravel-model-states/pull/282
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.2...2.11.3
+
 ## 2.11.2 - 2025-03-21
 
 ### What's Changed
@@ -334,11 +346,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
