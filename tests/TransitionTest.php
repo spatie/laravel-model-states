@@ -17,6 +17,7 @@ use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelIgnoresSameState;
 use Spatie\ModelStates\Tests\Dummy\TestModelIgnoresSameStateByAttribute;
+use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithTransitionsFromArray;
 use Spatie\ModelStates\Tests\Dummy\Transitions\CustomInvalidTransition;
@@ -113,6 +114,20 @@ it('custom transition test', function () {
 
     expect($model->state)->toBeInstanceOf(StateY::class);
     expect($model->message)->toEqual($message);
+});
+
+it('custom transition inherited from default test', function () {
+    Event::fake();
+    $model = TestModelWithCustomTransition::create([
+        'state' => StateY::class,
+    ]);
+
+    $model->state->transitionTo(StateZ::class);
+
+    $model->refresh();
+
+    expect($model->state)->toBeInstanceOf(StateZ::class);
+    Event::assertNotDispatched(TestModelUpdatingEvent::class);
 });
 
 it('directly transition', function () {
