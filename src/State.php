@@ -204,10 +204,31 @@ abstract class State implements Castable, JsonSerializable
         return $model;
     }
 
+    /**
+     * Get an array of state names that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition
+     * @return array  Array of state names as strings
+     */
     public function transitionableStates(...$transitionArgs): array
     {
         return collect($this->stateConfig->transitionableStates(static::getMorphClass()))->reject(function ($state) use ($transitionArgs) {
             return ! $this->canTransitionTo($state, ...$transitionArgs);
+        })->toArray();
+    }
+
+    /**
+     * Get an array of instantiated state objects that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition
+     * @return array  Array of state instances
+     */
+    public function transitionableStateInstances(...$transitionArgs): array
+    {
+        return collect($this->transitionableStates(...$transitionArgs))->map(function ($state) {
+            $stateClass = static::resolveStateClass($state);
+            $stateInstance = new $stateClass($this->getModel());
+            return $stateInstance;
         })->toArray();
     }
 

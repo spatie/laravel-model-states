@@ -72,6 +72,35 @@ it('transitionable states with custom transition', function () {
     expect($model->state->transitionableStates())->toBe([StateY::class]);
 });
 
+it('returns transitionable state instances', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $stateInstances = $model->state->transitionableStateInstances();
+
+    expect($stateInstances)->toBeArray();
+    expect($stateInstances)->each->toBeObject();
+    expect($stateInstances)->toContainOnlyInstancesOf(ModelState::class);
+
+    // Test that the actual instances match what we expect based on allowed transitions
+    $stateClassNames = array_map(fn($instance) => get_class($instance), $stateInstances);
+    expect($stateClassNames)->toEqual([
+        StateB::class,
+        StateC::class,
+        StateD::class,
+        StateF::class,
+    ]);
+
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($modelB->state->transitionableStateInstances())->toEqual([]);
+});
+
+
 it('equals', function () {
     $modelA = TestModelWithDefault::create();
 
