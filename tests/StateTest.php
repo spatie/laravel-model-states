@@ -261,6 +261,18 @@ it('emits the standard state changed event', function () {
     Event::assertDispatched(StateChanged::class);
 });
 
+it('include the model state field in the changed event', function () {
+    Event::fake();
+
+    $model = TestModel::create();
+
+    $model->state->transitionTo(StateB::class);
+
+    Event::assertDispatched(StateChanged::class, function (StateChanged $stateChanged) {
+        return $stateChanged->field == 'state';
+    });
+});
+
 it('should throw exception when custom state changed event does not extend StateChanged', function () {
     Event::fake();
 
