@@ -261,7 +261,7 @@ it('emits the standard state changed event', function () {
     Event::assertDispatched(StateChanged::class);
 });
 
-it('include the model state field in the changed event', function () {
+it('includes the field name in the state changed event', function () {
     Event::fake();
 
     $model = TestModel::create();
