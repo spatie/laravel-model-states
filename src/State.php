@@ -199,6 +199,7 @@ abstract class State implements Castable, JsonSerializable
             $model->{$this->field},
             $transition,
             $this->model,
+            $this->field,
         ));
 
         return $model;
