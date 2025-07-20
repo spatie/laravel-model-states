@@ -226,9 +226,8 @@ abstract class State implements Castable, JsonSerializable
     public function transitionableStateInstances(...$transitionArgs): array
     {
         return collect($this->transitionableStates(...$transitionArgs))->map(function ($state) {
-            $stateClass = static::resolveStateClass($state);
-            $stateInstance = new $stateClass($this->getModel());
-            return $stateInstance;
+            $stateClass = $this::config()->baseStateClass::resolveStateClass($state);
+            return (new $stateClass($this->getModel()));
         })->toArray();
     }
 
