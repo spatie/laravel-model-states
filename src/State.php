@@ -287,7 +287,11 @@ abstract class State implements Castable, JsonSerializable
         ...$transitionArgs
     ): Transition {
         $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
-
+        /**
+         * @deprecated This behavior should be removed in the next major release.
+         * Transitions will no longer need to be defined in the configuration file
+         * as long as they extend the DefaultTransition class.
+         */
         if ($transitionClass === null) {
             $defaultTransition = config('model-states.default_transition', DefaultTransition::class);
 
