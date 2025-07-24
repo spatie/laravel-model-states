@@ -268,8 +268,10 @@ abstract class State implements Castable, JsonSerializable
         foreach ($otherStates as $otherState) {
             $otherState = $this->resolveStateObject($otherState);
 
-            if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
-                && $this->getValue() === $otherState->getValue()) {
+            if (
+                $this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
+                && $this->getValue() === $otherState->getValue()
+            ) {
                 return true;
             }
         }
@@ -306,11 +308,22 @@ abstract class State implements Castable, JsonSerializable
         ...$transitionArgs
     ): Transition {
         $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
-
+        /**
+         * @deprecated This behavior should be removed in the next major release.
+         * Transitions will no longer need to be defined in the configuration file
+         * as long as they extend the DefaultTransition class.
+         */
         if ($transitionClass === null) {
             $defaultTransition = config('model-states.default_transition', DefaultTransition::class);
 
             $transition = new $defaultTransition(
+                $this->model,
+                $this->field,
+                $newState,
+                ...$transitionArgs
+            );
+        } elseif (is_subclass_of($transitionClass, DefaultTransition::class)) {
+            $transition = new $transitionClass(
                 $this->model,
                 $this->field,
                 $newState,

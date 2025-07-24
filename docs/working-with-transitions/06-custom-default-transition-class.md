@@ -24,13 +24,6 @@ class CustomDefaultTransitionWithAttributes extends DefaultTransition
 }
 ```
 
-Register your custom transition class in `config/model-states.php`:
-
-```php
-return [
-    'default_transition' => CustomDefaultTransitionWithAttributes::class
-];
-```
 
 Implement your state change listener to use the custom parameter:
 
