@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.12.0 - 2025-07-28
+
+### What's Changed
+
+* Add the field property to StateChanged event by @aabadawy in https://github.com/spatie/laravel-model-states/pull/286
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-model-states/pull/283
+* Add `transitionableStateInstances()`  method to get state objects for all transitionable states by @A909M in https://github.com/spatie/laravel-model-states/pull/285
+* feat: support custom transition constructors extending DefaultTransit… by @zayedadel in https://github.com/spatie/laravel-model-states/pull/284
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.3...2.12.0
+
 ## 2.11.3 - 2025-05-23
 
 ### What's Changed
@@ -347,11 +358,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
