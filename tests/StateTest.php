@@ -30,6 +30,7 @@ use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 
 it('resolve state class', function () {
     expect(ModelState::resolveStateClass(StateA::class))->toEqual(StateA::class);
@@ -364,4 +365,15 @@ it('should throw exception when allowing all transitions when there are no regis
     $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates::class);
 
     TestModelAllowAllTransitionsWithNoRegisteredStates::create();
+});
+
+it('uses custom transition extending DefaultTransition with correct arguments with out needing to explicitly set it as default in config', function () {
+
+    $model = new TestModelWithCustomTransition();
+    $model->state = StateY::class;
+    $model->save();
+    $model->state->setField('state');
+    $model->state->transitionTo(StateZ::class, true);
+    $model->refresh();
+    expect($model->state)->toBeInstanceOf(StateZ::class);
 });
