@@ -103,6 +103,7 @@ $stateCount = $payment->state->transitionableStatesCount(); // 4
 
 ## Checking for available transitions
 This method tells you whether there are any available transitions for the current state.
+
 ```php
 $hasTransitions = $payment->state->hasTransitionableStates(); // true or false
 ```
