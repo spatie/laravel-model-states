@@ -232,6 +232,28 @@ abstract class State implements Castable, JsonSerializable
         })->toArray();
     }
 
+    /**
+     * Get the count of states that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition logic.
+     * @return int  The number of transitionable states.
+     */
+    public function transitionableStatesCount(...$transitionArgs): int
+    {
+        return count($this->transitionableStates(...$transitionArgs));
+    }
+
+    /**
+     * Determine if there are any states that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition logic.
+     * @return bool  True if there are available transitions; false otherwise.
+     */
+    public function hasTransitionableStates(...$transitionArgs): bool
+    {
+        return filled($this->transitionableStates(...$transitionArgs));
+    }
+
     public function canTransitionTo($newState, ...$transitionArgs): bool
     {
         $newState = $this->resolveStateObject($newState);
