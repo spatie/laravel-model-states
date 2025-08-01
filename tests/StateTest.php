@@ -101,6 +101,41 @@ it('returns transitionable state instances', function () {
     expect($modelB->state->transitionableStateInstances())->toEqual([]);
 });
 
+it('returns transitionable state count', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateB::class,
+    ]);
+
+    $modelC = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($model->state->transitionableStatesCount())->toBe(4);
+    expect($modelB->state->transitionableStatesCount())->toBe(1);
+    expect($modelC->state->transitionableStatesCount())->toBe(0);
+});
+
+it('returns whether there are transitionable states', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateB::class,
+    ]);
+
+    $modelC = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($model->state->hasTransitionableStates())->toBe(true);
+    expect($modelB->state->hasTransitionableStates())->toBe(true);
+    expect($modelC->state->hasTransitionableStates())->toBe(false);
+});
 
 it('equals', function () {
     $modelA = TestModelWithDefault::create();

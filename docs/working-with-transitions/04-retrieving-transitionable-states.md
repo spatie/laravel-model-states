@@ -94,6 +94,20 @@ class Paid extends PaymentState
 }
 ```
 
+## Retrieving state counts
+This method tells you how many available transitions exist for the current state.
+
+```php
+$stateCount = $payment->state->transitionableStatesCount(); // 4
+```
+
+## Checking for available transitions
+This method tells you whether there are any available transitions for the current state.
+
+```php
+$hasTransitions = $payment->state->hasTransitionableStates(); // true or false
+```
+
 ## Can transition to
 
 If you want to know whether a state can be transitioned to another one, you can use the `canTransitionTo` method:
