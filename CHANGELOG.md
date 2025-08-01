@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.12.1 - 2025-08-01
+
+### What's Changed
+
+* feat: add count and boolean methods for available transactions by @WatheqAlshowaiter in https://github.com/spatie/laravel-model-states/pull/290
+
+### New Contributors
+
+* @WatheqAlshowaiter made their first contribution in https://github.com/spatie/laravel-model-states/pull/290
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.12.0...2.12.1
+
 ## 2.12.0 - 2025-07-28
 
 ### What's Changed
@@ -359,11 +371,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
