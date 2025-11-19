@@ -31,7 +31,7 @@ class StateChanged
         ?State $finalState,
         Transition $transition,
         $model,
-        string $field
+        ?string $field = null
     ) {
         $this->initialState = $initialState;
         $this->finalState = $finalState;
