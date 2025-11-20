@@ -18,6 +18,8 @@ class StateChanged
 
     public $model;
 
+    public ?string $field;
+
     /**
      * @param  string|State|null  $initialState
      * @param  string|State|null  $finalState
@@ -28,11 +30,13 @@ class StateChanged
         ?State $initialState,
         ?State $finalState,
         Transition $transition,
-        $model
+        $model,
+        string $field
     ) {
         $this->initialState = $initialState;
         $this->finalState = $finalState;
         $this->transition = $transition;
         $this->model = $model;
+        $this->field = $field;
     }
 }

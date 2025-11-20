@@ -2,9 +2,10 @@
 
 namespace Spatie\ModelStates\Validation;
 
-use Illuminate\Contracts\Validation\Rule;
+use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class ValidStateRule implements Rule
+class ValidStateRule implements ValidationRule
 {
     private string $baseStateClass;
 
@@ -34,19 +35,16 @@ class ValidStateRule implements Rule
         return $this;
     }
 
-    public function passes($attribute, $value): bool
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         if ($this->nullable && $value === null) {
-            return true;
+            return;
         }
 
         $stateClass = $this->baseStateClass::resolveStateClass($value);
 
-        return is_subclass_of($stateClass, $this->baseStateClass);
-    }
-
-    public function message(): string
-    {
-        return 'This value is invalid';
+        if(! is_subclass_of($stateClass, $this->baseStateClass)) {
+            $fail('This value is invalid');
+        }
     }
 }

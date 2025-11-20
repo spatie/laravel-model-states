@@ -9,10 +9,10 @@ use Spatie\StructureDiscoverer\Discover;
 
 class StateConfig
 {
-    /** @var string|\Spatie\ModelStates\State */
+    /** @var class-string<\Spatie\ModelStates\State<\Illuminate\Database\Eloquent\Model>> */
     public string $baseStateClass;
 
-    /** @var string|null|\Spatie\ModelStates\State */
+    /** @var class-string<\Spatie\ModelStates\State<\Illuminate\Database\Eloquent\Model>>|null */
     public ?string $defaultStateClass = null;
 
     /** @var array<string, null|class-string<\Spatie\ModelStates\Transition>> */
@@ -175,6 +175,24 @@ class StateConfig
                             ->get();
 
         $this->registerState($stateClasses);
+    }
+
+    /**
+     * Register all state classes from one or more custom directories.
+     *
+     * @param string ...$directories
+     * @return $this
+     */
+    public function registerStatesFromDirectory(string ...$directories): StateConfig
+    {
+        $stateClasses = Discover::in(...$directories)
+            ->classes()
+            ->extending($this->baseStateClass)
+            ->get();
+
+        $this->registerState($stateClasses);
+
+        return $this;
     }
 
     /**

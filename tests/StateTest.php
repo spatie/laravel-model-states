@@ -30,6 +30,7 @@ use Spatie\ModelStates\Tests\Dummy\TestModelUpdatingEvent;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCustomTransition;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithDefault;
 use Spatie\ModelStates\Tests\Dummy\AllowAllTransitionsState;
+use Spatie\ModelStates\Tests\Dummy\OtherModelStates\StateZ;
 
 it('resolve state class', function () {
     expect(ModelState::resolveStateClass(StateA::class))->toEqual(StateA::class);
@@ -70,6 +71,70 @@ it('transitionable states', function () {
 it('transitionable states with custom transition', function () {
     $model = TestModelWithCustomTransition::create(['state' => StateX::class]);
     expect($model->state->transitionableStates())->toBe([StateY::class]);
+});
+
+it('returns transitionable state instances', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $stateInstances = $model->state->transitionableStateInstances();
+
+    expect($stateInstances)->toBeArray();
+    expect($stateInstances)->each->toBeObject();
+    expect($stateInstances)->toContainOnlyInstancesOf(ModelState::class);
+
+    // Test that the actual instances match what we expect based on allowed transitions
+    $stateClassNames = array_map(fn($instance) => get_class($instance), $stateInstances);
+    expect($stateClassNames)->toEqual([
+        StateB::class,
+        StateC::class,
+        StateD::class,
+        StateF::class,
+    ]);
+
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($modelB->state->transitionableStateInstances())->toEqual([]);
+});
+
+it('returns transitionable state count', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateB::class,
+    ]);
+
+    $modelC = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($model->state->transitionableStatesCount())->toBe(4);
+    expect($modelB->state->transitionableStatesCount())->toBe(1);
+    expect($modelC->state->transitionableStatesCount())->toBe(0);
+});
+
+it('returns whether there are transitionable states', function () {
+    $model = TestModel::create([
+        'state' => StateA::class,
+    ]);
+
+    $modelB = TestModelWithDefault::create([
+        'state' => StateB::class,
+    ]);
+
+    $modelC = TestModelWithDefault::create([
+        'state' => StateC::class,
+    ]);
+
+    expect($model->state->hasTransitionableStates())->toBe(true);
+    expect($modelB->state->hasTransitionableStates())->toBe(true);
+    expect($modelC->state->hasTransitionableStates())->toBe(false);
 });
 
 it('equals', function () {
@@ -261,6 +326,18 @@ it('emits the standard state changed event', function () {
     Event::assertDispatched(StateChanged::class);
 });
 
+it('includes the field name in the state changed event', function () {
+    Event::fake();
+
+    $model = TestModel::create();
+
+    $model->state->transitionTo(StateB::class);
+
+    Event::assertDispatched(StateChanged::class, function (StateChanged $stateChanged) {
+        return $stateChanged->field == 'state';
+    });
+});
+
 it('should throw exception when custom state changed event does not extend StateChanged', function () {
     Event::fake();
 
@@ -323,4 +400,15 @@ it('should throw exception when allowing all transitions when there are no regis
     $this->expectExceptionMessage('No states registered for ' . AllowAllTransitionsStateWithNoRegisteredStates\AllowAllTransitionsStateWithNoRegisteredStates::class);
 
     TestModelAllowAllTransitionsWithNoRegisteredStates::create();
+});
+
+it('uses custom transition extending DefaultTransition with correct arguments with out needing to explicitly set it as default in config', function () {
+
+    $model = new TestModelWithCustomTransition();
+    $model->state = StateY::class;
+    $model->save();
+    $model->state->setField('state');
+    $model->state->transitionTo(StateZ::class, true);
+    $model->refresh();
+    expect($model->state)->toBeInstanceOf(StateZ::class);
 });

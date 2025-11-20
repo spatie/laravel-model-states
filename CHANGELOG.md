@@ -2,6 +2,77 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.12.1 - 2025-08-01
+
+### What's Changed
+
+* feat: add count and boolean methods for available transactions by @WatheqAlshowaiter in https://github.com/spatie/laravel-model-states/pull/290
+
+### New Contributors
+
+* @WatheqAlshowaiter made their first contribution in https://github.com/spatie/laravel-model-states/pull/290
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.12.0...2.12.1
+
+## 2.12.0 - 2025-07-28
+
+### What's Changed
+
+* Add the field property to StateChanged event by @aabadawy in https://github.com/spatie/laravel-model-states/pull/286
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-model-states/pull/283
+* Add `transitionableStateInstances()`  method to get state objects for all transitionable states by @A909M in https://github.com/spatie/laravel-model-states/pull/285
+* feat: support custom transition constructors extending DefaultTransit… by @zayedadel in https://github.com/spatie/laravel-model-states/pull/284
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.3...2.12.0
+
+## 2.11.3 - 2025-05-23
+
+### What's Changed
+
+* Add support for registering states from  multiple custom  directories. by @A909M in https://github.com/spatie/laravel-model-states/pull/282
+
+### New Contributors
+
+* @A909M made their first contribution in https://github.com/spatie/laravel-model-states/pull/282
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.2...2.11.3
+
+## 2.11.2 - 2025-03-21
+
+### What's Changed
+
+* use laravel [validationRule] interface instead of [Rule] deprecated interface by @aabadawy in https://github.com/spatie/laravel-model-states/pull/276
+
+### New Contributors
+
+* @aabadawy made their first contribution in https://github.com/spatie/laravel-model-states/pull/276
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.1...2.11.2
+
+## 2.11.1 - 2025-02-28
+
+### What's Changed
+
+* fix(config): var annotation for `$baseStateClass` and `$defaultStateClass` by @maartenpaauw in https://github.com/spatie/laravel-model-states/pull/275
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.11.0...2.11.1
+
+## 2.11.0 - 2025-02-26
+
+### What's Changed
+
+* Contract / Interface for Models that use `HasStates` trait. by @aSeriousDeveloper in https://github.com/spatie/laravel-model-states/pull/274
+
+### New Contributors
+
+* @aSeriousDeveloper made their first contribution in https://github.com/spatie/laravel-model-states/pull/274
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.10.1...2.11.0
+
+## 2.10.1 - 2025-02-14
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.10.0...2.10.1
+
 ## 2.10.0 - 2024-12-30
 
 ### What's Changed
@@ -294,11 +365,25 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
+
+
+
+
+
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
+
+
+
+
+
+
 
 
 

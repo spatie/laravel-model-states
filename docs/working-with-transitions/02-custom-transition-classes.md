@@ -62,7 +62,7 @@ $payment->state->transitionTo(Failed::class, 'error message');
 > these arguments will be passed to the transition's constructor. 
 > The first argument in the transition's constructor will always be the model that the transition is performed on. 
 
-Another way of handling transitions is by working directly with the transition classes, this allows for better IDE autocompletion, which can be useful to some people. Instead of using `transitionTo()`, you can use the `transition()` and pass it a transition class directly.
+Another way of handling transitions is by working directly with the transition classes – this allows for better IDE autocompletion, which can be useful to some people. Instead of using `transitionTo()`, you can use the `transition()` and pass it a transition class directly.
 
 ```php
 $payment->state->transition(new CreatedToFailed($payment, 'error message'));

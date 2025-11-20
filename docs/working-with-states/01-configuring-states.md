@@ -5,8 +5,6 @@ weight: 1
 
 This package provides a `HasStates` trait which you can use in whatever model you want state support in. Within your codebase, each state is represented by a class, and will be serialised to the database by this package behind the scenes.
 
-This way you don't have to worry about whether a state is in its textual form or not: you're always working with state objects.
-
 ```php
 use Spatie\ModelStates\HasStates;
 
@@ -114,6 +112,36 @@ abstract class PaymentState extends State
 }
 ```
 
+## Registering states from custom directories
+
+If you want to register all state classes from one or more directories, you can use the `registerStatesFromDirectory` method. This is useful if you organize your state classes in multiple folders and want to avoid registering each one manually.
+
+```php
+use Spatie\ModelStates\State;
+use Spatie\ModelStates\StateConfig;
+
+abstract class PaymentState extends State
+{
+    abstract public function color(): string;
+    
+    public static function config(): StateConfig
+    {
+        return parent::config()
+            ->default(Pending::class)
+            ->allowTransition(Pending::class, Paid::class)
+            ->allowTransition(Pending::class, Failed::class)
+            ->registerStatesFromDirectory(app_path('States/Payment'))
+            ->registerStatesFromDirectory(
+                __DIR__ . '/States',
+                __DIR__ . '/MoreStates',
+                // add as many directories as you need
+            );
+    }
+}
+```
+
+This will automatically discover and register all state classes in the given directory that extend your base state class.
+
 ### Registering custom StateChanged event
 By default, when a state is changed, the `StateChanged` event is fired. If you want to use a custom event, you can register it in the `config` method:
 
@@ -158,3 +186,21 @@ abstract class PaymentState extends State
 ```
 
 Next up, we'll take a moment to discuss how state classes are serialized to the database.
+
+## Improved typehinting
+
+Optionally, for improved type-hinting, the package also provides a `HasStatesContract` interface.
+
+This way you don't have to worry about whether a state is in its textual form or not: you're always working with state objects.
+
+```php
+use Spatie\ModelStates\HasStates;
+use Spatie\ModelStates\HasStatesContract;
+
+class Payment extends Model implements HasStatesContract
+{
+    use HasStates;
+
+    // …
+}
+```

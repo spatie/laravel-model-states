@@ -199,16 +199,59 @@ abstract class State implements Castable, JsonSerializable
             $model->{$this->field},
             $transition,
             $this->model,
+            $this->field,
         ));
 
         return $model;
     }
 
+    /**
+     * Get an array of state names that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition
+     * @return array  Array of state names as strings
+     */
     public function transitionableStates(...$transitionArgs): array
     {
         return collect($this->stateConfig->transitionableStates(static::getMorphClass()))->reject(function ($state) use ($transitionArgs) {
             return ! $this->canTransitionTo($state, ...$transitionArgs);
         })->toArray();
+    }
+
+    /**
+     * Get an array of instantiated state objects that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition
+     * @return array  Array of state instances
+     */
+    public function transitionableStateInstances(...$transitionArgs): array
+    {
+        return collect($this->transitionableStates(...$transitionArgs))->map(function ($state) {
+            $stateClass = $this::config()->baseStateClass::resolveStateClass($state);
+            return (new $stateClass($this->getModel()));
+        })->toArray();
+    }
+
+    /**
+     * Get the count of states that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition logic.
+     * @return int  The number of transitionable states.
+     */
+    public function transitionableStatesCount(...$transitionArgs): int
+    {
+        return count($this->transitionableStates(...$transitionArgs));
+    }
+
+    /**
+     * Determine if there are any states that can be transitioned to from the current state.
+     *
+     * @param  mixed  ...$transitionArgs  Optional arguments to pass to the transition logic.
+     * @return bool  True if there are available transitions; false otherwise.
+     */
+    public function hasTransitionableStates(...$transitionArgs): bool
+    {
+        return filled($this->transitionableStates(...$transitionArgs));
     }
 
     public function canTransitionTo($newState, ...$transitionArgs): bool
@@ -247,8 +290,10 @@ abstract class State implements Castable, JsonSerializable
         foreach ($otherStates as $otherState) {
             $otherState = $this->resolveStateObject($otherState);
 
-            if ($this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
-                && $this->getValue() === $otherState->getValue()) {
+            if (
+                $this->stateConfig->baseStateClass === $otherState->stateConfig->baseStateClass
+                && $this->getValue() === $otherState->getValue()
+            ) {
                 return true;
             }
         }
@@ -285,11 +330,22 @@ abstract class State implements Castable, JsonSerializable
         ...$transitionArgs
     ): Transition {
         $transitionClass = $this->stateConfig->resolveTransitionClass($from, $to);
-
+        /**
+         * @deprecated This behavior should be removed in the next major release.
+         * Transitions will no longer need to be defined in the configuration file
+         * as long as they extend the DefaultTransition class.
+         */
         if ($transitionClass === null) {
             $defaultTransition = config('model-states.default_transition', DefaultTransition::class);
 
             $transition = new $defaultTransition(
+                $this->model,
+                $this->field,
+                $newState,
+                ...$transitionArgs
+            );
+        } elseif (is_subclass_of($transitionClass, DefaultTransition::class)) {
+            $transition = new $transitionClass(
                 $this->model,
                 $this->field,
                 $newState,

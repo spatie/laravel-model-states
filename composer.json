@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.4",
         "ext-json": "*",
-        "facade/ignition-contracts": "^1.0.2",
+        "facade/ignition-contracts": "^1.0.2|^2.0",
         "illuminate/contracts": "^11.0 | ^12.0",
         "illuminate/database": "^11.0 | ^12.0",
         "illuminate/support": "^11.0 | ^12.0",
@@ -28,7 +28,12 @@
     "require-dev": {
         "orchestra/testbench": "^9.0 | ^10.0",
         "pestphp/pest": "^3.0|^4.1.4",
-        "symfony/var-dumper": "^5.3 | ^6.0 | ^7.3.5 | ^8.0"
+        "symfony/var-dumper": "^5.3 | ^6.0 | ^7.3.5 | ^8.0",
+        "illuminate/contracts": "^10.0 | ^11.0 | ^12.0",
+        "illuminate/database": "^10.0 | ^11.0 | ^12.0",
+        "illuminate/support": "^10.0 | ^11.0 | ^12.0",
+        "spatie/laravel-package-tools": "^1.9",
+        "spatie/php-structure-discoverer": "^2.2"
     },
     "autoload": {
         "psr-4": {
