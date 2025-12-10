@@ -2,6 +2,24 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.12.2 - 2025-12-10
+
+### What's Changed
+
+* Update issue template by @AlexVanderbist in https://github.com/spatie/laravel-model-states/pull/292
+* Improve punctuation for clarity in transition handling by @runofthemill in https://github.com/spatie/laravel-model-states/pull/296
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-model-states/pull/294
+* Update transition delimiter from '-' to '->' in StateConfig  by @lukas-staab in https://github.com/spatie/laravel-model-states/pull/300
+* Bump actions/checkout from 4 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-model-states/pull/298
+
+### New Contributors
+
+* @AlexVanderbist made their first contribution in https://github.com/spatie/laravel-model-states/pull/292
+* @runofthemill made their first contribution in https://github.com/spatie/laravel-model-states/pull/296
+* @lukas-staab made their first contribution in https://github.com/spatie/laravel-model-states/pull/300
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.12.1...2.12.2
+
 ## 2.12.1 - 2025-08-01
 
 ### What's Changed
@@ -372,11 +390,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
