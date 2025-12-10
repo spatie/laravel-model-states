@@ -109,7 +109,7 @@ class StateConfig
         $transitionableStates = [];
 
         foreach ($this->allowedTransitions as $allowedTransition => $value) {
-            [$transitionFromMorphClass, $transitionToMorphClass] = explode('-', $allowedTransition);
+            [$transitionFromMorphClass, $transitionToMorphClass] = explode('->', $allowedTransition);
 
             if ($transitionFromMorphClass !== $fromMorphClass) {
                 continue;
@@ -211,6 +211,6 @@ class StateConfig
             $to = $to::getMorphClass();
         }
 
-        return "{$from}-{$to}";
+        return "{$from}->{$to}";
     }
 }
