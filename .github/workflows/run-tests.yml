@@ -1,20 +1,25 @@
 name: run-tests
 
-on: [push, pull_request]
+on:
+  - push
+  - pull_request
 
 jobs:
   test:
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: true
       matrix:
         os: [ubuntu-latest, windows-latest]
-        php: [8.5, 8.4]
-        laravel: [12.*]
+        php: ['8.3', 8.4, '8.4', 8.5, '8.5']
+        laravel: ['12.*', '13.*']
         dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 12.*
             testbench: 10.*
+          - laravel: 13.*
+            testbench: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
 
