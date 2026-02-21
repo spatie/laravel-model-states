@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.13.0 - 2026-02-21
+
+### What's Changed
+
+- Add Laravel 13 support
+
 ## 2.12.2 - 2025-12-10
 
 ### What's Changed
@@ -391,11 +397,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
