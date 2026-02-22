@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.13.1 - 2026-02-22
+
+### What's Changed
+
+* Use spatie/php-attribute-reader by @freekmurze in https://github.com/spatie/laravel-model-states/pull/303
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.13.0...2.13.1
+
 ## 2.13.0 - 2026-02-21
 
 ### What's Changed
@@ -398,11 +406,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
