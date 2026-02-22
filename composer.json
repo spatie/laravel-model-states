@@ -23,6 +23,7 @@
         "illuminate/database": "^12.0|^13.0",
         "illuminate/support": "^12.0|^13.0",
         "spatie/laravel-package-tools": "^1.19",
+        "spatie/php-attribute-reader": "^1.0",
         "spatie/php-structure-discoverer": "^2.3.1"
     },
     "require-dev": {
