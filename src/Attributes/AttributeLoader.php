@@ -2,26 +2,21 @@
 
 namespace Spatie\ModelStates\Attributes;
 
-use ReflectionClass;
+use Spatie\Attributes\Attributes;
 use Spatie\ModelStates\StateConfig;
 
 class AttributeLoader
 {
-    private ReflectionClass $reflectionClass;
-
-    public function __construct(string $stateClass)
-    {
-        $this->reflectionClass = new ReflectionClass($stateClass);
+    public function __construct(
+        private string $stateClass,
+    ) {
     }
 
     public function load(StateConfig $stateConfig): StateConfig
     {
-        $transitionAttributes = $this->reflectionClass->getAttributes(AllowTransition::class);
+        $transitionAttributes = Attributes::getAll($this->stateClass, AllowTransition::class);
 
-        foreach ($transitionAttributes as $attribute) {
-            /** @var \Spatie\ModelStates\Attributes\AllowTransition $transitionAttribute */
-            $transitionAttribute = $attribute->newInstance();
-
+        foreach ($transitionAttributes as $transitionAttribute) {
             $stateConfig->allowTransition(
                 $transitionAttribute->from,
                 $transitionAttribute->to,
@@ -29,29 +24,22 @@ class AttributeLoader
             );
         }
 
-        if ($attribute = $this->reflectionClass->getAttributes(DefaultState::class)[0] ?? null) {
-            /** @var \Spatie\ModelStates\Attributes\DefaultState $transitionAttribute */
-            $defaultStateAttribute = $attribute->newInstance();
+        $defaultStateAttribute = Attributes::get($this->stateClass, DefaultState::class);
 
+        if ($defaultStateAttribute) {
             $stateConfig->default($defaultStateAttribute->defaultStateClass);
         }
 
-        if ($this->reflectionClass->getAttributes(IgnoreSameState::class)[0] ?? null) {
-            /** @var \Spatie\ModelStates\Attributes\IgnoreSameState $transitionAttribute */
-
+        if (Attributes::has($this->stateClass, IgnoreSameState::class)) {
             $stateConfig->ignoreSameState();
         }
-	
-	    $registerStateAttributes = $this->reflectionClass->getAttributes(RegisterState::class);
-		
-		foreach($registerStateAttributes as $attribute) {
-			/** @var \Spatie\ModelStates\Attributes\RegisterState $registerStateAttribute */
-			$registerStateAttribute = $attribute->newInstance();
-			
-			$stateConfig->registerState($registerStateAttribute->stateClass);
-		}
-	
-	
-	    return $stateConfig;
+
+        $registerStateAttributes = Attributes::getAll($this->stateClass, RegisterState::class);
+
+        foreach ($registerStateAttributes as $registerStateAttribute) {
+            $stateConfig->registerState($registerStateAttribute->stateClass);
+        }
+
+        return $stateConfig;
     }
 }
