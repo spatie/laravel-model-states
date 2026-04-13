@@ -105,7 +105,7 @@ trait HasStates
      */
     private function getStateConfigs(): array
     {
-        $casts = $this->getCasts();
+        $casts = array_merge($this->casts, $this->casts());
 
         $states = [];
 
