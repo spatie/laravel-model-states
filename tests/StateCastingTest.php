@@ -8,6 +8,7 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithCastsMethod;
 
 it('state without alias is serialized on create', function () {
     $model = TestModel::create([
@@ -149,4 +150,20 @@ it('respects jsonSerialize in state classes', function() {
     ]);
 
     expect($model->toJson())->toBe('{"state":{"name":"StateB"}}');
+});
+
+it('resolves state defaults on a fresh unsaved model when cast is declared via casts() method', function () {
+    // Regression test for PHP 8.5 trait binding order change: on PHP 8.5,
+    // initializeHasStates() runs before initializeHasAttributes(), so $this->casts
+    // may not yet contain values from the casts() method when setStateDefaults() fires.
+    // getStateConfigs() must read both the $casts property and the casts() method directly.
+    $model = new TestModelWithCastsMethod();
+
+    expect($model->state)->toBeInstanceOf(StateA::class);
+});
+
+it('resolves state on a fresh unsaved model constructed with attributes when cast is declared via casts() method', function () {
+    $model = new TestModelWithCastsMethod(['state' => StateB::class]);
+
+    expect($model->state)->toBeInstanceOf(StateB::class);
 });
