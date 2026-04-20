@@ -23,6 +23,12 @@ trait HasStates
 
     public function initializeHasStates(): void
     {
+        // On PHP 8.5 this trait can initialize before HasAttributes, so the
+        // casts() method hasn't been merged into $this->casts yet. Merge it
+        // ourselves so setAttribute() can locate the StateCaster below and
+        // store the morph alias instead of the raw state FQN.
+        $this->casts = array_merge($this->casts, $this->casts());
+
         $this->setStateDefaults();
     }
 
