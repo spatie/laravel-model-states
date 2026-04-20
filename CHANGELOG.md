@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.14.0 - 2026-04-20
+
+### What's Changed
+
+* Fix PHP 8.5 trait binding order bug when state is cast via casts() method by @conorjmurphy in https://github.com/spatie/laravel-model-states/pull/306
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.13.1...2.14.0
+
 ## 2.13.1 - 2026-02-22
 
 ### What's Changed
@@ -407,11 +415,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
