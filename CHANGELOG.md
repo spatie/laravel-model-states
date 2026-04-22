@@ -2,6 +2,15 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.14.1 - 2026-04-22
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 1 to 3 by @dependabot[bot] in https://github.com/spatie/laravel-model-states/pull/305
+* Fix PHP 8.5 regression writing raw state FQN for aliased defaults by @freekmurze in https://github.com/spatie/laravel-model-states/pull/308
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.14.0...2.14.1
+
 ## 2.14.0 - 2026-04-20
 
 ### What's Changed
@@ -416,11 +425,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
