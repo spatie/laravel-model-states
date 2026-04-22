@@ -7,7 +7,9 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
+use Spatie\ModelStates\Tests\Dummy\AliasedModelStates\Pending;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithAliasedDefaultCastsMethod;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCastsMethod;
 
 it('state without alias is serialized on create', function () {
@@ -166,4 +168,17 @@ it('resolves state on a fresh unsaved model constructed with attributes when cas
     $model = new TestModelWithCastsMethod(['state' => StateB::class]);
 
     expect($model->state)->toBeInstanceOf(StateB::class);
+});
+
+it('resolves an aliased default state when cast is declared via casts() method', function () {
+    // Regression test for spatie/laravel-model-states#307: under PHP 8.5 trait
+    // init order, initializeHasStates() fires before initializeHasAttributes(),
+    // so $this->casts doesn't yet contain casts() entries when setStateDefaults()
+    // writes the default. setAttribute() skipped the StateCaster and stored the
+    // raw FQN instead of the morph alias, which later blew up in StateCaster::get
+    // with "Undefined array key" because the mapping is keyed by alias.
+    $model = new TestModelWithAliasedDefaultCastsMethod();
+
+    expect($model->state)->toBeInstanceOf(Pending::class);
+    expect($model->getAttributes()['state'] ?? null)->toBe(Pending::getMorphClass());
 });
