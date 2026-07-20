@@ -402,6 +402,12 @@ it('should throw exception when allowing all transitions when there are no regis
     TestModelAllowAllTransitionsWithNoRegisteredStates::create();
 });
 
+it('is stringable and returns the state value', function () {
+    $model = TestModel::make(['state' => StateA::class]);
+
+    expect((string) $model->state)->toBe(StateA::class);
+});
+
 it('uses custom transition extending DefaultTransition with correct arguments with out needing to explicitly set it as default in config', function () {
 
     $model = new TestModelWithCustomTransition();

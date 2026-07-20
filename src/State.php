@@ -11,11 +11,12 @@ use Spatie\ModelStates\Events\StateChanged;
 use Spatie\ModelStates\Exceptions\ClassDoesNotExtendBaseClass;
 use Spatie\ModelStates\Exceptions\CouldNotPerformTransition;
 use Spatie\ModelStates\Exceptions\InvalidConfig;
+use Stringable;
 
 /**
  * @template TModel of \Illuminate\Database\Eloquent\Model
  */
-abstract class State implements Castable, JsonSerializable
+abstract class State implements Castable, JsonSerializable, Stringable
 {
     private $model;
 
