@@ -11,6 +11,7 @@ use Spatie\ModelStates\Tests\Dummy\AliasedModelStates\Pending;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithAliasedDefaultCastsMethod;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCastsMethod;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithNonClassCast;
 
 it('state without alias is serialized on create', function () {
     $model = TestModel::create([
@@ -181,4 +182,24 @@ it('resolves an aliased default state when cast is declared via casts() method',
 
     expect($model->state)->toBeInstanceOf(Pending::class);
     expect($model->getAttributes()['state'] ?? null)->toBe(Pending::getMorphClass());
+});
+
+it('asks the autoloader about a cast type that is not a class only once', function () {
+    $attempts = 0;
+    $autoloader = function (string $class) use (&$attempts) {
+        if ($class === 'stateCastingTestType') {
+            $attempts++;
+        }
+    };
+    spl_autoload_register($autoloader);
+
+    try {
+        new TestModelWithNonClassCast();
+        new TestModelWithNonClassCast();
+        new TestModelWithNonClassCast();
+    } finally {
+        spl_autoload_unregister($autoloader);
+    }
+
+    expect($attempts)->toBe(1);
 });

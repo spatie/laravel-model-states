@@ -11,6 +11,13 @@ trait HasStates
 {
     private array $stateCasts = [];
 
+    /**
+     * Whether each cast type is a state class, keyed by cast type.
+     *
+     * @var array<string, bool>
+     */
+    private static array $castTypeIsState = [];
+
     public static function bootHasStates(): void
     {
         self::creating(function ($model) {
@@ -116,7 +123,13 @@ trait HasStates
         $states = [];
 
         foreach ($casts as $field => $state) {
-            if (! is_subclass_of($state, State::class)) {
+            // is_subclass_of() runs the autoloader on every call for a cast type that is not a
+            // class, such as "datetime" or "boolean". The answer never changes, so remember it.
+            $isState = is_string($state)
+                ? self::$castTypeIsState[$state] ??= is_subclass_of($state, State::class)
+                : is_subclass_of($state, State::class);
+
+            if (! $isState) {
                 continue;
             }
 
