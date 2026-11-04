@@ -116,6 +116,12 @@ trait HasStates
         $states = [];
 
         foreach ($casts as $field => $state) {
+            if (is_string($state)) {
+                if (in_array($this->parseCasterClass($state), static::$primitiveCastTypes, true)) {
+                    continue;
+                }
+            }
+
             if (! is_subclass_of($state, State::class)) {
                 continue;
             }

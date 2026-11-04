@@ -7,10 +7,12 @@ use Spatie\ModelStates\Tests\Dummy\ModelStates\StateB;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\StateC;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateF;
 use Spatie\ModelStates\Tests\Dummy\ModelStates\AnotherDirectory\StateG;
+use Spatie\ModelStates\Tests\Dummy\AliasedModelStates\AliasedModelState;
 use Spatie\ModelStates\Tests\Dummy\AliasedModelStates\Pending;
 use Spatie\ModelStates\Tests\Dummy\TestModel;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithAliasedDefaultCastsMethod;
 use Spatie\ModelStates\Tests\Dummy\TestModelWithCastsMethod;
+use Spatie\ModelStates\Tests\Dummy\TestModelWithPrimitiveCasts;
 
 it('state without alias is serialized on create', function () {
     $model = TestModel::create([
@@ -181,4 +183,70 @@ it('resolves an aliased default state when cast is declared via casts() method',
 
     expect($model->state)->toBeInstanceOf(Pending::class);
     expect($model->getAttributes()['state'] ?? null)->toBe(Pending::getMorphClass());
+});
+
+it('preserves primitive casts and overridden state defaults across model instances', function () {
+    $childModel = new class extends TestModelWithPrimitiveCasts {
+        protected function casts(): array
+        {
+            return ['state' => AliasedModelState::class];
+        }
+    };
+
+    foreach (range(1, 3) as $iteration) {
+        $attributes = [
+            'message' => $iteration % 2,
+            'payload' => ['iteration' => $iteration],
+            'amount' => '12.345',
+            'published_at' => '2026-04-19 13:42:00',
+        ];
+
+        $model = new TestModelWithPrimitiveCasts($attributes);
+        $child = new ($childModel::class)($attributes);
+
+        expect($model->state)->toBeInstanceOf(StateA::class)
+            ->and($model->getAttributes()['state'])->toBe(StateA::class)
+            ->and($child->state)->toBeInstanceOf(Pending::class)
+            ->and($child->getAttributes()['state'])->toBe('pending');
+
+        foreach ([$model, $child] as $instance) {
+            expect($instance->message)->toBe($iteration % 2 === 1)
+                ->and($instance->payload)->toBe(['iteration' => $iteration])
+                ->and($instance->amount)->toBe('12.35')
+                ->and($instance->published_at->format('Y-m-d H:i:s'))->toBe('2026-04-19 13:42:00')
+                ->and($instance->toArray()['published_at'])->toBe('2026-04-19');
+        }
+    }
+});
+
+it('discovers a state cast after its autoloader is registered', function () {
+    $model = new class extends TestModel {
+        protected $casts = [
+            'state' => ModelState::class,
+            'message' => 'LateRegisteredState',
+        ];
+    };
+
+    expect($model::getDefaultStates()->all())->toBe(['state' => StateA::class]);
+
+    $autoloader = function (string $class): void {
+        if ($class === 'LateRegisteredState') {
+            class_alias(AliasedModelState::class, $class);
+        }
+    };
+    spl_autoload_register($autoloader);
+
+    try {
+        $freshModel = new ($model::class)();
+
+        expect($freshModel->state)->toBeInstanceOf(StateA::class)
+            ->and($freshModel->message)->toBeInstanceOf(Pending::class)
+            ->and($freshModel->getAttributes()['message'] ?? null)->toBe('pending')
+            ->and($model::getDefaultStates()->all())->toBe([
+                'state' => StateA::class,
+                'message' => 'pending',
+            ]);
+    } finally {
+        spl_autoload_unregister($autoloader);
+    }
 });
