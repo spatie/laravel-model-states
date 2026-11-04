@@ -2,6 +2,18 @@
 
 All notable changes to `laravel-model-states` will be documented in this file (#188)
 
+## 2.14.3 - 2026-11-04
+
+### What’s Changed
+
+* Avoid redundant state-class autoload checks for Eloquent primitive casts, including parameterized casts, by @webard in https://github.com/spatie/laravel-model-states/pull/312.
+* Preserve late state-class discovery and inherited model behavior without a process-lifetime negative cache; add regression coverage for defaults, aliases and mixed primitive casts.
+* Keep README images hosted on spatie.be.
+
+No public API, PHP/Laravel requirement or dependency changes.
+
+**Full Changelog**: https://github.com/spatie/laravel-model-states/compare/2.14.2...2.14.3
+
 ## 2.14.2 - 2026-07-22
 
 ### What's Changed
@@ -436,11 +448,13 @@ $model->canTransitionTo(StateB::class, 'status');
 
 
 
+
 ```
 You can now do:
 
 ```php
 $model->status->canTransitionTo(StateB::class);
+
 
 
 
