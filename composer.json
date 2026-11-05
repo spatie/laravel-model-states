@@ -28,7 +28,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^10.0|^11.0",
-        "pestphp/pest": "^4.1.4",
+        "pestphp/pest": "^4.7.8|^5.3.5",
         "symfony/var-dumper": "^7.3.5|^8.0",
         "illuminate/contracts": "^12.0|^13.0",
         "illuminate/database": "^12.0|^13.0",
